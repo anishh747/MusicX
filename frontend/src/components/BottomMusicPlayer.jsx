@@ -19,9 +19,7 @@ function BottomMusicPlayer() {
   const [mute, setMute] = useState(false);
   const [currentProgressBarTime, setCurrentProgressBarTime] = useState(0);
   const [currentProgressTime, setCurrentProgressTime] = useState("0:00");
-  const [currentSong, setCurrentSong] = useState(
-    "https://aac.saavncdn.com/851/d3f6d5e7ae7c9050697a779f85eaabe8_48.mp4"
-  );
+  const [currentSong, setCurrentSong] = useState("https://aac.saavncdn.com/768/18a63db056767c956c5cbe03b4a282c0_320.mp4");
   const audioRef = useRef(null);
   const songAvatarRef = useRef(null);
 
@@ -72,11 +70,11 @@ function BottomMusicPlayer() {
         onEnded={() => setPlay(false)}
       />
 
-      <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 absolute w-screen bottom-0">
+      <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 absolute w-screen bottom-0 right-0 z-50">
         <div className="left-player flex flex-row items-center gap-4">
           <img
             ref={songAvatarRef}
-            class="song-avatar w-[6rem] h-[6rem] rounded-full"
+            className="song-avatar w-[6rem] h-[6rem] rounded-full"
             src="https://img.fruugo.com/product/2/42/492286422_max.jpg"
             alt="Song thumbnail"
           ></img>
