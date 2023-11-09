@@ -1,7 +1,9 @@
 import express from "express";
-import { getSongData, getPlaylistData, getAlbumData, getSearchData, getArtistData } from "../controllers/musicController.js";
+import { getHomeData, getSongData, getPlaylistData, getAlbumData, getSearchData, getArtistData } from "../controllers/musicController.js";
 
 const router = express.Router();
+
+router.get('/home',getHomeData);
 
 router.get('/songs',getSongData);
 

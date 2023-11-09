@@ -1,5 +1,23 @@
 import expressAsyncHandler from "express-async-handler";
 
+const getHomeData = expressAsyncHandler(async (req, res) => {
+  try {
+    const { lang } = req.body;
+
+    const response = await fetch(`https://saavn.me/modules?language=${lang}`);
+
+    if (response.ok) {
+      const data = await response.json();
+      res.json(data.data);
+    } else {
+      throw new Error("Failed to fetch data");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 const getSongData = expressAsyncHandler(async (req, res) => {
   try {
     const { songId } = req.body;
@@ -73,6 +91,7 @@ const getArtistData = expressAsyncHandler(async (req, res) => {
 });
 
 export {
+  getHomeData,
   getSongData,
   getPlaylistData,
   getAlbumData,
