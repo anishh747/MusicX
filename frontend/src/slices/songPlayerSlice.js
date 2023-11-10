@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit/createSlice';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     songsQueue: [],
@@ -25,3 +25,7 @@ const songPlayerSlice = createSlice({
     }
 
 })
+
+export const {setCurrentSong,playPause} = songPlayerSlice.actions;
+
+export default songPlayerSlice.reducer;
