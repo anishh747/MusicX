@@ -8,6 +8,7 @@ import './App.css'
 import BottomMusicPlayer from './components/BottomMusicPlayer'
 import Navbar from './components/Navbar'
 import HomeScreen from './screen/HomeScreen';
+import AlbumScreen from './screen/AlbumScreen';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -19,6 +20,7 @@ function App() {
           <div className="container overflow-hidden">
             <Routes>
               <Route exact path='/' element={<HomeScreen/>} />
+              <Route exact path='/album/:id' element={<AlbumScreen/>} />
             </Routes>
           <BottomMusicPlayer />
           </div>
