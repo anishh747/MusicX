@@ -3,7 +3,7 @@ import { getHomeData, getSongData, getPlaylistData, getAlbumData, getSearchData,
 
 const router = express.Router();
 
-router.get('/home',getHomeData);
+router.post('/home',getHomeData);
 
 router.get('/songs',getSongData);
 

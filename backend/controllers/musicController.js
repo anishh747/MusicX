@@ -5,7 +5,7 @@ const getHomeData = expressAsyncHandler(async (req, res) => {
     const { lang } = req.body;
 
     const response = await fetch(`https://saavn.me/modules?language=${lang}`);
-
+    
     if (response.ok) {
       const data = await response.json();
       res.json(data.data);
