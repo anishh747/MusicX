@@ -57,7 +57,7 @@ const Navbar = () => {
 
   // Replace javascript:void(0) path with your path
   const navigation = [
-      { title: "Customers", path: "/album" },
+      { title: "Customers", path: "/" },
       { title: "Careers", path: "/about" },
       { title: "Guides", path: "" },
       { title: "Partners", path: "" },

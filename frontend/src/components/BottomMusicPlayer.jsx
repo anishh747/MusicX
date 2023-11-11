@@ -13,17 +13,22 @@ import {
   AiOutlineBackward,
 } from "react-icons/ai";
 import { FiRepeat } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 function BottomMusicPlayer() {
   const [play, setPlay] = useState(false);
   const [mute, setMute] = useState(false);
   const [currentProgressBarTime, setCurrentProgressBarTime] = useState(0);
   const [currentProgressTime, setCurrentProgressTime] = useState("0:00");
-  const [currentSong, setCurrentSong] = useState("https://aac.saavncdn.com/768/18a63db056767c956c5cbe03b4a282c0_320.mp4");
+  const [playingNow, setplayingNow] = useState(null); 
   const audioRef = useRef(null);
   const songAvatarRef = useRef(null);
-
+  const currentSong = useSelector((state) => state.songPlayer.currentSong);
+  
   function songDurationToTime(duration) {
+    if (duration === undefined) {
+      return "0:00";
+    }
     const minutes = Math.floor(duration / 60);
     const remainingSeconds = duration % 60;
     const beforeDecimal = remainingSeconds.toString().split(".")[0];
@@ -32,32 +37,43 @@ function BottomMusicPlayer() {
       beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
     }`;
   }
+  
+  useEffect(() => {
+    if (currentSong !== undefined) {
+      setplayingNow(currentSong?.item?.downloadUrl[0].link);
+      console.log(currentSong?.item);
+    }
+  }, [currentSong]);
 
   useEffect(() => {
-    const audioElement = audioRef.current;
-    const songAvatarImage = songAvatarRef.current;
-
-    if (play) {
-      audioElement.play();
-      songAvatarImage.classList.add("song-avatar-rotate");
-    } else {
-      audioElement.pause();
-      songAvatarImage.classList.remove("song-avatar-rotate");
+    if (playingNow !== null) {
+      const audioElement = audioRef.current;
+      const songAvatarImage = songAvatarRef.current;
+  
+      if (play) {
+        audioElement.play();
+        songAvatarImage.classList.add("song-avatar-rotate");
+      } else {
+        audioElement.pause();
+        songAvatarImage.classList.remove("song-avatar-rotate");
+      }
+   
     }
-
     // return () => {
     //   audioElement.pause();
     // };
   }, [play]);
 
   const handleTimeUpdate = () => {
-    const currentTime = audioRef.current.currentTime;
-    setCurrentProgressTime(songDurationToTime(currentTime));
-    const duration = audioRef.current.duration;
-    const progressBar = document.getElementById("progressBar");
-    if (progressBar) {
-      progressBar.value = (currentTime / duration) * 100;
-      setCurrentProgressBarTime(progressBar.value);
+    if (playingNow !== null) {
+      const currentTime = audioRef.current.currentTime;
+      setCurrentProgressTime(songDurationToTime(currentTime));
+      const duration = audioRef.current.duration;
+      const progressBar = document.getElementById("progressBar");
+      if (progressBar) {
+        progressBar.value = (currentTime / duration) * 100;
+        setCurrentProgressBarTime(progressBar.value);
+      } 
     }
   };
 
@@ -65,7 +81,7 @@ function BottomMusicPlayer() {
     <>
       <audio
         ref={audioRef}
-        src={currentSong}
+        src={playingNow}
         onTimeUpdate={handleTimeUpdate}
         onEnded={() => setPlay(false)}
       />
@@ -126,7 +142,7 @@ function BottomMusicPlayer() {
                 audioRef.current.currentTime = newTime;
               }}
             />
-            <p>{songDurationToTime(226)}</p>
+            <p>{songDurationToTime(currentSong?.item?.duration)}</p>
             <div className="text-3xl mx-2">
               <AiOutlineForward className="text-black" />
             </div>

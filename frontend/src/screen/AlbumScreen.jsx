@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useFetcher, useParams } from "react-router-dom";
 import { useAlbumsDataMutation } from "../slices/songApiSlice";
+import { setCurrentSong, playPause } from "../slices/songPlayerSlice"
+import { useDispatch } from "react-redux";
 
 const AlbumScreen = () => {
     const { id: albumId } = useParams();
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({});
     const [fetchAlbumsData, { isLoading }] = useAlbumsDataMutation();
+    const dispatch = useDispatch();
 
     async function fetchData() {
         try {
@@ -33,15 +36,17 @@ const AlbumScreen = () => {
         fetchData();
     }, []);
 
+    const handleOnClick = (item) =>{
+        dispatch(setCurrentSong({item}));
+    }
+
     return (
         <>
             {loading ? (
                 <div className="loading">
-                    <h1>LOADING</h1>
                 </div>
             ) : (
                 <div>
-                    <h1>LOADED</h1>
                     <div className="max-w-2xl mx-auto px-4">
                         <div className="items-start justify-between sm:flex">
                             <div>
@@ -51,7 +56,7 @@ const AlbumScreen = () => {
                         <ul className="mt-12 divide-y">
                             {
                                 data.songs.map((item, idx) => (
-                                    <li key={idx} className="py-5 flex items-start justify-between">
+                                    <li onClick={()=>{handleOnClick(item)}} key={idx} className="py-5 flex items-start justify-between hover:bg-gray-400">
                                         <div className="flex gap-3">
                                             <h3>{idx + 1}</h3>
                                             <img src={item.image[2].link} className="flex-none w-12 h-12" />

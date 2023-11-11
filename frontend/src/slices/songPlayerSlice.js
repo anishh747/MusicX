@@ -4,7 +4,7 @@ const initialState = {
     songsQueue: [],
     currentIndex: 0,
     isPlaying: false,
-    currentSong: "",
+    currentSong: {},
   };
 
 
@@ -13,10 +13,7 @@ const songPlayerSlice = createSlice({
     initialState,
     reducers:{
         setCurrentSong:(state,action)=>{
-            if(action.payload.song){
-                state.currentSong = action.payload.song;
-                state.isPlaying = true;
-            }
+            state.currentSong = action.payload;
         },
 
         playPause:(state,action)=>{
