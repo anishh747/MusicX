@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useFetcher, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAlbumsDataMutation } from "../slices/songApiSlice";
 import { setCurrentSong, playPause } from "../slices/songPlayerSlice"
 import { useDispatch } from "react-redux";
@@ -37,7 +37,9 @@ const AlbumScreen = () => {
     }, []);
 
     const handleOnClick = (item) =>{
+        dispatch(playPause(false))
         dispatch(setCurrentSong({item}));
+        dispatch(playPause(true))
     }
 
     return (

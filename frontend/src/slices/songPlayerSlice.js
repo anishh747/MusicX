@@ -17,10 +17,9 @@ const songPlayerSlice = createSlice({
         },
 
         playPause:(state,action)=>{
-            state.isPlaying = action.payload.isPlaying;
+            state.isPlaying = action.payload;
         },
     }
-
 })
 
 export const {setCurrentSong,playPause} = songPlayerSlice.actions;

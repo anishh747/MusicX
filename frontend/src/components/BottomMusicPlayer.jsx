@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   BsFillPlayFill,
+  BsFillPauseFill,
   BsFillVolumeMuteFill,
   BsFillVolumeUpFill,
   BsVolumeDownFill,
@@ -13,7 +14,8 @@ import {
   AiOutlineBackward,
 } from "react-icons/ai";
 import { FiRepeat } from "react-icons/fi";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentSong, playPause } from "../slices/songPlayerSlice"
 
 function BottomMusicPlayer() {
   const [play, setPlay] = useState(false);
@@ -21,10 +23,12 @@ function BottomMusicPlayer() {
   const [currentProgressBarTime, setCurrentProgressBarTime] = useState(0);
   const [currentProgressTime, setCurrentProgressTime] = useState("0:00");
   const [playingNow, setplayingNow] = useState(null); 
+  const dispatch = useDispatch();
   const audioRef = useRef(null);
   const songAvatarRef = useRef(null);
   const currentSong = useSelector((state) => state.songPlayer.currentSong);
-  
+  const isPlaying = useSelector((state) => state.songPlayer.isPlaying);
+
   function songDurationToTime(duration) {
     if (duration === undefined) {
       return "0:00";
@@ -42,8 +46,17 @@ function BottomMusicPlayer() {
     if (currentSong !== undefined) {
       setplayingNow(currentSong?.item?.downloadUrl[0].link);
       console.log(currentSong?.item);
+      // dispatch(playPause(true));
     }
   }, [currentSong]);
+
+  useEffect(() => {
+    setPlay(isPlaying);
+    console.log("Is Playing: "+isPlaying);
+    if (isPlaying === false) {
+      audioRef.current.pause();
+    } 
+  }, [isPlaying, currentSong]);
 
   useEffect(() => {
     if (playingNow !== null) {
@@ -59,10 +72,7 @@ function BottomMusicPlayer() {
       }
    
     }
-    // return () => {
-    //   audioElement.pause();
-    // };
-  }, [play]);
+  }, [play, playingNow]);
 
   const handleTimeUpdate = () => {
     if (playingNow !== null) {
@@ -76,6 +86,10 @@ function BottomMusicPlayer() {
       } 
     }
   };
+
+  const handlePlayPauseClick = () => {
+    dispatch(playPause(!play));
+  }
 
   return (
     <>
@@ -95,8 +109,8 @@ function BottomMusicPlayer() {
             alt="Song thumbnail"
           ></img>
           <div className="song-info">
-            <p className="song-title">Song title</p>
-            <p className="song-artist">Song artist</p>
+            <p className="song-title">{currentSong?.item?.name}</p>
+            <p className="song-artist">{currentSong?.item?.primaryArtists}</p>
           </div>
         </div>
 
@@ -112,9 +126,10 @@ function BottomMusicPlayer() {
 
             <div
               className="text-4xl cursor-pointer mx-2"
-              onClick={() => setPlay(!play)}
+              onClick={handlePlayPauseClick}
             >
-              <BsFillPlayFill className="text-black" />
+              {play ? (<BsFillPauseFill className="text-black" />) : (<BsFillPlayFill className="text-black" />)}
+
             </div>
 
             <div className="text-4xl mx-2">
