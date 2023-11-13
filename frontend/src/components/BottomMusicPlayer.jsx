@@ -22,12 +22,14 @@ function BottomMusicPlayer() {
   const [mute, setMute] = useState(false);
   const [currentProgressBarTime, setCurrentProgressBarTime] = useState(0);
   const [currentProgressTime, setCurrentProgressTime] = useState("0:00");
-  const [playingNow, setplayingNow] = useState(null); 
+  const [playingNow, setplayingNow] = useState(null);
   const dispatch = useDispatch();
   const audioRef = useRef(null);
   const songAvatarRef = useRef(null);
   const currentSong = useSelector((state) => state.songPlayer.currentSong);
   const isPlaying = useSelector((state) => state.songPlayer.isPlaying);
+  const progressBar = document.getElementById("progressBar");
+
 
   function songDurationToTime(duration) {
     if (duration === undefined) {
@@ -37,32 +39,30 @@ function BottomMusicPlayer() {
     const remainingSeconds = duration % 60;
     const beforeDecimal = remainingSeconds.toString().split(".")[0];
 
-    return `${minutes}:${
-      beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
-    }`;
+    return `${minutes}:${beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
+      }`;
   }
-  
+
   useEffect(() => {
     if (currentSong !== undefined) {
       setplayingNow(currentSong?.item?.downloadUrl[0].link);
       console.log(currentSong?.item);
-      // dispatch(playPause(true));
     }
   }, [currentSong]);
 
   useEffect(() => {
     setPlay(isPlaying);
-    console.log("Is Playing: "+isPlaying);
+    console.log("Is Playing: " + isPlaying);
     if (isPlaying === false) {
       audioRef.current.pause();
-    } 
+    }
   }, [isPlaying, currentSong]);
 
   useEffect(() => {
     if (playingNow !== null) {
       const audioElement = audioRef.current;
       const songAvatarImage = songAvatarRef.current;
-  
+
       if (play) {
         audioElement.play();
         songAvatarImage.classList.add("song-avatar-rotate");
@@ -70,7 +70,7 @@ function BottomMusicPlayer() {
         audioElement.pause();
         songAvatarImage.classList.remove("song-avatar-rotate");
       }
-   
+
     }
   }, [play, playingNow]);
 
@@ -79,17 +79,45 @@ function BottomMusicPlayer() {
       const currentTime = audioRef.current.currentTime;
       setCurrentProgressTime(songDurationToTime(currentTime));
       const duration = audioRef.current.duration;
-      const progressBar = document.getElementById("progressBar");
       if (progressBar) {
         progressBar.value = (currentTime / duration) * 100;
         setCurrentProgressBarTime(progressBar.value);
-      } 
+      }
     }
   };
 
   const handlePlayPauseClick = () => {
     dispatch(playPause(!play));
   }
+  
+  const handleForwardSong = () => {
+    if (currentSong !== undefined) {
+      const currentTime = audioRef.current.currentTime;
+      const duration = audioRef.current.duration;
+      const forwardOffset = 5;
+
+      if (currentTime + forwardOffset < duration) {
+        const updatedTime = currentTime + forwardOffset;
+        progressBar.value = (updatedTime / duration) * 100;
+        setCurrentProgressBarTime(progressBar.value);
+        audioRef.current.currentTime = updatedTime;
+      }
+    }
+  };
+
+  const handleBackwardSong = () => {
+    if (currentSong !== undefined) {
+      const currentTime = audioRef.current.currentTime;
+      const duration = audioRef.current.duration;
+      const backwardOffset = 5;
+
+      if (currentTime - backwardOffset > 0) {
+        const updatedTime = currentTime - backwardOffset;
+        progressBar.value = (updatedTime / duration) * 100;
+        setCurrentProgressBarTime(progressBar.value);
+        audioRef.current.currentTime = updatedTime;
+      }
+    }  }
 
   return (
     <>
@@ -97,7 +125,7 @@ function BottomMusicPlayer() {
         ref={audioRef}
         src={playingNow}
         onTimeUpdate={handleTimeUpdate}
-        onEnded={() => setPlay(false)}
+        onEnded={() => dispatch(playPause(false))}
       />
 
       <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 absolute w-screen bottom-0 right-0 z-50">
@@ -142,7 +170,7 @@ function BottomMusicPlayer() {
           </div>
 
           <div className="musicProgressBar flex flex-row gap-2 justify-center items-center">
-            <div className="text-3xl mx-2">
+            <div onClick={handleBackwardSong} className="text-3xl mx-2">
               <AiOutlineBackward className="text-black" />
             </div>
             <p>{currentProgressTime}</p>
@@ -158,7 +186,7 @@ function BottomMusicPlayer() {
               }}
             />
             <p>{songDurationToTime(currentSong?.item?.duration)}</p>
-            <div className="text-3xl mx-2">
+            <div onClick={handleForwardSong} className="text-3xl mx-2">
               <AiOutlineForward className="text-black" />
             </div>
           </div>
