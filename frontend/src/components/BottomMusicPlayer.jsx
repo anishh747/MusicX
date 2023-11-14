@@ -15,7 +15,7 @@ import {
 } from "react-icons/ai";
 import { FiRepeat } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
-import { setCurrentSong, playPause } from "../slices/songPlayerSlice"
+import { setCurrentSong, playPause, playNextSong, playPreviousSong } from "../slices/songPlayerSlice"
 
 function BottomMusicPlayer() {
   const [play, setPlay] = useState(false);
@@ -89,7 +89,7 @@ function BottomMusicPlayer() {
   const handlePlayPauseClick = () => {
     dispatch(playPause(!play));
   }
-  
+
   const handleForwardSong = () => {
     if (currentSong !== undefined) {
       const currentTime = audioRef.current.currentTime;
@@ -117,7 +117,20 @@ function BottomMusicPlayer() {
         setCurrentProgressBarTime(progressBar.value);
         audioRef.current.currentTime = updatedTime;
       }
-    }  }
+    }
+  }
+
+  const handleNextSongClick = () => {
+    dispatch(playNextSong());
+  } 
+  
+  const handlePreviousSongClick = () => {
+    dispatch(playPreviousSong());
+  }
+
+  const handleAfterSongEnds = () =>{
+    dispatch(playNextSong()); 
+  }
 
   return (
     <>
@@ -125,7 +138,7 @@ function BottomMusicPlayer() {
         ref={audioRef}
         src={playingNow}
         onTimeUpdate={handleTimeUpdate}
-        onEnded={() => dispatch(playPause(false))}
+        onEnded={handleAfterSongEnds}
       />
 
       <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 absolute w-screen bottom-0 right-0 z-50">
@@ -148,7 +161,7 @@ function BottomMusicPlayer() {
               <AiOutlineHeart className="text-black" />
             </div>
 
-            <div className="text-4xl mx-2">
+            <div onClick={handlePreviousSongClick} className="text-4xl mx-2">
               <BiSkipPrevious className="text-black" />
             </div>
 
@@ -160,7 +173,7 @@ function BottomMusicPlayer() {
 
             </div>
 
-            <div className="text-4xl mx-2">
+            <div onClick={handleNextSongClick} className="text-4xl mx-2">
               <BiSkipNext className="text-black" />
             </div>
 

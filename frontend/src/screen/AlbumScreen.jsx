@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAlbumsDataMutation } from "../slices/songApiSlice";
-import { setCurrentSong, playPause } from "../slices/songPlayerSlice"
+import { setCurrentSong, playPause, addToQueue } from "../slices/songPlayerSlice"
 import { useDispatch } from "react-redux";
+import { BiDotsHorizontalRounded } from "react-icons/bi";
 
 const AlbumScreen = () => {
     const { id: albumId } = useParams();
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({});
+    const [tripleDotState, setTripleDotState] = useState(false);
     const [fetchAlbumsData, { isLoading }] = useAlbumsDataMutation();
     const dispatch = useDispatch();
 
-    async function fetchData() {
+    async function fetchData() {    
         try {
             const response = await fetchAlbumsData({ albumId }).unwrap();
             setData(response);
@@ -26,20 +28,30 @@ const AlbumScreen = () => {
         const minutes = Math.floor(duration / 60);
         const remainingSeconds = duration % 60;
         const beforeDecimal = remainingSeconds.toString().split(".")[0];
-    
-        return `${minutes}:${
-          beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
-        }`;
-      }
+
+        return `${minutes}:${beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
+            }`;
+    }
 
     useEffect(() => {
         fetchData();
     }, []);
 
-    const handleOnClick = (item) =>{
-        dispatch(playPause(false))
-        dispatch(setCurrentSong({item}));
-        dispatch(playPause(true))
+    const handleOnClick = (item) => {
+        // dispatch(playPause(false))
+        dispatch(setCurrentSong({ item }));
+        // dispatch(playPause(true))
+    }
+
+    const handleTripleDotClick = (key) => {
+        for (let index = 0; index < data.songs.length; index++) {
+            document.querySelector(`.dropdown-ul-${index}`).classList.add("hidden")
+        }
+        document.querySelector(`.dropdown-ul-${key}`).classList.toggle("hidden")
+    }
+
+    const handleAddToQueue = (item) => {
+        dispatch(addToQueue ({ item }));
     }
 
     return (
@@ -58,8 +70,8 @@ const AlbumScreen = () => {
                         <ul className="mt-12 divide-y">
                             {
                                 data.songs.map((item, idx) => (
-                                    <li onClick={()=>{handleOnClick(item)}} key={idx} className="py-5 flex items-start justify-between hover:bg-gray-400">
-                                        <div className="flex gap-3">
+                                    <li key={idx} className="py-5 flex items-start justify-between hover:bg-gray-400">
+                                        <div onClick={() => { handleOnClick(item) }} className="flex gap-3 my-auto">
                                             <h3>{idx + 1}</h3>
                                             <img src={item.image[2].link} className="flex-none w-12 h-12" />
                                             <div>
@@ -67,9 +79,22 @@ const AlbumScreen = () => {
                                                 <span className="block text-sm text-gray-600">{item.primaryArtists}</span>
                                             </div>
                                         </div>
-                                        <h3>
-                                            {songDurationToTime(item.duration)}
-                                        </h3>
+                                        <div className="flex justify-center items-center gap-4 my-auto">
+                                            <h3>
+                                                {songDurationToTime(item.duration)}
+                                            </h3>
+                                            <BiDotsHorizontalRounded onClick={()=>{handleTripleDotClick(idx)}} className=" text-2xl text-black-500" />
+
+                                                    <ul className={`dropdown-ul-${idx} bg-white lg:absolute lg:border lg:rounded-md lg:text-sm lg:w-52 lg:shadow-md lg:space-y-0 lg:mt-0 hidden`}>
+                                                    
+                                                            <li>
+                                                                <button onClick={()=>{handleAddToQueue(item)}} className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5">Add to Queue</button>
+                                                                <button className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5">Add to Playlist</button>
+                                                                <button className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5">Add to Favourites</button>
+                                                            </li>
+
+                                                    </ul>
+                                        </div>
                                     </li>
                                 ))
                             }
