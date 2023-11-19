@@ -1,18 +1,22 @@
 import express from "express";
-import { getHomeData, getSongData, getPlaylistData, getAlbumData, getSearchData, getArtistData } from "../controllers/musicController.js";
+import { getHomeData, getSongData, getPlaylistData, getAlbumData, getSearchData, getArtistData, addToFavourites, getFavourites } from "../controllers/musicController.js";
 
 const router = express.Router();
 
 router.post('/home',getHomeData);
 
-router.get('/songs',getSongData);
+router.post('/songs',getSongData);
 
-router.get('/playlists',getPlaylistData);
+router.post('/playlists',getPlaylistData);
 
-router.get('/albums',getAlbumData);
+router.post('/albums',getAlbumData);
 
-router.get('/search',getSearchData);
+router.post('/search',getSearchData);
 
-router.get('/artist',getArtistData);
+router.post('/artist',getArtistData);
+
+router.post('/favourite',addToFavourites);
+
+router.get('/favourite',getFavourites);
 
 export default router;
