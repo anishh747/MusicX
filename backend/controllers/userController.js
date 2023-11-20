@@ -30,8 +30,6 @@ const registerUser = expressAsyncHandler(async(req,res) =>{
 
 //public route
 const authUser = expressAsyncHandler(async(req,res) =>{
-
-    try {
         const {email,password} = req.body;
         const checkUser = await pool.query("SELECT id FROM users WHERE email = ($1)",[email])
         if (checkUser.rowCount !== 0) {
@@ -41,15 +39,13 @@ const authUser = expressAsyncHandler(async(req,res) =>{
                 res.status(201)
                 res.json(userDetails)
             }else{
+                res.status(401)
                 throw new Error("Invalid Email or Password")
             }
         }else{
+            res.status(401)
             throw new Error("Invalid Email or Password")
         }
-    } catch (error) {
-        res.status(401).json({message: error.message})
-    }   
-
 });
 
 

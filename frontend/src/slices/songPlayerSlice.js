@@ -1,10 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = {
     songsQueue: [],
     currentIndex: -1,
     isPlaying: false,
-    currentSong: {},
+    currentSong: null,
   };
 
 
@@ -13,11 +13,11 @@ const songPlayerSlice = createSlice({
     initialState,
     reducers:{
         setCurrentSong:(state,action)=>{
-            state.isPlaying = false;
-            state.currentSong = action.payload;
-            state.currentIndex++;
-            state.songsQueue[state.currentIndex] = action.payload;
-            state.isPlaying = true;
+                state.isPlaying = false;
+                state.currentSong = action.payload;
+                state.currentIndex++;
+                state.songsQueue[state.currentIndex] = action.payload;
+                state.isPlaying = true;   
         },
 
         playPause:(state,action)=>{
@@ -48,8 +48,6 @@ const songPlayerSlice = createSlice({
                 state.currentIndex++;
                 state.currentSong = state.songsQueue[state.currentIndex];
                 state.isPlaying = true;
-            }else{
-                state.isPlaying = false;    
             }
         },
     }

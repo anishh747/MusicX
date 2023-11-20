@@ -45,8 +45,28 @@ export const songsApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: data
             }))
-        })
+        }),
+        addToFavourites: builder.mutation({
+            query:(data=>({
+                url: `${MUSIC_URL}/favourite`,
+                method: 'POST',
+                body: data
+            }))
+        }),
+        removeFromFavourites: builder.mutation({
+            query:(data=>({
+                url: `${MUSIC_URL}/favourite`,
+                method: 'DELETE',
+                body: data
+            }))
+        }),
+        getFavourites: builder.mutation({
+            query:(userId=>({
+                url: `${MUSIC_URL}/favourite/userId=${userId}`,
+                method: 'GET',
+            }))
+        }),
     })
 })
 
-export const {useHomePageDataMutation ,useSongDataMutation, usePlaylistDataMutation, useAlbumsDataMutation, useSearchQueryDataMutation, useArtistDataMutation} = songsApiSlice;
+export const {useHomePageDataMutation ,useSongDataMutation, usePlaylistDataMutation, useAlbumsDataMutation, useSearchQueryDataMutation, useArtistDataMutation, useAddToFavouritesMutation, useRemoveFromFavouritesMutation, useGetFavouritesMutation} = songsApiSlice;

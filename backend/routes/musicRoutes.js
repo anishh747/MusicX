@@ -1,5 +1,5 @@
 import express from "express";
-import { getHomeData, getSongData, getPlaylistData, getAlbumData, getSearchData, getArtistData, addToFavourites, getFavourites } from "../controllers/musicController.js";
+import { getHomeData, getSongData, getPlaylistData, getAlbumData, getSearchData, getArtistData, addToFavourites, removeFromFavourites, getFavourites } from "../controllers/musicController.js";
 
 const router = express.Router();
 
@@ -17,6 +17,8 @@ router.post('/artist',getArtistData);
 
 router.post('/favourite',addToFavourites);
 
-router.get('/favourite',getFavourites);
+router.delete('/favourite',removeFromFavourites);
+
+router.get('/favourite/userId=:userId',getFavourites);
 
 export default router;

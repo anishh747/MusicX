@@ -15,21 +15,28 @@ import {
 } from "react-icons/ai";
 import { FiRepeat } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from 'react-router-dom';
 import { setCurrentSong, playPause, playNextSong, playPreviousSong } from "../slices/songPlayerSlice"
+import { useAddToFavouritesMutation, useRemoveFromFavouritesMutation, useGetFavouritesMutation } from "../slices/songApiSlice";
 
 function BottomMusicPlayer() {
   const [play, setPlay] = useState(false);
   const [mute, setMute] = useState(false);
   const [currentProgressBarTime, setCurrentProgressBarTime] = useState(0);
   const [currentProgressTime, setCurrentProgressTime] = useState("0:00");
+  const [currentSongIsFavourite, setCurrentSongIsFavourite] = useState(false);
   const [playingNow, setplayingNow] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const audioRef = useRef(null);
   const songAvatarRef = useRef(null);
   const currentSong = useSelector((state) => state.songPlayer.currentSong);
   const isPlaying = useSelector((state) => state.songPlayer.isPlaying);
   const progressBar = document.getElementById("progressBar");
-
+  const { userInfo } = useSelector((state) => state.auth);
+  const [addToFavourites] = useAddToFavouritesMutation();
+  const [getFavourites] = useGetFavouritesMutation();
+  const [removeFromFavourites] = useRemoveFromFavouritesMutation();
 
   function songDurationToTime(duration) {
     if (duration === undefined) {
@@ -45,7 +52,7 @@ function BottomMusicPlayer() {
 
   useEffect(() => {
     if (currentSong !== undefined) {
-      setplayingNow(currentSong?.item?.downloadUrl[0].link);
+      setplayingNow(currentSong?.item?.downloadUrl[4].link);
       console.log(currentSong?.item);
     }
   }, [currentSong]);
@@ -122,15 +129,50 @@ function BottomMusicPlayer() {
 
   const handleNextSongClick = () => {
     dispatch(playNextSong());
-  } 
-  
+  }
+
   const handlePreviousSongClick = () => {
     dispatch(playPreviousSong());
   }
 
-  const handleAfterSongEnds = () =>{
-    dispatch(playNextSong()); 
+  const handleAfterSongEnds = () => {
+    dispatch(playNextSong());
   }
+
+  const toggleFavourite = async () => {
+    if (!userInfo) {
+      navigate('/login')
+    }
+    if (currentSong !== null) {
+      let songId = currentSong?.item?.id;
+      let userId = userInfo?.rows[0]?.id;
+      if (currentSongIsFavourite) {
+        const remove = await removeFromFavourites({ songId, userId }).unwrap();
+      } else{
+        const add = await addToFavourites({ songId, userId }).unwrap();
+      }
+    }
+  };
+
+  useEffect(() => {
+    setCurrentSongIsFavourite(false);
+    async function fetchFavourites() {
+      if (userInfo) {
+        let userId = userInfo.rows[0].id;
+        const favourites = await getFavourites(userId).unwrap();
+        console.log(currentSong?.item?.id);
+        if (currentSong !== null) {
+          for (let index = 0; index < favourites.length; index++) {
+            if (favourites[index].song_id === currentSong?.item?.id) {
+              setCurrentSongIsFavourite(true);
+              break;
+            }
+          }
+        }
+      }
+    }
+    fetchFavourites();
+  }, [userInfo,currentSong]);
 
   return (
     <>
@@ -157,8 +199,8 @@ function BottomMusicPlayer() {
 
         <div className="middle-player flex flex-col justify-between">
           <div className="flex items-center justify-center py-4">
-            <div className="text-3xl mx-2">
-              <AiOutlineHeart className="text-black" />
+            <div onClick={toggleFavourite} className="text-3xl mx-2">
+              {currentSongIsFavourite ? ( <AiFillHeart className="text-black" />) : (<AiOutlineHeart className="text-black" />)}
             </div>
 
             <div onClick={handlePreviousSongClick} className="text-4xl mx-2">

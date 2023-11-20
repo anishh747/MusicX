@@ -9,10 +9,12 @@ import BottomMusicPlayer from './components/BottomMusicPlayer'
 import Navbar from './components/Navbar'
 import HomeScreen from './screen/HomeScreen';
 import AlbumScreen from './screen/AlbumScreen';
+import Login from './components/Login';
+import Register from './components/Register';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const shouldShowBottomPlayer = !['/login', '/register'].includes(window.location.pathname);
+  
   return (
     <>
         <BrowserRouter>
@@ -20,9 +22,11 @@ function App() {
           <div className="container overflow-hidden">
             <Routes>
               <Route exact path='/' element={<HomeScreen/>} />
+              <Route exact path='/login' element={<Login/>} />
+              <Route exact path='/register' element={<Register/>} />
               <Route exact path='/album/:id' element={<AlbumScreen/>} />
             </Routes>
-          <BottomMusicPlayer />
+            {shouldShowBottomPlayer && <BottomMusicPlayer />}
           </div>
         </BrowserRouter>
     </>
