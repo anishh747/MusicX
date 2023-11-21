@@ -72,7 +72,21 @@ const getAlbumData = expressAsyncHandler(async (req, res) => {
   }
 });
 
-const getSearchData = expressAsyncHandler(async (req, res) => { });
+const getSearchData = expressAsyncHandler(async (req, res) => {
+  try {
+    const { query } = req.params;
+    const response = await fetch(`https://saavn.me/search/all?query=${query}`);
+    if (response.ok) {
+      const data = await response.json();
+      res.json(data.data);
+    } else {
+      throw new Error("Failed to fetch data");
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+
+});
 
 const getArtistData = expressAsyncHandler(async (req, res) => {
   try {

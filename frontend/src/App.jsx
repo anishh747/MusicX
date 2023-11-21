@@ -11,6 +11,8 @@ import HomeScreen from './screen/HomeScreen';
 import AlbumScreen from './screen/AlbumScreen';
 import Login from './components/Login';
 import Register from './components/Register';
+import SearchResult from './components/SearchResult';
+import ArtistDetails from './components/ArtistDetails';
 
 function App() {
   const shouldShowBottomPlayer = !['/login', '/register'].includes(window.location.pathname);
@@ -25,6 +27,8 @@ function App() {
               <Route exact path='/login' element={<Login/>} />
               <Route exact path='/register' element={<Register/>} />
               <Route exact path='/album/:id' element={<AlbumScreen/>} />
+              <Route exact path='/artist/:id' element={<ArtistDetails/>} />
+              <Route exact path='/search/q/:query' element={<SearchResult/>} />
             </Routes>
             {shouldShowBottomPlayer && <BottomMusicPlayer />}
           </div>

@@ -27,10 +27,17 @@ const songPlayerSlice = createSlice({
         addToQueue:(state,action)=>{
             state.songsQueue.push(action.payload);
             if (state.currentIndex === -1) {
-                state.currentSong = action.payload;
+                state.currentIndex++;   
+                state.currentSong = state.songsQueue[state.currentIndex];
                 state.isPlaying = true;
-                state.currentIndex++;
             }
+        },
+
+        clearQueue:(state)=>{
+            state.songsQueue = [];
+            state.currentIndex = -1;
+            state.currentSong = null;
+            state.isPlaying = false;
         },
 
         playPreviousSong:(state)=>{
@@ -53,6 +60,6 @@ const songPlayerSlice = createSlice({
     }
 })
 
-export const {setCurrentSong,playPause,addToQueue,playPreviousSong,playNextSong} = songPlayerSlice.actions;
+export const {setCurrentSong,playPause,addToQueue,clearQueue,playPreviousSong,playNextSong} = songPlayerSlice.actions;
 
 export default songPlayerSlice.reducer;

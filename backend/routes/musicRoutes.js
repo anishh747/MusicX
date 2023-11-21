@@ -11,7 +11,7 @@ router.post('/playlists',getPlaylistData);
 
 router.post('/albums',getAlbumData);
 
-router.post('/search',getSearchData);
+router.get('/search/:query',getSearchData);
 
 router.post('/artist',getArtistData);
 
