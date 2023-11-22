@@ -144,6 +144,7 @@ function BottomMusicPlayer() {
       navigate('/login')
     }
     if (currentSong !== null) {
+      setCurrentSongIsFavourite(!currentSongIsFavourite)
       let songId = currentSong?.item?.id;
       let userId = userInfo?.rows[0]?.id;
       if (currentSongIsFavourite) {

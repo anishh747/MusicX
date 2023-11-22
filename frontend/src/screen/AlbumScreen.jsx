@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAlbumsDataMutation } from "../slices/songApiSlice";
-import { setCurrentSong, playPause, addToQueue } from "../slices/songPlayerSlice"
+import { setCurrentSong, playPause, addToQueue, playNextSong } from "../slices/songPlayerSlice"
 import { useDispatch } from "react-redux";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { FaCirclePlay } from "react-icons/fa6";
@@ -51,13 +51,15 @@ const AlbumScreen = () => {
     }
 
     const handleAddToQueue = (item) => {
+        console.log(item);
         dispatch(addToQueue({ item }));
     }
 
-    const handleBigPlayButton = () => {
+    const handleBigPlayButton = () => { 
         for (let index = 0; index < data.songs.length; index++) {
             dispatch(addToQueue({ item: data.songs[index] }));
         }
+        dispatch(playNextSong())
     }
 
     return (

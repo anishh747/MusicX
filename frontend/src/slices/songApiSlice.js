@@ -34,9 +34,8 @@ export const songsApiSlice = apiSlice.injectEndpoints({
         }),
         searchQueryData: builder.mutation({
             query:(data) =>({
-                url: `${MUSIC_URL}/albums`,
-                method: 'POST',
-                body: data,
+                url: `${MUSIC_URL}/search/${data}`,
+                method: 'GET',
             })
         }),
         artistData: builder.mutation({
