@@ -148,9 +148,10 @@ function BottomMusicPlayer() {
       let userId = userInfo?.rows[0]?.id;
       if (currentSongIsFavourite) {
         const remove = await removeFromFavourites({ songId, userId }).unwrap();
-      } else{
+      } else {
         const add = await addToFavourites({ songId, userId }).unwrap();
       }
+      setCurrentSongIsFavourite(!currentSongIsFavourite);
     }
   };
 
@@ -172,7 +173,7 @@ function BottomMusicPlayer() {
       }
     }
     fetchFavourites();
-  }, [userInfo,currentSong]);
+  }, [userInfo, currentSong]);
 
   return (
     <>
@@ -183,7 +184,7 @@ function BottomMusicPlayer() {
         onEnded={handleAfterSongEnds}
       />
 
-      <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 absolute w-screen bottom-0 right-0 z-50">
+      <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 fixed w-screen bottom-0 right-0 z-50">
         <div className="left-player flex flex-row items-center gap-4">
           <img
             ref={songAvatarRef}
@@ -200,7 +201,7 @@ function BottomMusicPlayer() {
         <div className="middle-player flex flex-col justify-between">
           <div className="flex items-center justify-center py-4">
             <div onClick={toggleFavourite} className="text-3xl mx-2">
-              {currentSongIsFavourite ? ( <AiFillHeart className="text-black" />) : (<AiOutlineHeart className="text-black" />)}
+              {currentSongIsFavourite ? (<AiFillHeart className="text-black" />) : (<AiOutlineHeart className="text-black" />)}
             </div>
 
             <div onClick={handlePreviousSongClick} className="text-4xl mx-2">
