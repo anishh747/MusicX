@@ -86,7 +86,21 @@ const Login = () => {
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/120px-Google_%22G%22_logo.svg.png?20230822192911" alt="img" className="w-6 h-6 inline mr-2" />
                             Sign in with Google
                         </button>
+
+                        <div className="flex justify-between items-center w-full text-gray-400">
+                            <hr className="border-gray-400 w-1/4" />
+                            <span className="text-center text-md">OR</span>
+                            <hr className="border-gray-400 w-1/4" />
+                        </div>
+
+                        <div className="text-md flex justify-center items-center">
+                            <span className="mr-8 font-bold">New to musicX ?</span>
+                            <Link to={'/register'} className="text-white hover:underline space-x-3 font-bold">       Register</Link>
+                        </div>
                     </form>
+
+
+
 
                     <div className="relative">
                         <img

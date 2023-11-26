@@ -92,7 +92,7 @@ const Navbar = () => {
                         </ul>
                     </div>
                     <div className="flex-1 flex items-center justify-end space-x-2 sm:space-x-6">
-                        <form onSubmit={(event)=>{
+                        <form onSubmit={(event) => {
                             event.preventDefault();
                             navigate(`/search/q/${searchQuery}`);
                         }}
@@ -117,12 +117,12 @@ const Navbar = () => {
                         ) : (
                             <>
                                 <div className='space-y-3 items-center gap-x-6 md:flex md:space-y-0'>
-                                        <Link to='/login' className="w-[100px] block py-3 text-center text-gray-700 hover:text-indigo-600 border rounded-lg md:border-none">
-                                            Log in
-                                        </Link>
-                                        <Link to="/register" className="w-[100px] block py-3 px-4 font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:shadow-none rounded-lg shadow md:inline">
-                                            Sign Up
-                                        </Link>
+                                    <Link to='/login' className="w-[100px] block py-3 text-center text-gray-700 hover:text-indigo-600 border rounded-lg md:border-none">
+                                        Log in
+                                    </Link>
+                                    <Link to="/register" className="w-[100px] block py-3 px-4 font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:shadow-none rounded-lg shadow md:inline">
+                                        Sign Up
+                                    </Link>
                                 </div>
                             </>
                         )}

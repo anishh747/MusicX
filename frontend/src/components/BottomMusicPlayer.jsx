@@ -22,6 +22,7 @@ import { useAddToFavouritesMutation, useRemoveFromFavouritesMutation, useGetFavo
 function BottomMusicPlayer() {
   const [play, setPlay] = useState(false);
   const [mute, setMute] = useState(false);
+  const [volume, setVolume] = useState(1);
   const [currentProgressBarTime, setCurrentProgressBarTime] = useState(0);
   const [currentProgressTime, setCurrentProgressTime] = useState("0:00");
   const [currentSongIsFavourite, setCurrentSongIsFavourite] = useState(false);
@@ -70,6 +71,7 @@ function BottomMusicPlayer() {
       const audioElement = audioRef.current;
       const songAvatarImage = songAvatarRef.current;
 
+      audioElement.volume = volume;
       if (play) {
         audioElement.play();
         songAvatarImage.classList.add("song-avatar-rotate");
@@ -79,7 +81,7 @@ function BottomMusicPlayer() {
       }
 
     }
-  }, [play, playingNow]);
+  }, [play, playingNow, volume]);
 
   const handleTimeUpdate = () => {
     if (playingNow !== null) {
@@ -185,7 +187,7 @@ function BottomMusicPlayer() {
         onEnded={handleAfterSongEnds}
       />
 
-      <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 fixed w-screen bottom-0 right-0 z-50">
+      <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 fixed w-screen bottom-0 right-0 z-40">
         <div className="left-player flex flex-row items-center gap-4">
           <img
             ref={songAvatarRef}
@@ -262,7 +264,17 @@ function BottomMusicPlayer() {
               <BsFillVolumeUpFill className="text-black" />
             )}
           </div>
-          <input type="range" className="volumeBar w-[100px]" />
+          <input
+            type="range"
+            className="volumeBar w-[100px]"
+            value={mute ? 0 : volume * 100}
+            onChange={(e) => {
+              const newVolume = e.target.value / 100;
+              setVolume(newVolume);
+              setMute(false); // Unmute when adjusting volume
+            }}
+            disabled={mute}
+          />
         </div>
       </div>
     </>
