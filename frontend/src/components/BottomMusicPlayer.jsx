@@ -145,7 +145,7 @@ function BottomMusicPlayer() {
     if (!userInfo) {
       navigate('/login')
     }
-    if (currentSong !== null) {
+    else if (currentSong !== null) {
       setCurrentSongIsFavourite(!currentSongIsFavourite)
       let songId = currentSong?.item?.id;
       let userId = userInfo?.rows[0]?.id;
@@ -155,6 +155,8 @@ function BottomMusicPlayer() {
         const add = await addToFavourites({ songId, userId }).unwrap();
       }
       setCurrentSongIsFavourite(!currentSongIsFavourite);
+    }else{
+      
     }
   };
 
@@ -177,6 +179,14 @@ function BottomMusicPlayer() {
     }
     fetchFavourites();
   }, [userInfo, currentSong]);
+
+  useEffect(()=>{
+    if(mute){
+      audioRef.current.volume=0;
+    }else{
+      audioRef.current.volume=volume;
+    }
+  },[mute])
 
   return (
     <>

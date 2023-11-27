@@ -10,6 +10,11 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import SearchResult from "./components/SearchResult";
 import ArtistDetails from "./components/ArtistDetails";
+import CreateJoinRoom from './components/CreateJoinRoom';
+import Room from './components/Room';
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   const shouldShowBottomPlayer = !["/login", "/register"].includes(
@@ -25,6 +30,8 @@ function App() {
             <Route exact path="/" element={<HomeScreen />} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/register" element={<Register />} />
+            <Route exact path='/create-join' element={<CreateJoinRoom/>} />
+            <Route exact path='/room/:id' element={<Room/>} />
             <Route exact path="/album/:id" element={<AlbumScreen />} />
             <Route exact path="/playlist/:id" element={<PlaylistScreen />} />
             <Route exact path="/artist/:id" element={<ArtistDetails />} />
@@ -33,6 +40,8 @@ function App() {
           {shouldShowBottomPlayer && <BottomMusicPlayer />}
         </div>
       </BrowserRouter>
+      <ToastContainer />
+
     </>
   );
 }
