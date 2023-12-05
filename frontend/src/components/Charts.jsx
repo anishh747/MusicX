@@ -40,22 +40,23 @@ const Charts = () => {
       ) : (
         <div>
           <section className="mt-12 mx-auto px-4 max-w-screen-xl md:px-8">
-            <h1 className="text-2xl"> Top Charts</h1>
-            <div className="bot">
+            <h1 className="text-2xl px-28">Top Charts</h1>
+            <div className="bot px-28 space-x-4">
               {chartsData.map((items, key) => (
                 <article
                   key={key}
-                  className="max-w-md mx-auto mt-4 shadow-lg border rounded-md duration-300 hover:shadow-sm"
+                  className="max-w-xl mx-auto mt-4 flex shadow-lg border rounded-md duration-300 hover:shadow-sm w-screen"
                 >
-                  <Link to={`playlist/${items.id}`}>
+                  <Link to={`playlist/${items.id}`} className="flex">
                     <img
                       src={items.image[2].link}
                       loading="lazy"
                       alt={items.image[2].link}
-                      className="w-full h-48 rounded-t-md"
+                      className="w-1/3 h-24 rounded-l-md ml-4"
                     />
-                    <div className="pt-3 ml-4 mr-2 mb-3">
+                    <div className="flex-1 p-4">
                       <h3 className="text-xl text-gray-900">{items.title}</h3>
+                      {/* Additional information can be added here */}
                     </div>
                   </Link>
                 </article>
@@ -63,6 +64,7 @@ const Charts = () => {
             </div>
           </section>
         </div>
+
       )}
     </>
   );

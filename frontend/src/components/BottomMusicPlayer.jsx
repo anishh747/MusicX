@@ -155,8 +155,8 @@ function BottomMusicPlayer() {
         const add = await addToFavourites({ songId, userId }).unwrap();
       }
       setCurrentSongIsFavourite(!currentSongIsFavourite);
-    }else{
-      
+    } else {
+
     }
   };
 
@@ -180,13 +180,13 @@ function BottomMusicPlayer() {
     fetchFavourites();
   }, [userInfo, currentSong]);
 
-  useEffect(()=>{
-    if(mute){
-      audioRef.current.volume=0;
-    }else{
-      audioRef.current.volume=volume;
+  useEffect(() => {
+    if (mute) {
+      audioRef.current.volume = 0;
+    } else {
+      audioRef.current.volume = volume;
     }
-  },[mute])
+  }, [mute])
 
   return (
     <>
@@ -197,7 +197,7 @@ function BottomMusicPlayer() {
         onEnded={handleAfterSongEnds}
       />
 
-      <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 fixed w-screen bottom-0 right-0 z-40">
+      <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 fixed w-screen bottom-0 right-0 z-40 ">
         <div className="left-player flex flex-row items-center gap-4">
           <img
             ref={songAvatarRef}
