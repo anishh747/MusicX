@@ -197,14 +197,17 @@ function BottomMusicPlayer() {
         onEnded={handleAfterSongEnds}
       />
 
-      <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 fixed w-screen bottom-0 right-0 z-40 ">
+      <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 fixed w-screen bottom-0 right-0 z-40">
+
+
         <div className="left-player flex flex-row items-center gap-4">
+          {/* Display the song image in the bottom bar */}
           <img
             ref={songAvatarRef}
             className="song-avatar w-[6rem] h-[6rem] rounded-full"
-            src="https://img.fruugo.com/product/2/42/492286422_max.jpg"
+            src={currentSong?.item?.image[2].link || "https://img.fruugo.com/product/2/42/492286422_max.jpg"}
             alt="Song thumbnail"
-          ></img>
+          />
           <div className="song-info">
             <p className="song-title">{currentSong?.item?.name}</p>
             <p className="song-artist">{currentSong?.item?.primaryArtists}</p>
