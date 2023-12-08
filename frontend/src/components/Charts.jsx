@@ -40,8 +40,8 @@ const Charts = () => {
       ) : (
         <div>
           <section className="mt-12 mx-auto px-4 max-w-screen-xl md:px-8">
-            <h1 className="text-2xl px-28">Top Charts</h1>
-            <div className="bot px-28 space-x-4">
+            <h1 className="text-2xl">Top Charts</h1>
+            <div className="bot space-x-4">
               {chartsData.map((items, key) => (
                 <article
                   key={key}

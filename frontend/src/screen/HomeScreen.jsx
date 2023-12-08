@@ -4,10 +4,10 @@ import Charts from "../components/Charts";
 
 const HomeScreen = () => {
   return (
-    <>
+    <div>
       <TrendingCard />
       <Charts />
-    </>
+    </div>
   );
 };
 

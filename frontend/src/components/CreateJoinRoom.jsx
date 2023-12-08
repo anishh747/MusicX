@@ -5,37 +5,46 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from 'react-redux';
+import { setRoomData } from '../slices/roomSlice'; 
 
 const CreateJoinRoom = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [inputRoomCode, setInputRoomCode] = useState('');
     const [createRoom, { data, isLoading, isError, isSuccess, error }] = useCreateRoomMutation();
     const [getRoomInfo] = useRoomInfoMutation();
-    const {userInfo} = useSelector((state) => state.auth);
+    const { userInfo } = useSelector((state) => state.auth);
 
     useEffect(() => {
         if(!userInfo){
             navigate('/login');   
         }
-        // console.log(userInfo?.rows[0]?.email);
     },[userInfo]);
 
     const handleCreateRoom = async () => {
-        try {
-            const room_id = uuidv4();
-            const create = await createRoom({ room_id, host: userInfo?.rows[0]?.email });
-            console.log(create);
-            navigate(`/room/${room_id}`)
-        } catch (error) {
-            console.log(error.message)
+        if (userInfo) {
+            try {
+                const room_id = uuidv4();
+                const create = await createRoom({ room_id, host: userInfo.email });
+                const response = await getRoomInfo(room_id);
+                dispatch(setRoomData({...response?.data?.rows[0]}));
+                navigate(`/room/${room_id}`)
+            } catch (error) {
+                console.log(error.message)
+            }   
         }
     };
-
+    
     const handleJoinRoom = async () => {
         try {
             const response = await getRoomInfo(inputRoomCode);
             if (response?.data?.rowCount === 1) {
                 console.log(response.data.rows[0]);
+                dispatch(setRoomData({...response?.data?.rows[0]}));
+                navigate(`/room/${inputRoomCode}`)
+
+                
             } else {
                 throw new Error("Invalid Room ID");
             }

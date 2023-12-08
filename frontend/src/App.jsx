@@ -14,30 +14,39 @@ import CreateJoinRoom from './components/CreateJoinRoom';
 import Room from './components/Room';
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useDispatch } from "react-redux";
+import { playPause } from "./slices/songPlayerSlice";
 
 function App() {
+  const dispatch = useDispatch();
   const shouldShowBottomPlayer = !["/login", "/register"].includes(
     window.location.pathname
   );
 
+  window.addEventListener('beforeunload', function (event) {
+    dispatch(playPause(false));
+  });
+  
+
   return (
     <>
       <BrowserRouter>
-        <Navbar />
-        <div className="container overflow-hidden mx-auto">
-          <Routes>
-            <Route exact path="/" element={<HomeScreen />} />
-            <Route exact path="/login" element={<Login />} />
-            <Route exact path="/register" element={<Register />} />
-            <Route exact path='/create-join' element={<CreateJoinRoom/>} />
-            <Route exact path='/room/:id' element={<Room/>} />
-            <Route exact path="/album/:id" element={<AlbumScreen />} />
-            <Route exact path="/playlist/:id" element={<PlaylistScreen />} />
-            <Route exact path="/artist/:id" element={<ArtistDetails />} />
-            <Route exact path="/search/q/:query" element={<SearchResult />} />
-          </Routes>
-          {shouldShowBottomPlayer && <BottomMusicPlayer />}
+        <div className="flex flex-row overflow-y-hidden">
+          <Navbar />
+          <div className="h-[100vh] overflow-x-scroll">
+            <Routes>
+              <Route exact path="/" element={<HomeScreen />} />
+              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/register" element={<Register />} />
+              <Route exact path='/create-join' element={<CreateJoinRoom />} />
+              <Route exact path='/room/:id' element={<Room />} />
+              <Route exact path="/album/:id" element={<AlbumScreen />} />
+              <Route exact path="/playlist/:id" element={<PlaylistScreen />} />
+              <Route exact path="/artist/:id" element={<ArtistDetails />} />
+              <Route exact path="/search/q/:query" element={<SearchResult />} />
+            </Routes>
+            {shouldShowBottomPlayer && <BottomMusicPlayer />}
+          </div>
         </div>
       </BrowserRouter>
       <ToastContainer />

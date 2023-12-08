@@ -20,7 +20,6 @@ const Login = () => {
     useEffect(() => {
         if (userInfo) {
             navigate('/')
-            console.log(userInfo)
         } else {
             console.log("No userInfo");
         }
@@ -30,7 +29,7 @@ const Login = () => {
         event.preventDefault()
         try {
             const res = await login({ email, password }).unwrap();
-            dispatch(setCredentials({ ...res }))
+            dispatch(setCredentials({ ...res.rows[0] }))
             navigate('/')
         } catch (err) {
             // toast.error(err?.data?.message || err.error)

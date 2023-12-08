@@ -61,8 +61,8 @@ const TrendingCard = () => {
         </div>
       ) : (
         <div className="bot ">
-          <h1 className="text-3xl pl-64 mt-3 ">Trending</h1>
           <section className="mt-12 mx-auto px-4 max-w-screen-xl md:px-8">
+          <h1 className="text-3xl mt-3 ">Trending</h1>
             <h1 className="text-2xl ">Songs</h1>
             <div className="card-swiper">
               <Swiper
