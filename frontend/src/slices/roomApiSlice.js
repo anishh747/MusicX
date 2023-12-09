@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-const ROOM_URL = 'http://localhost:5000/api/room';
+const ROOM_URL = 'https://music-x-backend.onrender.com/api/room';
 
 
 export const roomApiSlice = apiSlice.injectEndpoints({

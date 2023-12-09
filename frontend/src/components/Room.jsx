@@ -36,7 +36,7 @@ const Room = () => {
     }, [roomInfo, userInfo]);
 
     useEffect(() => {
-        const s = io("http://localhost:5001");
+        const s = io("https://music-x-backend.onrender.com");
         setSocket(s);
 
         return () => {

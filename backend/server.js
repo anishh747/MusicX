@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import { createServer } from "http";
 import userRoutes from "./routes/userRoutes.js";
 import musicRoutes from "./routes/musicRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js  ";
@@ -10,6 +11,7 @@ import { Server } from "socket.io";
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 const app = express();
+const httpServer = createServer(app);
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
@@ -18,11 +20,12 @@ app.use("/api/users", userRoutes);
 app.use("/api/music", musicRoutes);
 app.use("/api/room", roomRoutes);
 
-const io = new Server(5001, {
+const io = new Server(httpServer, {
     cors: {
         origin: "http://localhost:9000",
     },
 });
+
 
 io.on("connection", (socket) => {
 
@@ -47,12 +50,14 @@ io.on("connection", (socket) => {
     });
   });
 
-io.listen(5173);
+httpServer.listen(PORT, () => {
+    console.log(`Server started at port ${PORT}`);
+});
 
 app.get("/", (req, res) => {
     res.send("Server is ready");
 });
 
-app.listen(PORT, () => {
-    console.log("Server started");
-});
+// app.listen(PORT, () => {
+//     console.log("Server started");
+// });
