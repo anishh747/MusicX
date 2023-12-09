@@ -41,6 +41,12 @@ io.on("connection", (socket) => {
         socket.on('chatMessage',(data)=>{
             io.to(roomCode).emit("receiveChatMessage", data);
         });
+
+        // Listen for room ended by host
+        socket.on('endRoom',()=>{
+            console.log("Room Ended");
+            io.to(roomCode).emit('endRoom');
+        });
         
         // Message on disconnection
         socket.on('disconnect',()=>{

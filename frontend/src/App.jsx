@@ -14,11 +14,25 @@ import CreateJoinRoom from './components/CreateJoinRoom';
 import Room from './components/Room';
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch } from "react-redux";
-import { playPause } from "./slices/songPlayerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { playPause, setHost, setRoomMode } from "./slices/songPlayerSlice";
+import { useEffect } from "react";
 
 function App() {
   const dispatch = useDispatch();
+  const roomInfo = useSelector((state) => state.room.roomInfo);
+  const { userInfo } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if(roomInfo){
+      dispatch(setRoomMode(true));
+    }
+    if(userInfo?.email === roomInfo?.host_email) {
+      dispatch(setHost(true));
+    }
+  }, [roomInfo]);
+
+
   const shouldShowBottomPlayer = !["/login", "/register"].includes(
     window.location.pathname
   );

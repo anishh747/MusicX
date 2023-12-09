@@ -119,6 +119,6 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, songPlayerSlice.reducer);
 
 
-export const {setCurrentSong,playPause,addToQueue,clearQueue,playPreviousSong,playNextSong} = songPlayerSlice.actions;
+export const {setCurrentSong,playPause,addToQueue,clearQueue,playPreviousSong,playNextSong,setHost,setRoomMode} = songPlayerSlice.actions;
 
 export default persistedReducer;

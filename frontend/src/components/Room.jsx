@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { io } from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearRoomData } from '../slices/roomSlice';
+import { setRoomMode, setHost } from '../slices/songPlayerSlice';
 import SingleMessage from "./Room/SingleMessage";
 import "./Room/ChatBox.css";
 
@@ -61,6 +62,11 @@ const Room = () => {
                 ]
                 );
             });
+
+            socket.on("endRoom", () => {
+                toast.info("Room Ended By Host");
+                handleLeaveRoom();
+            })
         }
         return () => {
             // Check if socket is not null before calling off method
@@ -74,13 +80,20 @@ const Room = () => {
 
 
     const handleEndRoom = async () => {
+        if (socket !== null) {
+            console.log("EMIT END ROOM")
+            socket.emit('endRoom', room_id);
+        }
         const endRoomQuery = await endRoom({ room_id });
         dispatch(clearRoomData());
+        dispatch(setRoomMode(false));
+        dispatch(setHost(false)); 
         navigate('/');
     }
 
     const handleLeaveRoom = async () => {
         dispatch(clearRoomData());
+        dispatch(setRoomMode(false));
         navigate('/');
     }
 
