@@ -10,6 +10,7 @@ import { clearRoomData } from '../slices/roomSlice';
 import { setRoomMode, setHost } from '../slices/songPlayerSlice';
 import SingleMessage from "./Room/SingleMessage";
 import "./Room/ChatBox.css";
+import socket from "../utils/socket";
 
 const Room = () => {
     const { id: room_id } = useParams();
@@ -18,7 +19,6 @@ const Room = () => {
     const [endRoom] = useEndRoomMutation();
     const [getRoomInfo] = useRoomInfoMutation();
     const navigate = useNavigate();
-    const [socket, setSocket] = useState(null);
     const [allMessages, setAllMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState("");
     const { userInfo } = useSelector((state) => state.auth);
@@ -36,14 +36,6 @@ const Room = () => {
         }
     }, [roomInfo, userInfo]);
 
-    useEffect(() => {
-        const s = io("https://music-x-backend.onrender.com");
-        setSocket(s);
-
-        return () => {
-            s.disconnect();
-        }
-    }, [])
 
     useEffect(() => {
         if (socket !== null) {

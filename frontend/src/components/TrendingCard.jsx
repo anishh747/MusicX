@@ -5,8 +5,8 @@ import {
 } from "../slices/songApiSlice";
 import { Link } from "react-router-dom";
 import { setCurrentSong } from "../slices/songPlayerSlice";
-import { useDispatch } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
@@ -17,6 +17,7 @@ import "../App.css";
 
 // import required modules
 import { Pagination } from "swiper/modules";
+import socket from "../utils/socket";
 
 const TrendingCard = () => {
   const [lang, setLanguage] = useState("english");
@@ -26,6 +27,8 @@ const TrendingCard = () => {
   const [fetchHomePageData, { isLoading }] = useHomePageDataMutation();
   const [fetchSongData] = useSongDataMutation();
   const dispatch = useDispatch();
+
+  const songPlayerInfo = useSelector((state) => state.songPlayer);
 
   async function fetchData() {
     try {
@@ -41,9 +44,16 @@ const TrendingCard = () => {
 
   async function handleSongClick(item) {
     try {
-      const response = await fetchSongData({ songId: item.id }).unwrap();
-      // console.log(response[0])
-      dispatch(setCurrentSong({ item: response[0] }));
+      if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
+        const response = await fetchSongData({ songId: item.id }).unwrap();
+        socket.emit("playSong", response[0])
+      } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
+        toast.error("You are not the host of the room");
+      } else {
+        const response = await fetchSongData({ songId: item.id }).unwrap();
+        // console.log({ item: response[0] })
+        dispatch(setCurrentSong({ item: response[0] }));
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -62,7 +72,7 @@ const TrendingCard = () => {
       ) : (
         <div className="bot ">
           <section className="mt-12 mx-auto px-4 max-w-screen-xl md:px-8">
-          <h1 className="text-3xl mt-3 ">Trending</h1>
+            <h1 className="text-3xl mt-3 ">Trending</h1>
             <h1 className="text-2xl ">Songs</h1>
             <div className="card-swiper">
               <Swiper

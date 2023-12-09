@@ -18,6 +18,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
 import { setCurrentSong, playPause, playNextSong, playPreviousSong } from "../slices/songPlayerSlice"
 import { useAddToFavouritesMutation, useRemoveFromFavouritesMutation, useGetFavouritesMutation } from "../slices/songApiSlice";
+import socket from "../utils/socket";
 
 function BottomMusicPlayer() {
   const [play, setPlay] = useState(false);
@@ -54,7 +55,7 @@ function BottomMusicPlayer() {
   useEffect(() => {
     if (currentSong !== undefined) {
       setplayingNow(currentSong?.item?.downloadUrl[4].link);
-      console.log(currentSong?.item);
+      // console.log(currentSong?.item);
     }
   }, [currentSong]);
 
@@ -187,6 +188,21 @@ function BottomMusicPlayer() {
       audioRef.current.volume = volume;
     }
   }, [mute])
+
+  useEffect(() => {
+    if (socket !== null) {
+      socket.on("playSong", (data) => {
+        dispatch(setCurrentSong({item: data}));
+      })
+    }
+    return () => {
+      // Check if socket is not null before calling off method
+      if (socket !== null) {
+        socket.off("message");
+        socket.off("receiveChatMessage");
+      }
+    }
+  }, [socket]);
 
   return (
     <>

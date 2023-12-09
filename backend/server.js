@@ -26,35 +26,33 @@ const io = new Server(httpServer, {
     },
 });
 
-
 io.on("connection", (socket) => {
-
-    console.log("a user connected");
-    
-    socket.on('joinRoomCode',(roomCode)=>{
+    socket.on("joinRoomCode", (roomCode) => {
         socket.join(roomCode);
-        
         // Send a message to all members in the room (including the sender)
-        io.to(roomCode).emit('message', 'A user has joined the room');
-        
+        io.to(roomCode).emit("message", "A user has joined the room");
+
         // Listen for chat messages
-        socket.on('chatMessage',(data)=>{
+        socket.on("chatMessage", (data) => {
             io.to(roomCode).emit("receiveChatMessage", data);
         });
 
         // Listen for room ended by host
-        socket.on('endRoom',()=>{
+        socket.on("endRoom", () => {
             console.log("Room Ended");
-            io.to(roomCode).emit('endRoom');
+            io.to(roomCode).emit("endRoom");
         });
-        
+
         // Message on disconnection
-        socket.on('disconnect',()=>{
-            io.to(roomCode).emit('message','A user has left the room');
+        socket.on("disconnect", () => {
+            io.to(roomCode).emit("message", "A user has left the room");
             console.log("A user Disconnected");
-      });
+        });
+        socket.on("playSong", (data) => {
+            io.to(roomCode).emit("playSong", data);
+        });
     });
-  });
+});
 
 httpServer.listen(PORT, () => {
     console.log(`Server started at port ${PORT}`);
