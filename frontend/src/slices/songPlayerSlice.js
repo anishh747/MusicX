@@ -24,28 +24,15 @@ const songPlayerSlice = createSlice({
     },
 
     playPause: (state, action) => {
-      if (state.roomMode === false) {
-        state.isPlaying = action.payload;
-      } else if (state.roomMode && state.isRoomHost) {
-        state.isPlaying = action.payload;
-      }
+      state.isPlaying = action.payload;
     },
 
     addToQueue: (state, action) => {
-      if (state.roomMode === false) {
-        state.songsQueue.push(action.payload);
-        if (state.currentIndex === -1) {
-          state.currentIndex++;
-          state.currentSong = state.songsQueue[state.currentIndex];
-          state.isPlaying = true;
-        }
-      } else if (state.roomMode && state.isRoomHost) {
-        state.songsQueue.push(action.payload);
-        if (state.currentIndex === -1) {
-          state.currentIndex++;
-          state.currentSong = state.songsQueue[state.currentIndex];
-          state.isPlaying = true;
-        }
+      state.songsQueue.push(action.payload);
+      if (state.currentIndex === -1) {
+        state.currentIndex++;
+        state.currentSong = state.songsQueue[state.currentIndex];
+        state.isPlaying = true;
       }
     },
 
@@ -57,41 +44,22 @@ const songPlayerSlice = createSlice({
     },
 
     playPreviousSong: (state) => {
-      if (state.roomMode === false) {
-        if (state.currentIndex > 0) {
-          state.isPlaying = false;
-          state.currentIndex--;
-          state.currentSong = state.songsQueue[state.currentIndex];
-          state.isPlaying = true;
-        }
-      } else if (state.roomMode && state.isRoomHost) {
-        if (state.currentIndex > 0) {
-          state.isPlaying = false;
-          state.currentIndex--;
-          state.currentSong = state.songsQueue[state.currentIndex];
-          state.isPlaying = true;
-        }
+      if (state.currentIndex > 0) {
+        state.isPlaying = false;
+        state.currentIndex--;
+        state.currentSong = state.songsQueue[state.currentIndex];
+        state.isPlaying = true;
       }
     },
 
     playNextSong: (state) => {
-      if (state.roomMode === false) {
-        if (state.currentIndex < state.songsQueue.length - 1) {
-          state.isPlaying = false;
-          state.currentIndex++;
-          state.currentSong = state.songsQueue[state.currentIndex];
-          state.isPlaying = true;
-        }
-      } else if (state.roomMode && state.isRoomHost) {
-        if (state.currentIndex < state.songsQueue.length - 1) {
-          state.isPlaying = false;
-          state.currentIndex++;
-          state.currentSong = state.songsQueue[state.currentIndex];
-          state.isPlaying = true;
-        }
+      if (state.currentIndex < state.songsQueue.length - 1) {
+        state.isPlaying = false;
+        state.currentIndex++;
+        state.currentSong = state.songsQueue[state.currentIndex];
+        state.isPlaying = true;
       }
     },
-
     setRoomMode: (state, action) => {
       state.roomMode = action.payload;
     },

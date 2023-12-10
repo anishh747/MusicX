@@ -8,7 +8,6 @@ import { setCurrentSong } from "../slices/songPlayerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Swiper, SwiperSlide } from "swiper/react";
-
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
@@ -17,18 +16,23 @@ import "../App.css";
 
 // import required modules
 import { Pagination } from "swiper/modules";
-import socket from "../utils/socket";
+import s from "../utils/socket";
 
 const TrendingCard = () => {
   const [lang, setLanguage] = useState("english");
   const [loading, setLoading] = useState(true);
   const [albumsData, setAlbumsData] = useState([]); // Use state to manage the data
   const [songsData, setSongsData] = useState([]);
+  const [socket, setSocket] = useState(null);
   const [fetchHomePageData, { isLoading }] = useHomePageDataMutation();
   const [fetchSongData] = useSongDataMutation();
   const dispatch = useDispatch();
 
   const songPlayerInfo = useSelector((state) => state.songPlayer);
+
+  useEffect(() => {
+    setSocket(s);
+  }, []);
 
   async function fetchData() {
     try {

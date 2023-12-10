@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-const USERS_URL = 'https://music-x-backend.onrender.com/api/users';
+const USERS_URL = `${import.meta.env.VITE_REACT_API_URL}/api/users`;
 
 
 export const usersApiSlice = apiSlice.injectEndpoints({

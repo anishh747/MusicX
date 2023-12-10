@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-const ROOM_URL = 'https://music-x-backend.onrender.com/api/room';
+const ROOM_URL = `${import.meta.env.VITE_REACT_API_URL}/api/room`;
 
 
 export const roomApiSlice = apiSlice.injectEndpoints({

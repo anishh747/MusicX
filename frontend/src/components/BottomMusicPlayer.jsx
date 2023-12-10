@@ -32,6 +32,7 @@ function BottomMusicPlayer() {
   const navigate = useNavigate();
   const audioRef = useRef(null);
   const songAvatarRef = useRef(null);
+  const songPlayerInfo = useSelector((state) => state.songPlayer);
   const currentSong = useSelector((state) => state.songPlayer.currentSong);
   const isPlaying = useSelector((state) => state.songPlayer.isPlaying);
   const progressBar = document.getElementById("progressBar");
@@ -55,7 +56,6 @@ function BottomMusicPlayer() {
   useEffect(() => {
     if (currentSong !== undefined) {
       setplayingNow(currentSong?.item?.downloadUrl[4].link);
-      // console.log(currentSong?.item);
     }
   }, [currentSong]);
 
@@ -65,7 +65,7 @@ function BottomMusicPlayer() {
     if (isPlaying === false) {
       audioRef.current.pause();
     }
-  }, [isPlaying, currentSong]);
+  }, [isPlaying]);
 
   useEffect(() => {
     if (playingNow !== null) {
@@ -97,7 +97,17 @@ function BottomMusicPlayer() {
   };
 
   const handlePlayPauseClick = () => {
-    dispatch(playPause(!play));
+    try {
+      if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
+        socket.emit("playPause")
+      } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
+        toast.error("You are not the host of the room");
+      } else {
+        dispatch(playPause(!play));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 
   const handleForwardSong = () => {
@@ -131,11 +141,31 @@ function BottomMusicPlayer() {
   }
 
   const handleNextSongClick = () => {
-    dispatch(playNextSong());
+    try {
+      if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
+        socket.emit("playNextSong")
+      } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
+        toast.error("You are not the host of the room");
+      } else {
+        dispatch(playNextSong());
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 
   const handlePreviousSongClick = () => {
-    dispatch(playPreviousSong());
+    try {
+      if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
+        socket.emit("playPreviousSong")
+      } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
+        toast.error("You are not the host of the room");
+      } else {
+        dispatch(playPreviousSong());
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 
   const handleAfterSongEnds = () => {
@@ -191,18 +221,39 @@ function BottomMusicPlayer() {
 
   useEffect(() => {
     if (socket !== null) {
-      socket.on("playSong", (data) => {
-        dispatch(setCurrentSong({item: data}));
-      })
+      const handlePlaySong = (data) => {
+        dispatch(setCurrentSong({ item: data }));
+      };
+  
+      const handlePlayPause = () => {
+        console.log("playPause socket");
+        console.log('Play:' + play);
+        dispatch(playPause(!play));
+      };
+  
+      const handlePlayNextSong = () => {
+        dispatch(playNextSong());
+      };
+  
+      const handlePlayPreviousSong = () => {
+        dispatch(playPreviousSong());
+      };
+  
+      socket.on("playSong", handlePlaySong);
+      socket.on("playPause", handlePlayPause);
+      socket.on("playNextSong", handlePlayNextSong);
+      socket.on("playPreviousSong", handlePlayPreviousSong);
+  
+      return () => {
+        // Clean up the event listeners when the component unmounts or when socket changes
+        socket.off("playSong", handlePlaySong);
+        socket.off("playPause", handlePlayPause);
+        socket.off("playNextSong", handlePlayNextSong);
+        socket.off("playPreviousSong", handlePlayPreviousSong);
+      };
     }
-    return () => {
-      // Check if socket is not null before calling off method
-      if (socket !== null) {
-        socket.off("message");
-        socket.off("receiveChatMessage");
-      }
-    }
-  }, [socket]);
+  }, [socket, dispatch, play, playNextSong, playPreviousSong, setCurrentSong]);
+  
 
   return (
     <>

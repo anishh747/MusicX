@@ -51,6 +51,22 @@ io.on("connection", (socket) => {
         socket.on("playSong", (data) => {
             io.to(roomCode).emit("playSong", data);
         });
+
+        socket.on("playPause", () => {
+            io.to(roomCode).emit("playPause");
+        });
+
+        socket.on("playNextSong", () => {
+            io.to(roomCode).emit("playNextSong");
+        });
+
+        socket.on("playPreviousSong", () => {
+            io.to(roomCode).emit("playPreviousSong");
+        });
+
+        socket.on("addToQueue", (data) => {
+            io.to(roomCode).emit("addToQueue", data);
+        });
     });
 });
 

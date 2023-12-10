@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-const MUSIC_URL = 'https://music-x-backend.onrender.com/api/music';
+const MUSIC_URL = `${import.meta.env.VITE_REACT_API_URL}/api/music`;
 
 
 export const songsApiSlice = apiSlice.injectEndpoints({

@@ -17,11 +17,24 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from "react-redux";
 import { playPause, setHost, setRoomMode } from "./slices/songPlayerSlice";
 import { useEffect } from "react";
+// import { io } from "socket.io-client";
+import s from "./utils/socket";
 
 function App() {
   const dispatch = useDispatch();
   const roomInfo = useSelector((state) => state.room.roomInfo);
   const { userInfo } = useSelector((state) => state.auth);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    setSocket(s);
+  }, []);
+
+  useEffect(() => {
+    if((socket !== null) && roomInfo){
+      socket.emit('joinRoomCode', roomInfo?.room_id);
+    }
+  }, [socket, roomInfo]);
 
   useEffect(() => {
     if(roomInfo){
@@ -40,7 +53,6 @@ function App() {
   window.addEventListener('beforeunload', function (event) {
     dispatch(playPause(false));
   });
-  
 
   return (
     <>

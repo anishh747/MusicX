@@ -4,17 +4,20 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearRoomData } from '../slices/roomSlice';
 import { setRoomMode, setHost } from '../slices/songPlayerSlice';
 import SingleMessage from "./Room/SingleMessage";
 import "./Room/ChatBox.css";
-import socket from "../utils/socket";
+import s from "../utils/socket";
+
+
 
 const Room = () => {
     const { id: room_id } = useParams();
     const [isHost, setIsHost] = useState(false);
+    const [socket, setSocket] = useState(null);
     const dispatch = useDispatch();
     const [endRoom] = useEndRoomMutation();
     const [getRoomInfo] = useRoomInfoMutation();
@@ -23,7 +26,7 @@ const Room = () => {
     const [inputMessage, setInputMessage] = useState("");
     const { userInfo } = useSelector((state) => state.auth);
     const roomInfo = useSelector((state) => state.room.roomInfo);
-
+    
     useEffect(() => {
         if (!userInfo) {
             navigate('/login');
@@ -35,16 +38,19 @@ const Room = () => {
             }
         }
     }, [roomInfo, userInfo]);
-
-
+    
+    useEffect(() => {
+        setSocket(s);
+    }, []);
+    
     useEffect(() => {
         if (socket !== null) {
             socket.emit('joinRoomCode', room_id);
-
+            
             socket.on("message", (message) => {
                 console.log(message);
             })
-
+            
             socket.on("receiveChatMessage", (data) => {
                 let updatedData = {};
                 updatedData = data;
@@ -86,6 +92,7 @@ const Room = () => {
     const handleLeaveRoom = async () => {
         dispatch(clearRoomData());
         dispatch(setRoomMode(false));
+        // socket.disconnect();
         navigate('/');
     }
 
