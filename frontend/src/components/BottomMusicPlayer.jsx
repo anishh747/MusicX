@@ -18,7 +18,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
 import { setCurrentSong, playPause, playNextSong, playPreviousSong } from "../slices/songPlayerSlice"
 import { useAddToFavouritesMutation, useRemoveFromFavouritesMutation, useGetFavouritesMutation } from "../slices/songApiSlice";
-import socket from "../utils/socket";
+import { io } from "socket.io-client";
+// import socket from "../utils/socket";
 
 function BottomMusicPlayer() {
   const [play, setPlay] = useState(false);
@@ -28,6 +29,7 @@ function BottomMusicPlayer() {
   const [currentProgressTime, setCurrentProgressTime] = useState("0:00");
   const [currentSongIsFavourite, setCurrentSongIsFavourite] = useState(false);
   const [playingNow, setplayingNow] = useState(null);
+  const [socket, setSocket] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const audioRef = useRef(null);
@@ -37,6 +39,7 @@ function BottomMusicPlayer() {
   const isPlaying = useSelector((state) => state.songPlayer.isPlaying);
   const progressBar = document.getElementById("progressBar");
   const { userInfo } = useSelector((state) => state.auth);
+  const roomInfo = useSelector((state) => state.room.roomInfo);
   const [addToFavourites] = useAddToFavouritesMutation();
   const [getFavourites] = useGetFavouritesMutation();
   const [removeFromFavourites] = useRemoveFromFavouritesMutation();
@@ -52,6 +55,18 @@ function BottomMusicPlayer() {
     return `${minutes}:${beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
       }`;
   }
+
+  useEffect(() => {
+    const s = io(import.meta.env.VITE_REACT_API_URL);
+    setSocket(s);
+  }, []);
+
+  useEffect(() => {
+    if((socket !== null) && roomInfo){
+      socket.emit('joinRoomCode', roomInfo?.room_id);
+    }
+  }, [socket, roomInfo]);
+
 
   useEffect(() => {
     if (currentSong !== undefined) {
@@ -264,14 +279,14 @@ function BottomMusicPlayer() {
         onEnded={handleAfterSongEnds}
       />
 
-      <div className="bottom-music-bar flex flex-row justify-around bg-gray-200 fixed w-screen bottom-0 right-0 z-40">
-
+      <div className="h-[6rem] bottom-music-bar flex flex-row justify-around bg-gray-200 fixed w-screen bottom-0 right-0 z-40">
+ 
 
         <div className="left-player flex flex-row items-center gap-4">
           {/* Display the song image in the bottom bar */}
           <img
             ref={songAvatarRef}
-            className="song-avatar w-[6rem] h-[6rem] rounded-full"
+            className="song-avatar w-[4.5rem] h-[4.5rem] rounded-full"
             src={currentSong?.item?.image[2].link || "https://img.fruugo.com/product/2/42/492286422_max.jpg"}
             alt="Song thumbnail"
           />

@@ -17,8 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { playPause, setHost, setRoomMode } from "./slices/songPlayerSlice";
 import { useEffect } from "react";
-// import { io } from "socket.io-client";
-import s from "./utils/socket";
+import { io } from "socket.io-client";
 import SearchBar from "./components/SearchBar";
 
 function App() {
@@ -28,6 +27,7 @@ function App() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
+    const s = io(import.meta.env.VITE_REACT_API_URL);
     setSocket(s);
   }, []);
 
@@ -59,7 +59,7 @@ function App() {
       <BrowserRouter>
         <div className="flex flex-row overflow-y-hidden">
           <Navbar />
-          <div className="h-[100vh] overflow-x-scroll">
+          <div className="h-[calc(100dvh-6rem)] overflow-x-scroll">
             <div className="main-container">
               <SearchBar />
               <Routes>

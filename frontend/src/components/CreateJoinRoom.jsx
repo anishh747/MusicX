@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch } from 'react-redux';
 import { setRoomData } from '../slices/roomSlice'; 
+import { clearQueue } from '../slices/songPlayerSlice';
 
 const CreateJoinRoom = () => {
     const navigate = useNavigate();
@@ -29,6 +30,7 @@ const CreateJoinRoom = () => {
                 const create = await createRoom({ room_id, host: userInfo.email });
                 const response = await getRoomInfo(room_id);
                 dispatch(setRoomData({...response?.data?.rows[0]}));
+                dispatch(clearQueue());
                 navigate(`/room/${room_id}`)
             } catch (error) {
                 console.log(error.message)
@@ -42,9 +44,8 @@ const CreateJoinRoom = () => {
             if (response?.data?.rowCount === 1) {
                 console.log(response.data.rows[0]);
                 dispatch(setRoomData({...response?.data?.rows[0]}));
+                dispatch(clearQueue());
                 navigate(`/room/${inputRoomCode}`)
-
-                
             } else {
                 throw new Error("Invalid Room ID");
             }

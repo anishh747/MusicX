@@ -16,9 +16,8 @@ import "swiper/css/navigation";
 
 import "../App.css";
 import "./TrendingCard/trendingCard.css";
-
-// import required modules
-import s from "../utils/socket";
+// import s from "../utils/socket";
+import { io } from "socket.io-client";
 
 const TrendingCard = () => {
   const [lang, setLanguage] = useState("english");
@@ -30,11 +29,20 @@ const TrendingCard = () => {
   const [fetchSongData] = useSongDataMutation();
   const dispatch = useDispatch();
 
+  const roomInfo = useSelector((state) => state.room.roomInfo);
   const songPlayerInfo = useSelector((state) => state.songPlayer);
 
   useEffect(() => {
+    const s = io(import.meta.env.VITE_REACT_API_URL);
     setSocket(s);
   }, []);
+
+  useEffect(() => {
+    if((socket !== null) && roomInfo){
+      socket.emit('joinRoomCode', roomInfo?.room_id);
+    }
+  }, [socket, roomInfo]);
+
 
   async function fetchData() {
     try {

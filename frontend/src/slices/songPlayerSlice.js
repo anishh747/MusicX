@@ -16,10 +16,13 @@ const songPlayerSlice = createSlice({
   initialState,
   reducers: {
     setCurrentSong: (state, action) => {
+      if (state.currentSong === action.payload) return;
+      const nextIndex = (state.currentIndex + 1) % 20;
+
+      state.songsQueue[nextIndex] = action.payload;
       state.isPlaying = false;
-      state.currentSong = action.payload;
-      state.currentIndex++;
-      state.songsQueue[state.currentIndex] = action.payload;
+      state.currentIndex = nextIndex;
+      state.currentSong = state.songsQueue[state.currentIndex];
       state.isPlaying = true;
     },
 
@@ -28,9 +31,11 @@ const songPlayerSlice = createSlice({
     },
 
     addToQueue: (state, action) => {
-      state.songsQueue.push(action.payload);
+      const nextIndex = (state.currentIndex + 1) % 20;
+      state.songsQueue[nextIndex] = action.payload;
+
       if (state.currentIndex === -1) {
-        state.currentIndex++;
+        state.currentIndex = nextIndex;
         state.currentSong = state.songsQueue[state.currentIndex];
         state.isPlaying = true;
       }
@@ -44,18 +49,18 @@ const songPlayerSlice = createSlice({
     },
 
     playPreviousSong: (state) => {
-      if (state.currentIndex > 0) {
+      if (state.currentIndex !== -1) {
         state.isPlaying = false;
-        state.currentIndex--;
+        state.currentIndex = (state.currentIndex + (state.songsQueue.length) - 1) % state.songsQueue.length;
         state.currentSong = state.songsQueue[state.currentIndex];
         state.isPlaying = true;
       }
     },
 
     playNextSong: (state) => {
-      if (state.currentIndex < state.songsQueue.length - 1) {
+      if (state.currentIndex < 19) {
         state.isPlaying = false;
-        state.currentIndex++;
+        state.currentIndex = (state.currentIndex + 1) % (state.songsQueue.length);
         state.currentSong = state.songsQueue[state.currentIndex];
         state.isPlaying = true;
       }

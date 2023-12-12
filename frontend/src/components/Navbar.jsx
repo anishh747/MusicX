@@ -91,107 +91,80 @@ const Navbar = () => {
     },
   ];
 
-  return (
-    <div className="h-[100vh]">
-      <nav className="lg:w-60 h-full border-r bg-gray-400 space-y-8 sm:w-80 -z-50">
-        <div class=" flex flex-col h-full">
-          <div className="h-20 flex items-center px-8">
-            <a href="javascript:void(0)" className="flex-none">
-              <img
-                src="https://floatui.com/logo.svg"
-                width={140}
-                className="mx-auto"
-              />
-            </a>
-          </div>
-          <div className="flex-1 flex flex-col h-full overflow-auto">
-            <ul className="px-4 text-sm font-medium flex-1">
-              {navigation.map((item, idx) => (
-                <li key={idx}>
-                  <Link
-                    to={item.href}
-                    className="flex items-center gap-x-2 text-gray-600 p-2 rounded-lg  hover:bg-gray-50 active:bg-gray-100 duration-150"
-                  >
-                    <div className="text-gray-500">{item.icon}</div>
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-              {roomInfo ? (
-                <Link
-                  to={`/room/${roomInfo.room_id}`}
-                  class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                >
-                  Go to Room
-                </Link>
-              ) : (
-                <Link
-                  to="create-join"
-                  class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                >
-                  Join Room
-                </Link>
-              )}
-              <li></li>
-            </ul>
-
-            <div>
-              <ul className="px-4 pb-4 text-sm font-medium">
-                {userInfo ? (
-                  <button
-                    onClick={handleLogoutButton}
-                    type="button"
-                    class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                  >
-                    Log Out
-                  </button>
-                ) : (
-                  <Link to="/login">
-                    <button
-                      type="button"
-                      class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900"
-                    >
-                      Sign In
-                    </button>
-                  </Link>
-                )}
-                {navsFooter.map((item, idx) => (
-                  <li key={idx}>
-                    <a
-                      href={item.href}
-                      className="flex items-center gap-x-2 text-gray-600 p-2 rounded-lg  hover:bg-gray-50 active:bg-gray-100 duration-150"
-                    >
-                      <div className="text-gray-500">{item.icon}</div>
-                      {item.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-              <div className="py-4 px-4 border-t">
-                <div className="flex items-center gap-x-4">
-                  <img
-                    src="https://randomuser.me/api/portraits/women/79.jpg"
-                    className="w-12 h-12 rounded-full"
-                  />
-                  <div>
-                    <span className="block text-gray-700 text-sm font-semibold">
-                      Alivika tony
-                    </span>
-                    <a
-                      href="javascript:void(0)"
-                      className="block mt-px text-gray-600 hover:text-indigo-600 text-xs"
-                    >
-                      View profile
-                    </a>
-                  </div>
+    return (
+        <div className="h-[calc(100dvh-6rem)]">
+            <nav
+                className="lg:w-60 h-full border-r bg-gray-400 space-y-8 sm:w-80 -z-50">
+                <div class=" flex flex-col h-full">
+                    <div className='h-20 flex items-center px-8'>
+                        <a href='javascript:void(0)' className='flex-none'>
+                            <img src="https://floatui.com/logo.svg" width={140} className="mx-auto" />
+                        </a>
+                    </div>
+                    <div className="flex-1 flex flex-col h-full overflow-auto">
+                        <ul className="px-4 text-sm font-medium flex-1">
+                            {
+                                navigation.map((item, idx) => (
+                                    <li key={idx}>
+                                        <Link to={item.href} className="flex items-center gap-x-2 text-gray-600 p-2 rounded-lg  hover:bg-gray-50 active:bg-gray-100 duration-150">
+                                            <div className="text-gray-500">{item.icon}</div>
+                                            {item.name}
+                                        </Link>
+                                    </li>
+                                ))
+                            }
+                            {
+                                roomInfo? (
+                                    <Link to={`/room/${roomInfo.room_id}`} class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Go to Room</Link>
+                                ):(
+                                    <Link to='create-join' class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Join Room</Link>
+                                )
+                            }
+                            <li>
+                            </li>
+                        </ul>
+                        <div>
+                            <ul className="px-4 pb-4 text-sm font-medium">
+                                {
+                                    userInfo ? (
+                                        <button onClick={handleLogoutButton} type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Log Out</button>
+                                    ) : (
+                                        <Link to='/login'>
+                                            <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">Sign In</button>
+                                        </Link>
+                                    )
+                                }
+                                {
+                                    navsFooter.map((item, idx) => (
+                                        <li key={idx}>
+                                            <a href={item.href} className="flex items-center gap-x-2 text-gray-600 p-2 rounded-lg  hover:bg-gray-50 active:bg-gray-100 duration-150">
+                                                <div className="text-gray-500">{item.icon}</div>
+                                                {item.name}
+                                            </a>
+                                        </li>
+                                    ))
+                                }
+                            </ul>
+                            <div className="py-4 px-4 border-t">
+                                <div className="flex items-center gap-x-4">
+                                    <img src="https://randomuser.me/api/portraits/women/79.jpg" className="w-12 h-12 rounded-full" />
+                                    <div>
+                                        <span className="block text-gray-700 text-sm font-semibold">Alivika tony</span>
+                                        <a
+                                            href="javascript:void(0)"
+                                            className="block mt-px text-gray-600 hover:text-indigo-600 text-xs"
+                                        >
+                                            View profile
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div >
                 </div>
-              </div>
-            </div>
-          </div>
+            </nav>
         </div>
-      </nav>
-    </div>
-  );
+    );
 };
 
 export default Navbar;
