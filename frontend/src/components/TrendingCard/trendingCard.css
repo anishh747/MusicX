@@ -1,0 +1,57 @@
+
+/* .trending-card-container {} */
+
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: linear-gradient(90deg,#000000, #434343);
+
+    border-radius: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    transition: transform 0.5s;
+}
+
+/* .swiper-slide:hover{
+    transform: scale(1.01);
+} */
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-swiper {
+    width: 100%;
+}
+
+.swiper-caption {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.swiper-caption h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.swiper-gap {
+    margin-top: 20px;
+}
+
+.full-text{
+    color: white;
+}
+/* .swiper-container {} */

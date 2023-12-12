@@ -7,6 +7,7 @@ import {
 import { Link } from "react-router-dom";
 import { setCurrentSong } from "../slices/songPlayerSlice";
 import { useDispatch } from "react-redux";
+import "./Charts/charts.css";
 
 const Charts = () => {
   const [lang, setLanguage] = useState("english");
@@ -38,33 +39,33 @@ const Charts = () => {
           <h1>LOADING</h1>
         </div>
       ) : (
-        <div>
-          <section className="mt-12 mx-auto px-4 max-w-screen-xl md:px-8">
-            <h1 className="text-2xl">Top Charts</h1>
-            <div className="bot space-x-4">
+        <div className="charts-container">
+          <div className="px-4">
+            <div className="container-title">
+              <h1 className="text-3xl font-bold mb-4">Top Charts</h1>
+            </div>
+            <div className="grid grid-cols-4 lg-grid-cols-4 gap-10">
               {chartsData.map((items, key) => (
-                <article
-                  key={key}
-                  className="max-w-xl mx-auto mt-4 flex shadow-lg border rounded-md duration-300 hover:shadow-sm w-screen"
-                >
-                  <Link to={`playlist/${items.id}`} className="flex">
+                <article key={key} className="chart-card">
+                  <Link to={`playlist/${items.id}`} className="flex flex-col">
                     <img
                       src={items.image[2].link}
                       loading="lazy"
                       alt={items.image[2].link}
-                      className="w-1/3 h-24 rounded-l-md ml-4"
+                      className="w-full h-32 object-cover mb-2" // Adjusted height here
                     />
-                    <div className="flex-1 p-4">
-                      <h3 className="text-xl text-gray-900">{items.title}</h3>
+                    <div className="card-info">
+                      <h3 className="text-lg font-semibold text-center">
+                        {items.title}
+                      </h3>
                       {/* Additional information can be added here */}
                     </div>
                   </Link>
                 </article>
               ))}
             </div>
-          </section>
+          </div>
         </div>
-
       )}
     </>
   );
