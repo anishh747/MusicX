@@ -1,7 +1,6 @@
-import React from "react";
-import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./SearchBar/searchBar.css";
 
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -9,20 +8,18 @@ const SearchBar = () => {
 
   return (
     <>
-      <div className="px-4 text-sm font-medium flex-1">
+      <div className="search-bar">
         <form
           onSubmit={(event) => {
             event.preventDefault();
             navigate(`/search/q/${searchQuery}`);
           }}
-          className="flex items-center space-x-2 rounded-md p-2"
+          className="search-form"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 flex-none text-gray-300"
-            fill="none"
+            className="search-icon"
             viewBox="0 0 24 24"
-            stroke="currentColor"
           >
             <path
               strokeLinecap="round"
@@ -32,7 +29,7 @@ const SearchBar = () => {
             />
           </svg>
           <input
-            className="w-full outline-none appearance-none placeholder-gray-500 text-gray-500 sm:w-auto"
+            className="search-input"
             type="text"
             placeholder="Search"
             value={searchQuery}

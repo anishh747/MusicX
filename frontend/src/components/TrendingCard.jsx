@@ -38,11 +38,10 @@ const TrendingCard = () => {
   }, []);
 
   useEffect(() => {
-    if((socket !== null) && roomInfo){
-      socket.emit('joinRoomCode', roomInfo?.room_id);
+    if (socket !== null && roomInfo) {
+      socket.emit("joinRoomCode", roomInfo?.room_id);
     }
   }, [socket, roomInfo]);
-
 
   async function fetchData() {
     try {
@@ -180,6 +179,7 @@ const TrendingCard = () => {
                         {items.artists[0].name}
                       </p>
                     </div>
+                    <div className="play-button"></div>
                   </div>
                 </Link>
               </SwiperSlide>

@@ -18,9 +18,9 @@
     transition: transform 0.5s;
 }
 
-/* .swiper-slide:hover{
-    transform: scale(1.01);
-} */
+.swiper-slide:hover{
+    cursor: pointer;
+}
 
 .swiper-slide img {
     display: block;
@@ -55,3 +55,4 @@
     color: white;
 }
 /* .swiper-container {} */
+

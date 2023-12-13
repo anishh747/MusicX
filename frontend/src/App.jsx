@@ -59,7 +59,7 @@ function App() {
       <BrowserRouter>
         <div className="flex flex-row overflow-y-hidden">
           <Navbar />
-          <div className="h-[calc(100dvh-6rem)] overflow-x-scroll">
+          <div className="play-screen h-[calc(100dvh-6rem)] overflow-x-hidden">
             <div className="main-container">
               <SearchBar />
               <Routes>
