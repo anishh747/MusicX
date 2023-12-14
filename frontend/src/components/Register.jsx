@@ -34,7 +34,7 @@ const Register = () => {
         } else {
             try {
                 const res = await register({ email, name, password }).unwrap();
-                dispatch(setCredentials({ ...res }))
+                dispatch(setCredentials({ ...res.rows[0] }))
                 navigate('/')
             } catch (error) {
                 toast.error(err?.data?.message || err.error)

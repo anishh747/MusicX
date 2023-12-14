@@ -19,17 +19,25 @@ import { playPause, setHost, setRoomMode } from "./slices/songPlayerSlice";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 import SearchBar from "./components/SearchBar";
+import NowPlaying from "./components/NowPlaying";
 
 function App() {
   const dispatch = useDispatch();
   const roomInfo = useSelector((state) => state.room.roomInfo);
   const { userInfo } = useSelector((state) => state.auth);
+  const songPlayerInfo = useSelector((state) => state.songPlayer);
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     const s = io(import.meta.env.VITE_REACT_API_URL);
     setSocket(s);
   }, []);
+
+  useEffect(() => {
+    if(songPlayerInfo.nowPlayingView){
+
+    }
+  }, [songPlayerInfo.nowPlayingView]);
 
   useEffect(() => {
     if (socket !== null && roomInfo) {
@@ -82,9 +90,10 @@ function App() {
                 />
               </Routes>
             </div>
-            {shouldShowBottomPlayer && <BottomMusicPlayer />}
           </div>
+              <NowPlaying display={songPlayerInfo.nowPlayingView ? ("block"):("hidden")}/>
         </div>
+            {shouldShowBottomPlayer && <BottomMusicPlayer />}
       </BrowserRouter>
       <ToastContainer />
     </>

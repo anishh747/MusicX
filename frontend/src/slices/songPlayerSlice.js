@@ -9,6 +9,7 @@ const initialState = {
   currentSong: null,
   roomMode: false,
   isRoomHost: false,
+  nowPlayingView: false,
 };
 
 const songPlayerSlice = createSlice({
@@ -72,6 +73,10 @@ const songPlayerSlice = createSlice({
     setHost: (state, action) => {
       state.isRoomHost = action.payload;
     },
+
+    isNowPlayingView: (state, action) => {
+      state.nowPlayingView = action.payload;
+    },
   },
 });
 
@@ -91,6 +96,7 @@ export const {
   playNextSong,
   setHost,
   setRoomMode,
+  isNowPlayingView
 } = songPlayerSlice.actions;
 
 export default persistedReducer;

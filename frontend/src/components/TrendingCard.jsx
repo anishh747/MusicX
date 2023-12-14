@@ -110,11 +110,11 @@ const TrendingCard = () => {
                   />
                   <div className="pt-3 ml-4 mr-2 mb-3">
                     <h3 className="text-xl text-white-900">
-                      {items.name.length > 18 ? (
+                      {items.name.length > 12 ? (
                         <span
                           className="full-text"
                           dangerouslySetInnerHTML={{
-                            __html: `${items.name.slice(0, 18)}...`,
+                            __html: `${items.name.slice(0, 12)}...`,
                           }}
                         />
                       ) : (
@@ -122,7 +122,7 @@ const TrendingCard = () => {
                           className="full-text"
                           dangerouslySetInnerHTML={{
                             __html: items.name,
-                          }}
+                          }}  
                         />
                       )}
                     </h3>

@@ -13,13 +13,13 @@ import {
   AiOutlineForward,
   AiOutlineBackward,
 } from "react-icons/ai";
+import { LuMonitorPlay } from "react-icons/lu";
 import { FiRepeat } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
-import { setCurrentSong, playPause, playNextSong, playPreviousSong } from "../slices/songPlayerSlice"
+import { setCurrentSong, playPause, playNextSong, playPreviousSong, isNowPlayingView } from "../slices/songPlayerSlice"
 import { useAddToFavouritesMutation, useRemoveFromFavouritesMutation, useGetFavouritesMutation } from "../slices/songApiSlice";
 import { io } from "socket.io-client";
-// import socket from "../utils/socket";
 
 function BottomMusicPlayer() {
   const [play, setPlay] = useState(false);
@@ -29,6 +29,7 @@ function BottomMusicPlayer() {
   const [currentProgressTime, setCurrentProgressTime] = useState("0:00");
   const [currentSongIsFavourite, setCurrentSongIsFavourite] = useState(false);
   const [playingNow, setplayingNow] = useState(null);
+  const [nowPlayingView, setNowPlayingView] = useState(false);
   const [socket, setSocket] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,6 +44,10 @@ function BottomMusicPlayer() {
   const [addToFavourites] = useAddToFavouritesMutation();
   const [getFavourites] = useGetFavouritesMutation();
   const [removeFromFavourites] = useRemoveFromFavouritesMutation();
+
+  useEffect(() => {
+    setNowPlayingView(songPlayerInfo.nowPlayingView);
+  }, [songPlayerInfo.nowPlayingView]);
 
   function songDurationToTime(duration) {
     if (duration === undefined) {
@@ -194,7 +199,7 @@ function BottomMusicPlayer() {
     else if (currentSong !== null) {
       setCurrentSongIsFavourite(!currentSongIsFavourite)
       let songId = currentSong?.item?.id;
-      let userId = userInfo?.rows[0]?.id;
+      let userId = userInfo?.id;
       if (currentSongIsFavourite) {
         const remove = await removeFromFavourites({ songId, userId }).unwrap();
       } else {
@@ -210,7 +215,7 @@ function BottomMusicPlayer() {
     setCurrentSongIsFavourite(false);
     async function fetchFavourites() {
       if (userInfo) {
-        let userId = userInfo.rows[0].id;
+        let userId = userInfo?.id;
         const favourites = await getFavourites(userId).unwrap();
         console.log(currentSong?.item?.id);
         if (currentSong !== null) {
@@ -347,6 +352,13 @@ function BottomMusicPlayer() {
         </div>
 
         <div className="right-player flex flex-row items-center">
+          {
+            nowPlayingView ? (
+              <LuMonitorPlay onClick={()=>dispatch(isNowPlayingView(!nowPlayingView))} className="text-3xl mr-4 text-green-600" />
+              ):(
+                <LuMonitorPlay onClick={()=>dispatch(isNowPlayingView(!nowPlayingView))} className="text-3xl mr-4" />
+            )
+          }
           <div
             className="text-3xl"
             onClick={() => {
