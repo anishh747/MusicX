@@ -4,6 +4,7 @@ import { createServer } from "http";
 import userRoutes from "./routes/userRoutes.js";
 import musicRoutes from "./routes/musicRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js  ";
+import userPlaylistRoutes from "./routes/userPlaylistRoutes.js  ";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { Server } from "socket.io";
@@ -19,6 +20,7 @@ app.use(cookieParser());
 app.use("/api/users", userRoutes);
 app.use("/api/music", musicRoutes);
 app.use("/api/room", roomRoutes);
+app.use("/api/userplaylist", userPlaylistRoutes);
 
 const io = new Server(httpServer, {
     cors: {
