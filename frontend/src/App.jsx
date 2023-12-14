@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { io } from "socket.io-client";
 import SearchBar from "./components/SearchBar";
 import NowPlaying from "./components/NowPlaying";
+import Favourites from "./components/Favourites";
 
 function App() {
   const dispatch = useDispatch();
@@ -88,6 +89,7 @@ function App() {
                   path="/search/q/:query"
                   element={<SearchResult />}
                 />
+                <Route exact path="/favourites" element={<Favourites />} />
               </Routes>
             </div>
           </div>
