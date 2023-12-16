@@ -18,6 +18,8 @@ import "../App.css";
 import "./TrendingCard/trendingCard.css";
 // import s from "../utils/socket";
 import { io } from "socket.io-client";
+import { FaPlayCircle } from "react-icons/fa";
+
 
 const TrendingCard = () => {
   const [lang, setLanguage] = useState("english");
@@ -28,6 +30,14 @@ const TrendingCard = () => {
   const [fetchHomePageData, { isLoading }] = useHomePageDataMutation();
   const [fetchSongData] = useSongDataMutation();
   const dispatch = useDispatch();
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
+  const handleMouseEnter = (index) => {
+    setHoveredIndex(index);
+  };
+  const handleMouseLeave = () => {
+    setHoveredIndex(null);
+  };
 
   const roomInfo = useSelector((state) => state.room.roomInfo);
   const songPlayerInfo = useSelector((state) => state.songPlayer);
@@ -101,7 +111,8 @@ const TrendingCard = () => {
             {/* Map through songsData */}
             {songsData.map((items, key) => (
               <SwiperSlide key={key} className="swiper-slide">
-                <div className="card" onClick={() => handleSongClick(items)}>
+                <div className="card" onClick={() => handleSongClick(items)} onMouseEnter={() => handleMouseEnter(key)}
+                    onMouseLeave={() => handleMouseLeave(key)}>
                   <img
                     src={items.image[2].link}
                     loading="lazy"
@@ -129,6 +140,13 @@ const TrendingCard = () => {
                     <p className="text-gray-400 text-sm mt-1">
                       {items.primaryArtists[0].name}
                     </p>
+                    {hoveredIndex === key && (
+                      <div className="play-overlay">
+                        <button onClick={() => handleSongClick(items)}>
+                          <FaPlayCircle className="play-button" />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </SwiperSlide>
@@ -151,12 +169,21 @@ const TrendingCard = () => {
               <SwiperSlide key={key} className="swiper-slide">
                 <Link to={`album/${items.id}`}>
                   <div className="card">
-                    <img
-                      src={items.image[2].link}
-                      loading="lazy"
-                      alt={items.image[2].link}
-                      className="w-full h-48 rounded-t-md"
-                    />
+                  <div>
+                      <img
+                        src={items.image[2].link}
+                        loading="lazy"
+                        alt={items.image[2].link}
+                        className="w-full h-48 rounded-t-md"
+                      />
+                      {hoveredIndex === key && (
+                        <div className="play-overlay">
+                          <button onClick={() => handleSongClick(items)}>
+                            <FaPlayCircle className="play-button" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
                     <div className="pt-3 ml-4 mr-2 mb-3">
                       <h3 className="text-xl text-white-900">
                         {items.name.length > 18 ? (
