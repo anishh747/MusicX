@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
 import { useLogoutMutation } from "../slices/usersApiSlice";
 import "./Navbar/navbar.css";
+import { MdPlaylistAdd } from "react-icons/md";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -19,6 +20,16 @@ const Navbar = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -50,6 +61,44 @@ const Navbar = () => {
           </ul>
         </div>
 
+        <div className="playlist-content">
+          <div className="playlist-caption">
+            <h2>My playlists</h2>
+            <button className="text-2xl" onClick={openModal}>
+              <MdPlaylistAdd />
+            </button>
+            {isModalOpen && (
+              <div className="modal-content">
+                <span className="close" onClick={closeModal}>
+                  &times;
+                </span>
+                <h3>Create Playlist</h3>
+                <form>
+                  <label htmlFor="playlistName">Playlist Name:</label>
+                  <input
+                    type="text"
+                    id="playlistName"
+                    name="playlistName"
+                    placeholder="Enter playlist name"
+                  />
+                  <div className="button-container">
+                    <button type="submit">Submit</button>
+                    <button type="button" onClick={closeModal}>
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </div>
+          <div className="playlist-list">
+            <ul>
+              <li>playlist 1</li>
+              <li>playlist 2</li>
+            </ul>
+          </div>
+        </div>
+
         <div className="bottom-content">
           <ul>
             <li className="nav-link">
@@ -74,7 +123,7 @@ const Navbar = () => {
             />
             <div>
               <span>Alivika Tony</span>
-              <a href="javascript:void(0)">View profile</a>
+              <a href="">View profile</a>
             </div>
           </div>
         </div>
