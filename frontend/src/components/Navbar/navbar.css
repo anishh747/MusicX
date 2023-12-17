@@ -1,6 +1,6 @@
 .sidebar {
     height: calc(100vh - 6rem);
-    width: 16rem;
+    width: 320px;
     border-right: 1px solid #cbd5e0;
     background: linear-gradient(#000428,#004e92);
     display: flex;

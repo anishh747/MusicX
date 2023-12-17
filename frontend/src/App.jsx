@@ -36,8 +36,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if(songPlayerInfo.nowPlayingView){
-
+    if (songPlayerInfo.nowPlayingView) {
     }
   }, [songPlayerInfo.nowPlayingView]);
 
@@ -95,9 +94,11 @@ function App() {
               </Routes>
             </div>
           </div>
-              <NowPlaying display={songPlayerInfo.nowPlayingView ? ("block"):("hidden")}/>
+          <NowPlaying
+            display={songPlayerInfo.nowPlayingView ? "block" : "hidden"}
+          />
         </div>
-            {shouldShowBottomPlayer && <BottomMusicPlayer />}
+        {shouldShowBottomPlayer && <BottomMusicPlayer />}
       </BrowserRouter>
       <ToastContainer />
     </>

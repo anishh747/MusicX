@@ -83,42 +83,42 @@ const AlbumScreen = () => {
       ) : (
         <div>
           <div className="max-w-2xl mx-auto px-4">
-            <FaCirclePlay
+            {/* <FaCirclePlay
               onClick={handleBigPlayButton}
               className="text-6xl text-green-500 mx-auto hover:cursor-pointer"
-            />
+            /> */}
             <div className="items-start justify-between sm:flex">
-              <div>
-                <h4 className="text-gray-800 text-xl font-semibold">Songs</h4>
-              </div>
+              <h4 className="text-white-800 text-xl py-8 font-semibold">
+                Songs
+              </h4>
             </div>
-            <ul className="mt-12 divide-y">
+            <ul className="album-song-container">
+              <li className="album-song-list">
+                <div>
+                  <h3>S.N.</h3>
+                  <div className="mx-8">
+                    <span>Song Name</span>
+                  </div>
+                </div>
+                <div>
+                  <h3>Song Duration</h3>
+                </div>
+              </li>
               {data.songs.map((item, idx) => (
-                <li
-                  key={idx}
-                  className="py-5 flex items-start justify-between hover:bg-gray-400"
-                >
+                <li key={idx} className="album-song-list">
                   <div
                     onClick={() => {
                       handleOnClick(item);
                     }}
-                    className="flex gap-3 my-auto"
                   >
                     <h3>{idx + 1}</h3>
-                    <img
-                      src={item.image[2].link}
-                      className="flex-none w-12 h-12"
-                    />
+                    <img src={item.image[2].link} />
                     <div>
-                      <span className="block text-sm text-gray-700 font-semibold">
-                        {item.name}
-                      </span>
-                      <span className="block text-sm text-gray-600">
-                        {item.primaryArtists}
-                      </span>
+                      <span>{item.name}</span>
+                      <span>{item.primaryArtists}</span>
                     </div>
                   </div>
-                  <div className="flex justify-center items-center gap-4 my-auto">
+                  <div>
                     <h3>{songDurationToTime(item.duration)}</h3>
                     <Options index={idx} song={item} />
                   </div>
