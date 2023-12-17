@@ -21,6 +21,7 @@ import { io } from "socket.io-client";
 import SearchBar from "./components/SearchBar";
 import NowPlaying from "./components/NowPlaying";
 import Favourites from "./components/Favourites";
+import MyPlaylist from "./components/MyPlaylist";
 
 function App() {
   const dispatch = useDispatch();
@@ -68,7 +69,7 @@ function App() {
       <BrowserRouter>
         <div className="flex flex-row overflow-y-hidden">
           <Navbar />
-          <div className="play-screen h-[calc(100dvh-6rem)] overflow-x-hidden">
+          <div className="play-screen h-[calc(100dvh-6rem)] w-[100%] overflow-x-hidden">
             <div className="main-container">
               <SearchBar />
               <Routes>
@@ -78,6 +79,7 @@ function App() {
                 <Route exact path="/create-join" element={<CreateJoinRoom />} />
                 <Route exact path="/room/:id" element={<Room />} />
                 <Route exact path="/album/:id" element={<AlbumScreen />} />
+                <Route exact path="/myPlaylist/:id" element={<MyPlaylist />} />
                 <Route
                   exact
                   path="/playlist/:id"

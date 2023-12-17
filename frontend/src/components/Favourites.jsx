@@ -28,7 +28,7 @@ const Favourites = () => {
                 const response = await fetchFavourites(userInfo.id).unwrap();
                 for (let index = 0; index < response.length; index++) {
                     getSongData(response[index].song_id)
-                }   
+                }
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching data:", error);

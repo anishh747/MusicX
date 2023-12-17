@@ -3,15 +3,21 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
 import { useLogoutMutation } from "../slices/usersApiSlice";
+import { useGetPlaylistsMutation, useCreatePlaylistMutation } from "../slices/playlistApiSlice";
 import "./Navbar/navbar.css";
 import { MdPlaylistAdd } from "react-icons/md";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [playlistName, setPlaylistName] = useState("");
+  const [userPlaylists, setUserPlaylists] = useState();
+  const [fetchPlaylistsData] = useGetPlaylistsMutation();
+  const [createPlaylist] = useCreatePlaylistMutation();
   const { userInfo } = useSelector((state) => state.auth);
   const [logoutMutation] = useLogoutMutation();
   const roomInfo = useSelector((state) => state.room.roomInfo);
+
   const handleLogoutButton = async () => {
     try {
       await logoutMutation().unwrap();
@@ -21,6 +27,19 @@ const Navbar = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const playlistResponse = await fetchPlaylistsData(userInfo.id).unwrap();
+        setUserPlaylists(playlistResponse.rows);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -32,6 +51,16 @@ const Navbar = () => {
     setModalOpen(false);
   };
 
+  const submitCreatePlaylist = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await createPlaylist({ playlistName,userId: userInfo.id }).unwrap();
+      console.log(res);
+      closeModal();
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div className="sidebar">
       <div className="logo">
@@ -73,13 +102,15 @@ const Navbar = () => {
                   &times;
                 </span>
                 <h3>Create Playlist</h3>
-                <form>
+                <form onSubmit={submitCreatePlaylist}>
                   <label htmlFor="playlistName">Playlist Name:</label>
                   <input
                     type="text"
                     id="playlistName"
                     name="playlistName"
                     placeholder="Enter playlist name"
+                    value={playlistName}
+                    onChange={(e) => setPlaylistName(e.target.value)}
                   />
                   <div className="button-container">
                     <button type="submit">Submit</button>
@@ -93,8 +124,13 @@ const Navbar = () => {
           </div>
           <div className="playlist-list">
             <ul>
-              <li>playlist 1</li>
-              <li>playlist 2</li>
+              {
+                userPlaylists && userPlaylists.map((item) => (
+                  <li key={item.playlist_id}>
+                    <Link to={`myPlaylist/${item.playlist_id}`}>{item.title}</Link>
+                  </li>
+                ))
+              }
             </ul>
           </div>
         </div>

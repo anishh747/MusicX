@@ -4,12 +4,15 @@ import {
   useAlbumsDataMutation,
   useSongDataMutation,
 } from "../slices/songApiSlice";
+import { useGetPlaylistsMutation, useAddSongToPlaylistMutation } from "../slices/playlistApiSlice";
 import {
   setCurrentSong,
   playPause,
   addToQueue,
   playNextSong,
 } from "../slices/songPlayerSlice";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from "react-redux";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { FaCirclePlay } from "react-icons/fa6";
@@ -19,15 +22,21 @@ const AlbumScreen = () => {
   const { id: albumId } = useParams();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
+  const [userPlaylists, setUserPlaylists] = useState();
   const [fetchAlbumsData, { isLoading }] = useAlbumsDataMutation();
   const [fetchSongData] = useSongDataMutation();
+  const [fetchPlaylistsData] = useGetPlaylistsMutation();
+  const [addSongToPlaylist] = useAddSongToPlaylistMutation();
   const dispatch = useDispatch();
   const songPlayerInfo = useSelector((state) => state.songPlayer);
+  const { userInfo } = useSelector((state) => state.auth);
 
   async function fetchData() {
     try {
       const response = await fetchAlbumsData({ albumId }).unwrap();
       setData(response);
+      const playlistResponse = await fetchPlaylistsData(userInfo.id).unwrap();
+      setUserPlaylists(playlistResponse.rows);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -48,6 +57,7 @@ const AlbumScreen = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
 
   const handleOnClick = async (item) => {
     try {
@@ -84,6 +94,16 @@ const AlbumScreen = () => {
     }
     dispatch(playNextSong());
   };
+
+  const handleAddToPlaylist = async (playlist, item) => {
+    try {
+      const response = await addSongToPlaylist({ songId: item.id, playlistId: playlist.playlist_id }).unwrap();
+      console.log(response);
+      toast.success("Song added to playlist");
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <>
@@ -129,40 +149,11 @@ const AlbumScreen = () => {
                   </div>
                   <div className="flex justify-center items-center gap-4 my-auto">
                     <h3>{songDurationToTime(item.duration)}</h3>
-
-                    {/* <BiDotsHorizontalRounded
-                      onClick={() => {
-                        handleTripleDotClick(idx);
-                      }}
-                      className=" text-2xl text-black-500"
-                    />
-
-                    <ul
-                      className={`dropdown-ul-${idx} bg-white lg:absolute lg:border lg:rounded-md lg:text-sm lg:w-52 lg:shadow-md lg:space-y-0 lg:mt-0 hidden`}
-                    >
-                      <li>
-                        <button
-                          onClick={() => {
-                            handleAddToQueue(item);
-                          }}
-                          className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5"
-                        >
-                          Add to Queue
-                        </button>
-                        <button className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5">
-                          Add to Playlist
-                        </button>
-                        <button className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5">
-                          Add to Favourites
-                        </button>
-                      </li>
-                    </ul> */}
-
-                    <div class="dropdown">
+                    <div className="dropdown">
                       <button>
-                        <BiDotsHorizontalRounded className=" text-2xl text-black-500" />
+                        <BiDotsHorizontalRounded key={idx} className=" text-2xl text-black-500" />
                       </button>
-                      <div class="dropdown-content">
+                      <div className="dropdown-content">
                         <button
                           onClick={() => {
                             handleAddToQueue(item);
@@ -177,9 +168,17 @@ const AlbumScreen = () => {
                         <button className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5">
                           <div className="playlist-dropdown">
                             Add to Playlist
-                            <div class="playlist-dropdown-content">
-                              <button>p1</button>
-                              <button>p1</button>
+                            <div className="playlist-dropdown-content">
+                              {
+                                userPlaylists?.map((playlist) => (
+                                  <p key={idx}
+                                    onClick={()=>handleAddToPlaylist(playlist, item)}
+                                    className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5"
+                                  >
+                                    {playlist.title}
+                                  </p>
+                                ))
+                              }
                             </div>
                           </div>
                         </button>
