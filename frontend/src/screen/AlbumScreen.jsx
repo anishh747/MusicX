@@ -4,7 +4,7 @@ import {
   useAlbumsDataMutation,
   useSongDataMutation,
 } from "../slices/songApiSlice";
-import { useGetPlaylistsMutation, useAddSongToPlaylistMutation } from "../slices/playlistApiSlice";
+import { useGetPlaylistsMutation } from "../slices/playlistApiSlice";
 import {
   setCurrentSong,
   playPause,
@@ -12,31 +12,25 @@ import {
   playNextSong,
 } from "../slices/songPlayerSlice";
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
-import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { FaCirclePlay } from "react-icons/fa6";
-import "./albumScreen.css";
+import Options from "../components/Options/Options";
 
 const AlbumScreen = () => {
   const { id: albumId } = useParams();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
-  const [userPlaylists, setUserPlaylists] = useState();
   const [fetchAlbumsData, { isLoading }] = useAlbumsDataMutation();
   const [fetchSongData] = useSongDataMutation();
   const [fetchPlaylistsData] = useGetPlaylistsMutation();
-  const [addSongToPlaylist] = useAddSongToPlaylistMutation();
   const dispatch = useDispatch();
   const songPlayerInfo = useSelector((state) => state.songPlayer);
-  const { userInfo } = useSelector((state) => state.auth);
 
   async function fetchData() {
     try {
       const response = await fetchAlbumsData({ albumId }).unwrap();
       setData(response);
-      const playlistResponse = await fetchPlaylistsData(userInfo.id).unwrap();
-      setUserPlaylists(playlistResponse.rows);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -58,7 +52,6 @@ const AlbumScreen = () => {
     fetchData();
   }, []);
 
-
   const handleOnClick = async (item) => {
     try {
       if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
@@ -76,34 +69,12 @@ const AlbumScreen = () => {
     }
   };
 
-  const handleTripleDotClick = (key) => {
-    for (let index = 0; index < data.songs.length; index++) {
-      document.querySelector(`.dropdown-ul-${index}`).classList.add("hidden");
-    }
-    document.querySelector(`.dropdown-ul-${key}`).classList.toggle("hidden");
-  };
-
-  const handleAddToQueue = (item) => {
-    console.log(item);
-    dispatch(addToQueue({ item }));
-  };
-
   const handleBigPlayButton = () => {
     for (let index = 0; index < data.songs.length; index++) {
       dispatch(addToQueue({ item: data.songs[index] }));
     }
     dispatch(playNextSong());
   };
-
-  const handleAddToPlaylist = async (playlist, item) => {
-    try {
-      const response = await addSongToPlaylist({ songId: item.id, playlistId: playlist.playlist_id }).unwrap();
-      console.log(response);
-      toast.success("Song added to playlist");
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
 
   return (
     <>
@@ -149,41 +120,7 @@ const AlbumScreen = () => {
                   </div>
                   <div className="flex justify-center items-center gap-4 my-auto">
                     <h3>{songDurationToTime(item.duration)}</h3>
-                    <div className="dropdown">
-                      <button>
-                        <BiDotsHorizontalRounded key={idx} className=" text-2xl text-black-500" />
-                      </button>
-                      <div className="dropdown-content">
-                        <button
-                          onClick={() => {
-                            handleAddToQueue(item);
-                          }}
-                          className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5"
-                        >
-                          Add to Queue
-                        </button>
-                        <button className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5">
-                          Add to Favourites
-                        </button>
-                        <button className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5">
-                          <div className="playlist-dropdown">
-                            Add to Playlist
-                            <div className="playlist-dropdown-content">
-                              {
-                                userPlaylists?.map((playlist) => (
-                                  <p key={idx}
-                                    onClick={()=>handleAddToPlaylist(playlist, item)}
-                                    className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5"
-                                  >
-                                    {playlist.title}
-                                  </p>
-                                ))
-                              }
-                            </div>
-                          </div>
-                        </button>
-                      </div>
-                    </div>
+                    <Options index={idx} song={item} />
                   </div>
                 </li>
               ))}
