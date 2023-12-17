@@ -52,13 +52,12 @@ const Charts = () => {
                       src={items.image[2].link}
                       loading="lazy"
                       alt={items.image[2].link}
-                      className="w-full h-32 object-cover mb-2" // Adjusted height here
+                      className="w-full h-32 object-cover mb-2"
                     />
                     <div className="card-info">
                       <h3 className="text-lg font-semibold text-center">
                         {items.title}
                       </h3>
-                      {/* Additional information can be added here */}
                     </div>
                   </Link>
                 </article>

@@ -4,6 +4,7 @@ import { useGetPlaylistSongsMutation } from "../slices/playlistApiSlice";
 import { useSongDataMutation } from "../slices/songApiSlice";
 import { setCurrentSong } from "../slices/songPlayerSlice";
 import { useDispatch } from "react-redux";
+import "../screen/screen.css";
 
 const MyPlaylist = () => {
   const { id: playlistId } = useParams();
@@ -63,39 +64,41 @@ const MyPlaylist = () => {
         ) : (
           <div>
             <div className="max-w-2xl mx-auto px-4">
-              <div className="items-start justify-between sm:flex">
-                <div>
-                  <h4 className="text-gray-800 text-xl font-semibold">Songs</h4>
-                </div>
+              <div className="album-name">
+                <h4 className="text-white-800 text-xl py-8 font-semibold">
+                  Songs
+                </h4>
               </div>
-              <ul className="mt-12 divide-y">
+              <ul className="album-song-container">
+                <li className="album-song-list">
+                  <div>
+                    <h3>S.N.</h3>
+                    <div className="mx-8">
+                      <span>Song Name</span>
+                    </div>
+                  </div>
+                  <div>
+                    <h3>Song Duration</h3>
+                  </div>
+                </li>
                 {data.map((item, idx) => (
-                  <li
-                    key={idx}
-                    className="py-5 flex items-start justify-between hover:bg-gray-400"
-                  >
+                  <li key={idx} className="album-song-list">
                     <div
                       onClick={() => {
                         handleOnClick(item);
                       }}
-                      className="flex gap-3 my-auto"
                     >
                       <h3>{idx + 1}</h3>
-                      <img
-                        src={item.image[2].link}
-                        className="flex-none w-12 h-12"
-                      />
+                      <img src={item.image[2].link} />
                       <div>
-                        <span className="block text-sm text-white-700 font-semibold">
+                        <span>
                           {item.name}
                           {item.song_id}
                         </span>
-                        <span className="block text-sm text-gray-600">
-                          {item.primaryArtists}
-                        </span>
+                        <span>{item.primaryArtists}</span>
                       </div>
                     </div>
-                    <div className="flex justify-center items-center gap-4 my-auto">
+                    <div>
                       <h3>{songDurationToTime(item.duration)}</h3>
                     </div>
                   </li>

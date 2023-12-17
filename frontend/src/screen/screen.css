@@ -1,0 +1,66 @@
+
+.text-green-500 {
+    color: #00cc00;
+}
+
+.album-name {
+    margin-top: 10px;
+}
+
+.album-song-container {
+    list-style: none;
+    padding: 0;
+    color: #fff;
+}
+
+.album-song-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 0;
+    transition: background-color 0.3s ease;
+}
+
+.album-song-list>div:first-child {
+    display: flex;
+    align-items: center;
+}
+
+.album-song-list h3 {
+    margin: 0;
+    padding-right: 10px;
+}
+
+.album-song-list img {
+    max-width: 50px;
+    max-height: 50px;
+    margin-right: 10px;
+}
+
+.album-song-list span {
+    display: block;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.album-song-list>div:last-child {
+    display: flex;
+    align-items: center;
+}
+
+.album-song-list svg {
+    font-size: 24px;
+    margin-right: 10px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.album-song-list:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+}
+
+.album-song-list svg:hover {
+    color: #00cc00;
+}
