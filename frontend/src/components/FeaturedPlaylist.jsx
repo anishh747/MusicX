@@ -1,8 +1,6 @@
 import React from "react";
 import { useRef, useState, useEffect } from "react";
-import {
-  useHomePageDataMutation,
-} from "../slices/songApiSlice";
+import { useHomePageDataMutation } from "../slices/songApiSlice";
 import { Link } from "react-router-dom";
 import "./Charts/charts.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,6 +9,7 @@ import { Pagination, Navigation, Scrollbar } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import "./TrendingCard/trendingCard.css";
 
 const FeaturedPlaylist = () => {
   const [lang, setLanguage] = useState("english");
@@ -45,25 +44,46 @@ const FeaturedPlaylist = () => {
             <div className="container-title">
               <h1 className="text-3xl font-bold mb-4">Featured Playlists</h1>
             </div>
-            <div className="grid grid-cols-4 lg-grid-cols-4 gap-10">
+            <Swiper
+              slidesPerView={5}
+              spaceBetween={30}
+              navigation={true}
+              modules={[Pagination, Navigation]}
+            >
               {featuredPlaylistData.map((items, key) => (
-                <article key={key} className="chart-card">
-                  <Link to={`playlist/${items.id}`} className="flex flex-col">
-                    <img
-                      src={items.image[2].link}
-                      loading="lazy"
-                      alt={items.image[2].link}
-                      className="w-full h-32 object-cover mb-2"
-                    />
-                    <div className="card-info">
-                      <h3 className="text-lg font-semibold text-center">
-                        {items.title}
-                      </h3>
+                <SwiperSlide key={key} className="swiper-slide">
+                  <Link to={`playlist/${items.id}`}>
+                    <div className="card">
+                      <img
+                        src={items.image[2].link}
+                        loading="lazy"
+                        alt={items.image[2].link}
+                        className="w-full h-32 object-cover mb-2"
+                      />
+                      <div className="full-text py-3">
+                        <h3>
+                          {items.title.length > 20 ? (
+                            <span
+                              className="full-text"
+                              dangerouslySetInnerHTML={{
+                                __html: `${items.title.slice(0, 20)}...`,
+                              }}
+                            />
+                          ) : (
+                            <span
+                              className="full-text"
+                              dangerouslySetInnerHTML={{
+                                __html: items.title,
+                              }}
+                            />
+                          )}
+                        </h3>
+                      </div>
                     </div>
                   </Link>
-                </article>
+                </SwiperSlide>
               ))}
-            </div>
+            </Swiper>
           </div>
         </div>
       )}

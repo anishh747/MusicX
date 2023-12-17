@@ -20,7 +20,6 @@ import "./TrendingCard/trendingCard.css";
 import { io } from "socket.io-client";
 import { FaPlayCircle } from "react-icons/fa";
 
-
 const TrendingCard = () => {
   const [lang, setLanguage] = useState("english");
   const [loading, setLoading] = useState(true);
@@ -111,8 +110,12 @@ const TrendingCard = () => {
             {/* Map through songsData */}
             {songsData.map((items, key) => (
               <SwiperSlide key={key} className="swiper-slide">
-                <div className="card" onClick={() => handleSongClick(items)} onMouseEnter={() => handleMouseEnter(key)}
-                    onMouseLeave={() => handleMouseLeave(key)}>
+                <div
+                  className="card"
+                  onClick={() => handleSongClick(items)}
+                  onMouseEnter={() => handleMouseEnter(key)}
+                  onMouseLeave={() => handleMouseLeave(key)}
+                >
                   <img
                     src={items.image[2].link}
                     loading="lazy"
@@ -133,7 +136,7 @@ const TrendingCard = () => {
                           className="full-text"
                           dangerouslySetInnerHTML={{
                             __html: items.name,
-                          }}  
+                          }}
                         />
                       )}
                     </h3>
@@ -169,7 +172,7 @@ const TrendingCard = () => {
               <SwiperSlide key={key} className="swiper-slide">
                 <Link to={`album/${items.id}`}>
                   <div className="card">
-                  <div>
+                    <div>
                       <img
                         src={items.image[2].link}
                         loading="lazy"
@@ -206,7 +209,6 @@ const TrendingCard = () => {
                         {items.artists[0].name}
                       </p>
                     </div>
-                    <div className="play-button"></div>
                   </div>
                 </Link>
               </SwiperSlide>
