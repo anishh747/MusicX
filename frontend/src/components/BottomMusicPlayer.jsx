@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import "./BottomMusicPlayer/BottomMusicPlayer.css";
 import {
   BsFillPlayFill,
   BsFillPauseFill,
@@ -14,11 +15,23 @@ import {
   AiOutlineBackward,
 } from "react-icons/ai";
 import { LuMonitorPlay } from "react-icons/lu";
-import { FiRepeat } from "react-icons/fi";
+import { FiRepeat, FiShuffle } from "react-icons/fi";
+import { PiShuffleBold } from "react-icons/pi";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from 'react-router-dom';
-import { setCurrentSong, playPause, playNextSong, playPreviousSong, isNowPlayingView } from "../slices/songPlayerSlice"
-import { useAddToFavouritesMutation, useRemoveFromFavouritesMutation, useGetFavouritesMutation } from "../slices/songApiSlice";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  setCurrentSong,
+  playPause,
+  playNextSong,
+  playPreviousSong,
+  isNowPlayingView,
+  toggleShuffle,
+} from "../slices/songPlayerSlice";
+import {
+  useAddToFavouritesMutation,
+  useRemoveFromFavouritesMutation,
+  useGetFavouritesMutation,
+} from "../slices/songApiSlice";
 import { io } from "socket.io-client";
 
 function BottomMusicPlayer() {
@@ -44,6 +57,7 @@ function BottomMusicPlayer() {
   const [addToFavourites] = useAddToFavouritesMutation();
   const [getFavourites] = useGetFavouritesMutation();
   const [removeFromFavourites] = useRemoveFromFavouritesMutation();
+  const isShuffleMode = useSelector((state) => state.songPlayer.isShuffleMode);
 
   useEffect(() => {
     setNowPlayingView(songPlayerInfo.nowPlayingView);
@@ -57,8 +71,9 @@ function BottomMusicPlayer() {
     const remainingSeconds = duration % 60;
     const beforeDecimal = remainingSeconds.toString().split(".")[0];
 
-    return `${minutes}:${beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
-      }`;
+    return `${minutes}:${
+      beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
+    }`;
   }
 
   useEffect(() => {
@@ -67,11 +82,10 @@ function BottomMusicPlayer() {
   }, []);
 
   useEffect(() => {
-    if((socket !== null) && roomInfo){
-      socket.emit('joinRoomCode', roomInfo?.room_id);
+    if (socket !== null && roomInfo) {
+      socket.emit("joinRoomCode", roomInfo?.room_id);
     }
   }, [socket, roomInfo]);
-
 
   useEffect(() => {
     if (currentSong !== undefined) {
@@ -100,7 +114,6 @@ function BottomMusicPlayer() {
         audioElement.pause();
         songAvatarImage.classList.remove("song-avatar-rotate");
       }
-
     }
   }, [play, playingNow, volume]);
 
@@ -119,7 +132,7 @@ function BottomMusicPlayer() {
   const handlePlayPauseClick = () => {
     try {
       if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
-        socket.emit("playPause")
+        socket.emit("playPause");
       } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
         toast.error("You are not the host of the room");
       } else {
@@ -128,7 +141,7 @@ function BottomMusicPlayer() {
     } catch (error) {
       console.error("Error:", error);
     }
-  }
+  };
 
   const handleForwardSong = () => {
     if (currentSong !== undefined) {
@@ -158,12 +171,12 @@ function BottomMusicPlayer() {
         audioRef.current.currentTime = updatedTime;
       }
     }
-  }
+  };
 
   const handleNextSongClick = () => {
     try {
       if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
-        socket.emit("playNextSong")
+        socket.emit("playNextSong");
       } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
         toast.error("You are not the host of the room");
       } else {
@@ -172,12 +185,12 @@ function BottomMusicPlayer() {
     } catch (error) {
       console.error("Error:", error);
     }
-  }
+  };
 
   const handlePreviousSongClick = () => {
     try {
       if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
-        socket.emit("playPreviousSong")
+        socket.emit("playPreviousSong");
       } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
         toast.error("You are not the host of the room");
       } else {
@@ -186,18 +199,21 @@ function BottomMusicPlayer() {
     } catch (error) {
       console.error("Error:", error);
     }
-  }
+  };
 
   const handleAfterSongEnds = () => {
     dispatch(playNextSong());
-  }
+  };
+
+  const handleToggleShuffle = () => {
+    dispatch(toggleShuffle());
+  };
 
   const toggleFavourite = async () => {
     if (!userInfo) {
-      navigate('/login')
-    }
-    else if (currentSong !== null) {
-      setCurrentSongIsFavourite(!currentSongIsFavourite)
+      navigate("/login");
+    } else if (currentSong !== null) {
+      setCurrentSongIsFavourite(!currentSongIsFavourite);
       let songId = currentSong?.item?.id;
       let userId = userInfo?.id;
       if (currentSongIsFavourite) {
@@ -207,7 +223,6 @@ function BottomMusicPlayer() {
       }
       setCurrentSongIsFavourite(!currentSongIsFavourite);
     } else {
-
     }
   };
 
@@ -237,33 +252,33 @@ function BottomMusicPlayer() {
     } else {
       audioRef.current.volume = volume;
     }
-  }, [mute])
+  }, [mute]);
 
   useEffect(() => {
     if (socket !== null) {
       const handlePlaySong = (data) => {
         dispatch(setCurrentSong({ item: data }));
       };
-  
+
       const handlePlayPause = () => {
         console.log("playPause socket");
-        console.log('Play:' + play);
+        console.log("Play:" + play);
         dispatch(playPause(!play));
       };
-  
+
       const handlePlayNextSong = () => {
         dispatch(playNextSong());
       };
-  
+
       const handlePlayPreviousSong = () => {
         dispatch(playPreviousSong());
       };
-  
+
       socket.on("playSong", handlePlaySong);
       socket.on("playPause", handlePlayPause);
       socket.on("playNextSong", handlePlayNextSong);
       socket.on("playPreviousSong", handlePlayPreviousSong);
-  
+
       return () => {
         // Clean up the event listeners when the component unmounts or when socket changes
         socket.off("playSong", handlePlaySong);
@@ -273,117 +288,150 @@ function BottomMusicPlayer() {
       };
     }
   }, [socket, dispatch, play, playNextSong, playPreviousSong, setCurrentSong]);
-  
 
   return (
     <>
-      <audio
-        ref={audioRef}
-        src={playingNow}
-        onTimeUpdate={handleTimeUpdate}
-        onEnded={handleAfterSongEnds}
-      />
+      <div>
+        <audio
+          ref={audioRef}
+          src={playingNow}
+          onTimeUpdate={handleTimeUpdate}
+          onEnded={handleAfterSongEnds}
+        />
 
-      <div className="h-[6rem] bottom-music-bar flex flex-row justify-around bg-gray-200 fixed w-screen bottom-0 right-0 z-40">
- 
+        <div className="bottom-music-bar">
+          <div className=" h-[6rem] bottom-music-bar flex flex-row justify-around bg-gray-200 fixed w-screen bottom-0 right-0 z-40">
+            <div className="left-player flex flex-row items-center gap-4">
+              {/* Display the song image in the bottom bar */}
+              <img
+                ref={songAvatarRef}
+                className="song-avatar w-[4.5rem] h-[4.5rem] rounded-full"
+                src={
+                  currentSong?.item?.image[2].link ||
+                  "https://img.fruugo.com/product/2/42/492286422_max.jpg"
+                }
+                alt="Song thumbnail"
+              />
+              <div className="song-info">
+                <p className="song-title">{currentSong?.item?.name}</p>
+                <p className="song-artist">
+                  {currentSong?.item?.primaryArtists}
+                </p>
+              </div>
+            </div>
 
-        <div className="left-player flex flex-row items-center gap-4">
-          {/* Display the song image in the bottom bar */}
-          <img
-            ref={songAvatarRef}
-            className="song-avatar w-[4.5rem] h-[4.5rem] rounded-full"
-            src={currentSong?.item?.image[2].link || "https://img.fruugo.com/product/2/42/492286422_max.jpg"}
-            alt="Song thumbnail"
-          />
-          <div className="song-info">
-            <p className="song-title">{currentSong?.item?.name}</p>
-            <p className="song-artist">{currentSong?.item?.primaryArtists}</p>
+            <div className="middle-player flex flex-col justify-between">
+              <div className="flex items-center justify-center py-4">
+                <div onClick={toggleFavourite} className="text-3xl mx-2">
+                  {currentSongIsFavourite ? (
+                    <AiFillHeart className="text-black" />
+                  ) : (
+                    <AiOutlineHeart className="text-black" />
+                  )}
+                </div>
+
+                <div
+                  onClick={handlePreviousSongClick}
+                  className="text-4xl mx-2"
+                >
+                  <BiSkipPrevious className="text-black" />
+                </div>
+
+                <div
+                  className="text-4xl cursor-pointer mx-2"
+                  onClick={handlePlayPauseClick}
+                >
+                  {play ? (
+                    <BsFillPauseFill className="text-black" />
+                  ) : (
+                    <BsFillPlayFill className="text-black" />
+                  )}
+                </div>
+
+                <div onClick={handleNextSongClick} className="text-4xl mx-2">
+                  <BiSkipNext className="text-black" />
+                </div>
+
+                {isShuffleMode ? (
+                  // Show this button when shuffle mode is enabled
+                  <div
+                    onClick={handleToggleShuffle}
+                    className="text-3xl mx-2 text-black font-bold"
+                  >
+                    <PiShuffleBold />
+                  </div>
+                ) : (
+                  // Show this button when shuffle mode is disabled
+                  <div
+                    onClick={handleToggleShuffle}
+                    className="text-3xl mx-2 text-black"
+                  >
+                    <FiRepeat />
+                  </div>
+                )}
+              </div>
+              <div className="musicProgressBar flex flex-row gap-2 justify-center items-center">
+                <div onClick={handleBackwardSong} className="text-3xl mx-2">
+                  <AiOutlineBackward className="text-black" />
+                </div>
+                <p>{currentProgressTime}</p>
+                <input
+                  id="progressBar"
+                  className="w-[40vw]"
+                  type="range"
+                  value={currentProgressBarTime}
+                  onChange={(e) => {
+                    const newTime =
+                      (e.target.value * audioRef.current.duration) / 100;
+                    audioRef.current.currentTime = newTime;
+                  }}
+                />
+                <p>{songDurationToTime(currentSong?.item?.duration)}</p>
+                <div onClick={handleForwardSong} className="text-3xl mx-2">
+                  <AiOutlineForward className="text-black" />
+                </div>
+              </div>
+            </div>
+
+            <div className="right-player flex flex-row items-center">
+              {nowPlayingView ? (
+                <LuMonitorPlay
+                  onClick={() => dispatch(isNowPlayingView(!nowPlayingView))}
+                  className="text-3xl mr-4 text-green-600"
+                />
+              ) : (
+                <LuMonitorPlay
+                  onClick={() => dispatch(isNowPlayingView(!nowPlayingView))}
+                  className="text-3xl mr-4"
+                />
+              )}
+              <div
+                className="text-3xl"
+                onClick={() => {
+                  setMute(!mute);
+                }}
+              >
+                {mute ? (
+                  <BsFillVolumeMuteFill className="text-black" />
+                ) : (
+                  <BsFillVolumeUpFill className="text-black" />
+                )}
+              </div>
+              <input
+                type="range"
+                className="volumeBar w-[100px]"
+                value={mute ? 0 : volume * 100}
+                onChange={(e) => {
+                  const newVolume = e.target.value / 100;
+                  setVolume(newVolume);
+                  setMute(false); // Unmute when adjusting volume
+                }}
+                disabled={mute}
+              />
+            </div>
           </div>
         </div>
-
-        <div className="middle-player flex flex-col justify-between">
-          <div className="flex items-center justify-center py-4">
-            <div onClick={toggleFavourite} className="text-3xl mx-2">
-              {currentSongIsFavourite ? (<AiFillHeart className="text-black" />) : (<AiOutlineHeart className="text-black" />)}
-            </div>
-
-            <div onClick={handlePreviousSongClick} className="text-4xl mx-2">
-              <BiSkipPrevious className="text-black" />
-            </div>
-
-            <div
-              className="text-4xl cursor-pointer mx-2"
-              onClick={handlePlayPauseClick}
-            >
-              {play ? (<BsFillPauseFill className="text-black" />) : (<BsFillPlayFill className="text-black" />)}
-
-            </div>
-
-            <div onClick={handleNextSongClick} className="text-4xl mx-2">
-              <BiSkipNext className="text-black" />
-            </div>
-
-            <div className="text-3xl mx-2">
-              <FiRepeat className="text-black" />
-            </div>
-          </div>
-
-          <div className="musicProgressBar flex flex-row gap-2 justify-center items-center">
-            <div onClick={handleBackwardSong} className="text-3xl mx-2">
-              <AiOutlineBackward className="text-black" />
-            </div>
-            <p>{currentProgressTime}</p>
-            <input
-              id="progressBar"
-              className="w-[40vw]"
-              type="range"
-              value={currentProgressBarTime}
-              onChange={(e) => {
-                const newTime =
-                  (e.target.value * audioRef.current.duration) / 100;
-                audioRef.current.currentTime = newTime;
-              }}
-            />
-            <p>{songDurationToTime(currentSong?.item?.duration)}</p>
-            <div onClick={handleForwardSong} className="text-3xl mx-2">
-              <AiOutlineForward className="text-black" />
-            </div>
-          </div>
         </div>
-
-        <div className="right-player flex flex-row items-center">
-          {
-            nowPlayingView ? (
-              <LuMonitorPlay onClick={()=>dispatch(isNowPlayingView(!nowPlayingView))} className="text-3xl mr-4 text-green-600" />
-              ):(
-                <LuMonitorPlay onClick={()=>dispatch(isNowPlayingView(!nowPlayingView))} className="text-3xl mr-4" />
-            )
-          }
-          <div
-            className="text-3xl"
-            onClick={() => {
-              setMute(!mute);
-            }}
-          >
-            {mute ? (
-              <BsFillVolumeMuteFill className="text-black" />
-            ) : (
-              <BsFillVolumeUpFill className="text-black" />
-            )}
-          </div>
-          <input
-            type="range"
-            className="volumeBar w-[100px]"
-            value={mute ? 0 : volume * 100}
-            onChange={(e) => {
-              const newVolume = e.target.value / 100;
-              setVolume(newVolume);
-              setMute(false); // Unmute when adjusting volume
-            }}
-            disabled={mute}
-          />
-        </div>
-      </div>
     </>
   );
 }

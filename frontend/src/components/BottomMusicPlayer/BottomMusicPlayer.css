@@ -1,0 +1,31 @@
+
+.bottom-music-player {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 40;
+  }
+  
+  .bottom-music-bar {
+    height: 6rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%; 
+  }
+
+  .left-player{
+    width: 20vw;
+    transform: translatex(2vw);
+  }
+
+  .middle-player{
+    transform: translateX(-5vw);
+  }
+
+  .img-avatar{
+    scale: 1.5;
+  }
+  
+
+  
