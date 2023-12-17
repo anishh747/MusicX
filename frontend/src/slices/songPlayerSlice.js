@@ -1,7 +1,9 @@
+// Import necessary libraries and modules
 import { createSlice } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
+// Initial state of the song player
 const initialState = {
   songsQueue: [],
   currentIndex: -1,
@@ -10,8 +12,10 @@ const initialState = {
   roomMode: false,
   isRoomHost: false,
   nowPlayingView: false,
+  isShuffleMode: false,
 };
 
+// Create a slice for the song player
 const songPlayerSlice = createSlice({
   name: "songPlayer",
   initialState,
@@ -52,20 +56,38 @@ const songPlayerSlice = createSlice({
     playPreviousSong: (state) => {
       if (state.currentIndex !== -1) {
         state.isPlaying = false;
-        state.currentIndex = (state.currentIndex + (state.songsQueue.length) - 1) % state.songsQueue.length;
+        state.currentIndex =
+          (state.currentIndex + state.songsQueue.length - 1) %
+          state.songsQueue.length;
         state.currentSong = state.songsQueue[state.currentIndex];
         state.isPlaying = true;
       }
     },
 
     playNextSong: (state) => {
-      if (state.currentIndex < 19) {
+      if (state.isShuffleMode) {
+        // If shuffle mode is enabled, play a random song
+        const randomIndex = Math.floor(Math.random() * state.songsQueue.length);
         state.isPlaying = false;
-        state.currentIndex = (state.currentIndex + 1) % (state.songsQueue.length);
+        state.currentIndex = randomIndex;
         state.currentSong = state.songsQueue[state.currentIndex];
         state.isPlaying = true;
+      } else {
+        // If shuffle mode is disabled, play the next song in the queue
+        if (state.currentIndex < 19) {
+          state.isPlaying = false;
+          state.currentIndex = (state.currentIndex + 1) % state.songsQueue.length;
+          state.currentSong = state.songsQueue[state.currentIndex];
+          state.isPlaying = true;
+        }
       }
     },
+
+    toggleShuffle: (state) => {
+      // Toggle the shuffle mode
+      state.isShuffleMode = !state.isShuffleMode;
+    },
+
     setRoomMode: (state, action) => {
       state.roomMode = action.payload;
     },
@@ -80,13 +102,16 @@ const songPlayerSlice = createSlice({
   },
 });
 
+// Configuration for persisting the state
 const persistConfig = {
   key: "songPlayer",
   storage,
 };
 
+// Create a persisted reducer
 const persistedReducer = persistReducer(persistConfig, songPlayerSlice.reducer);
 
+// Export actions
 export const {
   setCurrentSong,
   playPause,
@@ -96,7 +121,9 @@ export const {
   playNextSong,
   setHost,
   setRoomMode,
-  isNowPlayingView
+  isNowPlayingView,
+  toggleShuffle,
 } = songPlayerSlice.actions;
 
+// Export the persisted reducer
 export default persistedReducer;
