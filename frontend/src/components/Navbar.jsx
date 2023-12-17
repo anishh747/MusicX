@@ -30,11 +30,14 @@ const Navbar = () => {
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        const playlistResponse = await fetchPlaylistsData(userInfo.id).unwrap();
-        setUserPlaylists(playlistResponse.rows);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      if (userInfo) {
+        try {
+          const playlistResponse = await fetchPlaylistsData(userInfo.id).unwrap();
+          setUserPlaylists(playlistResponse.rows);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+
       }
     }
 
