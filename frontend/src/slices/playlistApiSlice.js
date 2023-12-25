@@ -44,7 +44,13 @@ export const playlistApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             })
         }),
+        getPlaylistName: builder.mutation({
+            query: (data) => ({    
+                url: `${PLAYLIST_URL}/getplaylistname/${data}`,
+                method: 'GET',
+            })
+        }),
     })
 })
 
-export const {useCreatePlaylistMutation ,useDeletePlaylistMutation, useGetPlaylistsMutation, useAddSongToPlaylistMutation, useRemoveSongFromPlaylistMutation, useGetPlaylistSongsMutation} = playlistApiSlice;
+export const {useCreatePlaylistMutation ,useDeletePlaylistMutation, useGetPlaylistsMutation, useAddSongToPlaylistMutation, useRemoveSongFromPlaylistMutation, useGetPlaylistSongsMutation, useGetPlaylistNameMutation} = playlistApiSlice;

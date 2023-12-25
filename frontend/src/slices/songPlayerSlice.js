@@ -21,28 +21,46 @@ const songPlayerSlice = createSlice({
   initialState,
   reducers: {
     setCurrentSong: (state, action) => {
-      if (state.currentSong === action.payload) return;
-      const nextIndex = (state.currentIndex + 1) % 20;
-
-      state.songsQueue[nextIndex] = action.payload;
-      state.isPlaying = false;
-      state.currentIndex = nextIndex;
-      state.currentSong = state.songsQueue[state.currentIndex];
-      state.isPlaying = true;
+      if (state?.currentSong?.item?.id !== action.payload.item.id) {
+        
+        const existingIndex = state.songsQueue.findIndex(
+          (song) => song.item.id === action.payload.item.id
+          );
+          
+          if (existingIndex !== -1) {
+            state.songsQueue.splice(existingIndex, 1);
+            state.currentIndex--;
+          }
+          
+        const nextIndex = (state.currentIndex + 1) % 20;
+        state.songsQueue[nextIndex] = action.payload;
+        state.isPlaying = false;
+        state.currentIndex = nextIndex;
+        state.currentSong = state.songsQueue[state.currentIndex];
+        state.isPlaying = true;
+      }
     },
 
     playPause: (state, action) => {
       state.isPlaying = action.payload;
     },
+    // console.log(action.payload.item.id);
 
     addToQueue: (state, action) => {
-      const nextIndex = (state.currentIndex + 1) % 20;
-      state.songsQueue[nextIndex] = action.payload;
+      if (state.songsQueue.length < 20) {
+        const existingIndex = state.songsQueue.findIndex(
+          (song) => song.item.id === action.payload.item.id
+        );
 
-      if (state.currentIndex === -1) {
-        state.currentIndex = nextIndex;
-        state.currentSong = state.songsQueue[state.currentIndex];
-        state.isPlaying = true;
+        if (existingIndex !== -1) {
+          state.songsQueue.splice(existingIndex, 1);
+        }
+        state.songsQueue.push(action.payload);
+        if (state.currentIndex === -1) {
+          state.currentIndex = 0;
+          state.currentSong = state.songsQueue[state.currentIndex];
+          state.isPlaying = true;
+        }
       }
     },
 
@@ -65,21 +83,11 @@ const songPlayerSlice = createSlice({
     },
 
     playNextSong: (state) => {
-      if (state.isShuffleMode) {
-        // If shuffle mode is enabled, play a random song
-        const randomIndex = Math.floor(Math.random() * state.songsQueue.length);
+      if (state.currentIndex < 19) {
         state.isPlaying = false;
-        state.currentIndex = randomIndex;
+        state.currentIndex = (state.currentIndex + 1) % state.songsQueue.length;
         state.currentSong = state.songsQueue[state.currentIndex];
         state.isPlaying = true;
-      } else {
-        // If shuffle mode is disabled, play the next song in the queue
-        if (state.currentIndex < 19) {
-          state.isPlaying = false;
-          state.currentIndex = (state.currentIndex + 1) % state.songsQueue.length;
-          state.currentSong = state.songsQueue[state.currentIndex];
-          state.isPlaying = true;
-        }
       }
     },
 
