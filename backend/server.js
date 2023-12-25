@@ -24,7 +24,7 @@ app.use("/api/userplaylist", userPlaylistRoutes);
 
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:9000",
+        origin: "*",
     },
 });
 

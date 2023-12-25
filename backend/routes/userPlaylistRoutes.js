@@ -1,5 +1,5 @@
 import express from "express";
-import {createPlaylist, deletePlaylist, getPlaylists, addSongToPlaylist, removeSongFromPlaylist, getPlaylistSongs} from "../controllers/userPlaylistController.js";
+import {createPlaylist, deletePlaylist, getPlaylists, addSongToPlaylist, removeSongFromPlaylist, getPlaylistSongs, getPlaylistTitle} from "../controllers/userPlaylistController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
@@ -15,5 +15,7 @@ router.post('/addsongtoplaylist',addSongToPlaylist);
 router.delete('/removesongfromplaylist',removeSongFromPlaylist);
 
 router.get('/getplaylistsongs/:playlistId',getPlaylistSongs);
+
+router.get('/getplaylistname/:playlistId',getPlaylistTitle);
 
 export default router;

@@ -81,8 +81,19 @@ const getPlaylistSongs = expressAsyncHandler(async(req,res) =>{
     }
 })
 
+const getPlaylistTitle = expressAsyncHandler(async(req,res) =>{
+    try {
+        const {playlistId} = req.params;
+        const getPlaylistTitle = await pool.query("SELECT * FROM user_playlists WHERE playlist_id = ($1)",[playlistId])
+        res.status(201);
+        res.json(getPlaylistTitle);
+    } catch (error) {
+        
+    }
+})
 
-export {createPlaylist, deletePlaylist, getPlaylists, addSongToPlaylist, removeSongFromPlaylist, getPlaylistSongs}
+
+export {createPlaylist, deletePlaylist, getPlaylists, addSongToPlaylist, removeSongFromPlaylist, getPlaylistSongs, getPlaylistTitle}
 
 // CREATE TABLE user_playlists (
 //     playlist_id SERIAL PRIMARY KEY,
