@@ -71,9 +71,12 @@ const AlbumScreen = () => {
 
   const handleBigPlayButton = () => {
     for (let index = 0; index < data.songs.length; index++) {
+      if (songPlayerInfo.songsQueue.length === 19) {
+        toast.info("Queue is full")
+        return;
+      }
       dispatch(addToQueue({ item: data.songs[index] }));
     }
-    dispatch(playNextSong());
   };
 
   return (
@@ -83,10 +86,10 @@ const AlbumScreen = () => {
       ) : (
         <div>
           <div className="max-w-2xl mx-auto px-4">
-            {/* <FaCirclePlay
+            <FaCirclePlay
               onClick={handleBigPlayButton}
               className="text-6xl text-green-500 mx-auto hover:cursor-pointer"
-            /> */}
+            />
             <div className="items-start justify-between sm:flex">
               <h4 className="text-white-800 text-xl py-8 font-semibold">
                 Songs

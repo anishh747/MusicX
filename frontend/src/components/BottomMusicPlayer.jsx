@@ -33,6 +33,10 @@ import {
   useGetFavouritesMutation,
 } from "../slices/songApiSlice";
 import { io } from "socket.io-client";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// import { useSocket } from '../utils/socketContext';
+import s from "../utils/socket";
 
 function BottomMusicPlayer() {
   const [play, setPlay] = useState(false);
@@ -44,6 +48,7 @@ function BottomMusicPlayer() {
   const [playingNow, setplayingNow] = useState(null);
   const [nowPlayingView, setNowPlayingView] = useState(false);
   const [socket, setSocket] = useState(null);
+  // const socket = useSocket();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const audioRef = useRef(null);

@@ -15,6 +15,8 @@ import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { FaCirclePlay } from "react-icons/fa6";
 import Options from "../components/Options/Options";
 import "./screen.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PlaylistScreen = () => {
   const { id: playlistId } = useParams();
@@ -67,23 +69,14 @@ const PlaylistScreen = () => {
     }
   };
 
-  const handleTripleDotClick = (key) => {
-    for (let index = 0; index < data.songs.length; index++) {
-      document.querySelector(`.dropdown-ul-${index}`).classList.add("hidden");
-    }
-    document.querySelector(`.dropdown-ul-${key}`).classList.toggle("hidden");
-  };
-
-  const handleAddToQueue = (item) => {
-    console.log(item);
-    dispatch(addToQueue({ item }));
-  };
-
   const handleBigPlayButton = () => {
     for (let index = 0; index < data.songs.length; index++) {
+      if (songPlayerInfo.songsQueue.length === 19) {
+        toast.info("Queue is full")
+        return;
+      }
       dispatch(addToQueue({ item: data.songs[index] }));
     }
-    dispatch(playNextSong());
   };
 
   return (
@@ -93,10 +86,10 @@ const PlaylistScreen = () => {
       ) : (
         <div>
           <div className="max-w-2xl mx-auto px-4">
-            {/* <FaCirclePlay
+            <FaCirclePlay
               onClick={handleBigPlayButton}
               className="text-6xl text-green-500 mx-auto hover:cursor-pointer"
-            /> */}
+            />
             <div className="album-name">
               <h4 className="text-white-800 text-xl py-8 font-semibold">
                 Songs

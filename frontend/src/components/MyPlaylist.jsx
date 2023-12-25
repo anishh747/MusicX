@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useGetPlaylistSongsMutation } from "../slices/playlistApiSlice";
+import { useGetPlaylistSongsMutation, useGetPlaylistNameMutation } from "../slices/playlistApiSlice";
 import { useSongDataMutation } from "../slices/songApiSlice";
 import { setCurrentSong } from "../slices/songPlayerSlice";
 import { useDispatch } from "react-redux";
@@ -8,10 +8,11 @@ import "../screen/screen.css";
 
 const MyPlaylist = () => {
   const { id: playlistId } = useParams();
-  const [playlistSongs, setPlaylistSongs] = useState();
+  const [playlistName, setPlaylistName] = useState("PLAYLIST NAME");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchPlaylistsData] = useGetPlaylistSongsMutation();
+  const [fetchPlaylistName] = useGetPlaylistNameMutation();
   const [fetchSongData] = useSongDataMutation();
   const dispatch = useDispatch();
 
@@ -35,8 +36,9 @@ const MyPlaylist = () => {
 
   async function fetchData() {
     try {
+      const fetchPlaylistNameResponse = await fetchPlaylistName(playlistId).unwrap();
+      setPlaylistName(fetchPlaylistNameResponse.rows[0].title);
       const playlistResponse = await fetchPlaylistsData(playlistId).unwrap();
-      // setPlaylistSongs(playlistResponse.rows);
       for (let index = 0; index < playlistResponse.rows.length; index++) {
         const response = await fetchSongData({
           songId: playlistResponse.rows[index].song_id,
@@ -44,7 +46,6 @@ const MyPlaylist = () => {
         let newObj = response[0];
         setData((prev) => [...prev, newObj]);
       }
-      console.log(playlistResponse.rows);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -53,8 +54,20 @@ const MyPlaylist = () => {
   }
 
   useEffect(() => {
+    setData([]);
     fetchData();
-  }, []);
+  }, [playlistId]);
+
+  const handleBigPlayButton = () => {
+    for (let index = 0; index < data.songs.length; index++) {
+      if (songPlayerInfo.songsQueue.length === 19) {
+        toast.info("Queue is full")
+        return;
+      }
+      dispatch(addToQueue({ item: data.songs[index] }));
+    }
+    dispatch(playNextSong());
+  };
 
   return (
     <>
@@ -66,9 +79,13 @@ const MyPlaylist = () => {
             <div className="max-w-2xl mx-auto px-4">
               <div className="album-name">
                 <h4 className="text-white-800 text-xl py-8 font-semibold">
-                  Songs
+                  {playlistName}
                 </h4>
               </div>
+              <FaCirclePlay
+              onClick={handleBigPlayButton}
+              className="text-6xl text-green-500 mx-auto hover:cursor-pointer"
+            />
               <ul className="album-song-container">
                 <li className="album-song-list">
                   <div>

@@ -20,12 +20,9 @@ import "./TrendingCard/trendingCard.css";
 import { io } from "socket.io-client";
 import { FaPlayCircle } from "react-icons/fa";
 
-const NewReleases = () => {
-  const [lang, setLanguage] = useState("english");
-  const [loading, setLoading] = useState(true);
-  const [newReleasesData, setNewReleasesData] = useState([]);
+const NewReleases = (props) => {
+  const [newReleasesData, setNewReleasesData] = useState(props.newReleases);
   const [socket, setSocket] = useState(null);
-  const [fetchHomePageData, { isLoading }] = useHomePageDataMutation();
   const [fetchSongData] = useSongDataMutation();
   const dispatch = useDispatch();
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -50,25 +47,6 @@ const NewReleases = () => {
     }
   }, [socket, roomInfo]);
 
-  async function fetchData() {
-    try {
-      const res = await fetchHomePageData({ lang }).unwrap();
-      setNewReleasesData(res.albums);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    console.log(newReleasesData);
-  }, [newReleasesData]);
-
   async function handleSongClick(item) {
     try {
       if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
@@ -88,68 +66,62 @@ const NewReleases = () => {
 
   return (
     <>
-      {loading ? (
-        <div className="loading">
-          <h1>LOADING</h1>
+      <div className="swiper-container px-3">
+        <div className="container-title">
+          <h1>New Releases</h1>
         </div>
-      ) : (
-        <div className="swiper-container px-3">
-          <div className="container-title">
-            <h1>New Releases</h1>
-          </div>
 
-          <Swiper
-            slidesPerView={5}
-            spaceBetween={30}
-            navigation={true}
-            modules={[Pagination, Navigation]}
-          >
-            {newReleasesData.map((items, key) => (
-              <SwiperSlide key={key} className="swiper-slide">
-                <div
-                  className="card"
-                  onClick={() => handleSongClick(items)}
-                  onMouseEnter={() => handleMouseEnter(key)}
-                  onMouseLeave={() => handleMouseLeave(key)}
-                >
-                  <img
-                    src={items.image[2].link}
-                    loading="lazy"
-                    alt={items.image[2].link}
-                    className="w-full h-48 rounded-t-md"
-                  />
-                  <div className="pt-3 ml-4 mr-2 mb-3">
-                    <h3 className="text-xl text-white-900">
-                      {items.name.length > 12 ? (
-                        <span
-                          className="full-text"
-                          dangerouslySetInnerHTML={{
-                            __html: `${items.name.slice(0, 12)}...`,
-                          }}
-                        />
-                      ) : (
-                        <span
-                          className="full-text py-3"
-                          dangerouslySetInnerHTML={{
-                            __html: items.name,
-                          }}
-                        />
-                      )}
-                    </h3>
-                    {hoveredIndex === key && (
-                      <div className="play-overlay">
-                        <button onClick={() => handleSongClick(items)}>
-                          <FaPlayCircle className="play-button" />
-                        </button>
-                      </div>
+        <Swiper
+          slidesPerView={5}
+          spaceBetween={30}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+        >
+          {newReleasesData.map((items, key) => (
+            <SwiperSlide key={key} className="swiper-slide">
+              <div
+                className="card"
+                onClick={() => handleSongClick(items)}
+                onMouseEnter={() => handleMouseEnter(key)}
+                onMouseLeave={() => handleMouseLeave(key)}
+              >
+                <img
+                  src={items.image[2].link}
+                  loading="lazy"
+                  alt={items.image[2].link}
+                  className="w-full h-48 rounded-t-md"
+                />
+                <div className="pt-3 ml-4 mr-2 mb-3">
+                  <h3 className="text-xl text-white-900">
+                    {items.name.length > 12 ? (
+                      <span
+                        className="full-text"
+                        dangerouslySetInnerHTML={{
+                          __html: `${items.name.slice(0, 12)}...`,
+                        }}
+                      />
+                    ) : (
+                      <span
+                        className="full-text py-3"
+                        dangerouslySetInnerHTML={{
+                          __html: items.name,
+                        }}
+                      />
                     )}
-                  </div>
+                  </h3>
+                  {hoveredIndex === key && (
+                    <div className="play-overlay">
+                      <button onClick={() => handleSongClick(items)}>
+                        <FaPlayCircle className="play-button" />
+                      </button>
+                    </div>
+                  )}
                 </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-      )}
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </>
   );
 };

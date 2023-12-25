@@ -19,29 +19,22 @@ import "./TrendingCard/trendingCard.css";
 // import s from "../utils/socket";
 import { io } from "socket.io-client";
 import { FaPlayCircle } from "react-icons/fa";
+// import { useSocket } from '../utils/socketContext';
 
-const TrendingCard = () => {
-  const [lang, setLanguage] = useState("english");
+
+const TrendingCard = (props) => {
   const [loading, setLoading] = useState(true);
-  const [albumsData, setAlbumsData] = useState([]); // Use state to manage the data
-  const [songsData, setSongsData] = useState([]);
+  const [albumsData, setAlbumsData] = useState(props.data.albums); // Use state to manage the data
+  const [songsData, setSongsData] = useState(props.data.songs);
   const [socket, setSocket] = useState(null);
-  const [fetchHomePageData, { isLoading }] = useHomePageDataMutation();
+  // const socket = useSocket();
   const [fetchSongData] = useSongDataMutation();
   const dispatch = useDispatch();
   const [hoveredIndex, setHoveredIndex] = useState(null);
-
-  const handleMouseEnter = (index) => {
-    setHoveredIndex(index);
-  };
-  const handleMouseLeave = () => {
-    setHoveredIndex(null);
-  };
-
   const roomInfo = useSelector((state) => state.room.roomInfo);
   const songPlayerInfo = useSelector((state) => state.songPlayer);
 
-  useEffect(() => {
+  useEffect(() => { 
     const s = io(import.meta.env.VITE_REACT_API_URL);
     setSocket(s);
   }, []);
@@ -52,21 +45,10 @@ const TrendingCard = () => {
     }
   }, [socket, roomInfo]);
 
-  async function fetchData() {
+  const handleSongClick = async (item) => {
     try {
-      const response = await fetchHomePageData({ lang }).unwrap();
-      setAlbumsData(response.trending.albums);
-      setSongsData(response.trending.songs);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleSongClick(item) {
-    try {
-      if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
+      if (songPlayerInfo?.roomMode && songPlayerInfo?.isRoomHost) {
+        console.log("host clicked");
         const response = await fetchSongData({ songId: item.id }).unwrap();
         socket.emit("playSong", response[0]);
       } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
@@ -79,56 +61,110 @@ const TrendingCard = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }
-
-  useEffect(() => {
-    fetchData();
-  }, [lang]);
+  };
 
   return (
     <>
-      {loading ? (
-        <div className="loading">
-          <h1>LOADING</h1>
+      <div className="swiper-container px-3">
+        <div className="container-title">
+          <h1>Trending</h1>
         </div>
-      ) : (
-        <div className="swiper-container px-3">
-          <div className="container-title">
-            <h1>Trending</h1>
-          </div>
 
-          <div className="swiper-caption">
-            <h2>Songs</h2>
-          </div>
+        <div className="swiper-caption">
+          <h2>Songs</h2>
+        </div>
 
-          <Swiper
-            slidesPerView={5}
-            spaceBetween={30}
-            navigation={true}
-            modules={[Pagination, Navigation]}
-          >
-            {/* Map through songsData */}
-            {songsData.map((items, key) => (
-              <SwiperSlide key={key} className="swiper-slide">
-                <div
-                  className="card"
-                  onClick={() => handleSongClick(items)}
-                  onMouseEnter={() => handleMouseEnter(key)}
-                  onMouseLeave={() => handleMouseLeave(key)}
-                >
-                  <img
-                    src={items.image[2].link}
-                    loading="lazy"
-                    alt={items.image[2].link}
-                    className="w-full h-48 rounded-t-md"
-                  />
+        <Swiper
+          slidesPerView={5}
+          spaceBetween={30}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+        >
+          {/* Map through songsData */}
+          {songsData.map((items, key) => (
+            <SwiperSlide key={key} className="swiper-slide">
+              <div
+                className="card"
+                onClick={() => handleSongClick(items)}
+              >
+                <img
+                  src={items.image[2].link}
+                  loading="lazy"
+                  alt={items.image[2].link}
+                  className="w-full h-48 rounded-t-md"
+                />
+                <div className="pt-3 ml-4 mr-2 mb-3">
+                  <h3 className="text-xl text-white-900">
+                    {items.name.length > 12 ? (
+                      <span
+                        className="full-text"
+                        dangerouslySetInnerHTML={{
+                          __html: `${items.name.slice(0, 12)}...`,
+                        }}
+                      />
+                    ) : (
+                      <span
+                        className="full-text"
+                        dangerouslySetInnerHTML={{
+                          __html: items.name,
+                        }}
+                      />
+                    )}
+                  </h3>
+                  <p className="text-gray-400 text-sm mt-1">
+                    {items.primaryArtists[0].name}
+                  </p>
+                  {hoveredIndex === key && (
+                    <div className="play-overlay">
+                      <button onClick={() => handleSongClick(items)}>
+                        <FaPlayCircle className="play-button" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+        <div className="swiper-caption">
+          <br />
+          <h2>Albums</h2>
+        </div>
+
+        <Swiper
+          slidesPerView={5}
+          spaceBetween={30}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+        >
+          {/* Map through albumsData */}
+          {albumsData.map((items, key) => (
+            <SwiperSlide key={key} className="swiper-slide">
+              <Link to={`album/${items.id}`}>
+                <div className="card">
+                  <div>
+                    <img
+                      src={items.image[2].link}
+                      loading="lazy"
+                      alt={items.image[2].link}
+                      className="w-full h-48 rounded-t-md"
+                    />
+                    {hoveredIndex === key && (
+                      <div className="play-overlay">
+                        <button onClick={() => handleSongClick(items)}>
+                          <FaPlayCircle className="play-button" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   <div className="pt-3 ml-4 mr-2 mb-3">
                     <h3 className="text-xl text-white-900">
-                      {items.name.length > 12 ? (
+                      {items.name.length > 18 ? (
                         <span
                           className="full-text"
                           dangerouslySetInnerHTML={{
-                            __html: `${items.name.slice(0, 12)}...`,
+                            __html: `${items.name.slice(0, 18)}...`,
                           }}
                         />
                       ) : (
@@ -141,81 +177,15 @@ const TrendingCard = () => {
                       )}
                     </h3>
                     <p className="text-gray-400 text-sm mt-1">
-                      {items.primaryArtists[0].name}
+                      {items.artists[0].name}
                     </p>
-                    {hoveredIndex === key && (
-                      <div className="play-overlay">
-                        <button onClick={() => handleSongClick(items)}>
-                          <FaPlayCircle className="play-button" />
-                        </button>
-                      </div>
-                    )}
                   </div>
                 </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-
-          <div className="swiper-caption">
-            <br />
-            <h2>Albums</h2>
-          </div>
-
-          <Swiper
-            slidesPerView={5}
-            spaceBetween={30}
-            navigation={true}
-            modules={[Pagination, Navigation]}
-          >
-            {/* Map through albumsData */}
-            {albumsData.map((items, key) => (
-              <SwiperSlide key={key} className="swiper-slide">
-                <Link to={`album/${items.id}`}>
-                  <div className="card">
-                    <div>
-                      <img
-                        src={items.image[2].link}
-                        loading="lazy"
-                        alt={items.image[2].link}
-                        className="w-full h-48 rounded-t-md"
-                      />
-                      {hoveredIndex === key && (
-                        <div className="play-overlay">
-                          <button onClick={() => handleSongClick(items)}>
-                            <FaPlayCircle className="play-button" />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                    <div className="pt-3 ml-4 mr-2 mb-3">
-                      <h3 className="text-xl text-white-900">
-                        {items.name.length > 18 ? (
-                          <span
-                            className="full-text"
-                            dangerouslySetInnerHTML={{
-                              __html: `${items.name.slice(0, 18)}...`,
-                            }}
-                          />
-                        ) : (
-                          <span
-                            className="full-text"
-                            dangerouslySetInnerHTML={{
-                              __html: items.name,
-                            }}
-                          />
-                        )}
-                      </h3>
-                      <p className="text-gray-400 text-sm mt-1">
-                        {items.artists[0].name}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-      )}
+              </Link>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </>
   );
 };

@@ -9,11 +9,13 @@ import {
   useAlbumsDataMutation,
   useSongDataMutation,
 } from "../../slices/songApiSlice";
+import { addToQueue } from "../../slices/songPlayerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Options = (props) => {
+  const dispatch = useDispatch();
   const [userPlaylists, setUserPlaylists] = useState();
   const [addSongToPlaylist] = useAddSongToPlaylistMutation();
   const [fetchAlbumsData, { isLoading }] = useAlbumsDataMutation();
@@ -22,8 +24,10 @@ const Options = (props) => {
 
   async function fetchData() {
     try {
+      if(userInfo){
       const playlistResponse = await fetchPlaylistsData(userInfo.id).unwrap();
-      setUserPlaylists(playlistResponse.rows);
+      setUserPlaylists(playlistResponse.rows);  
+    }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -47,6 +51,7 @@ const Options = (props) => {
       console.log(response);
       toast.success("Song added to playlist");
     } catch (error) {
+      toast.error("Song already exists");
       console.log(error.message);
     }
   };

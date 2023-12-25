@@ -11,13 +11,13 @@ import { setRoomMode, setHost } from '../slices/songPlayerSlice';
 import SingleMessage from "./Room/SingleMessage";
 import "./Room/ChatBox.css";
 // import s from "../utils/socket";
-
-
+// import { useSocket } from '../utils/socketContext';
 
 const Room = () => {
     const { id: room_id } = useParams();
     const [isHost, setIsHost] = useState(false);
     const [socket, setSocket] = useState(null);
+    // const socket = useSocket();
     const dispatch = useDispatch();
     const [endRoom] = useEndRoomMutation();
     const [getRoomInfo] = useRoomInfoMutation();
@@ -26,6 +26,12 @@ const Room = () => {
     const [inputMessage, setInputMessage] = useState("");
     const { userInfo } = useSelector((state) => state.auth);
     const roomInfo = useSelector((state) => state.room.roomInfo);
+
+    useEffect(() => {
+        if (roomInfo) {
+            setRoomMode(true);
+        }
+    }, [roomInfo]);
 
     useEffect(() => {
         if (!userInfo) {
@@ -77,8 +83,6 @@ const Room = () => {
             };
         }
     }, [socket]);
-
-
     
 
     const handleEndRoom = async () => {
