@@ -92,7 +92,7 @@ const AlbumScreen = () => {
             />
             <div className="items-start justify-between sm:flex">
               <h4 className="text-white-800 text-xl py-8 font-semibold">
-                Songs
+                {data.name}
               </h4>
             </div>
             <ul className="album-song-container">

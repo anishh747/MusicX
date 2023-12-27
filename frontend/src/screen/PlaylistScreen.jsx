@@ -11,7 +11,6 @@ import {
   playNextSong,
 } from "../slices/songPlayerSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { FaCirclePlay } from "react-icons/fa6";
 import Options from "../components/Options/Options";
 import "./screen.css";
@@ -91,7 +90,7 @@ const PlaylistScreen = () => {
             />
             <div className="album-name">
               <h4 className="text-white-800 text-xl py-8 font-semibold">
-                Songs
+                {data.name}
               </h4>
             </div>
             <ul className="album-song-container">

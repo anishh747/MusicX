@@ -6,6 +6,7 @@ import { setCurrentSong } from "../slices/songPlayerSlice";
 import { useDispatch } from "react-redux";
 import "../screen/screen.css";
 import { FaCirclePlay } from "react-icons/fa6";
+
 const MyPlaylist = () => {
   const { id: playlistId } = useParams();
   const [playlistName, setPlaylistName] = useState("PLAYLIST NAME");

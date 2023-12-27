@@ -80,9 +80,9 @@ const Options = (props) => {
           <div className="playlist-dropdown">
             Add to Playlist
             <div className="playlist-dropdown-content">
-              {userPlaylists?.map((playlist) => (
+              {userPlaylists?.map((playlist,idx) => (
                 <p
-                  key={props.index}
+                  key={idx}
                   onClick={() => handleAddToPlaylist(playlist, props.song)}
                   className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5"
                 >

@@ -11,10 +11,7 @@ import "swiper/css/navigation";
 import "./TrendingCard/trendingCard.css";
 
 const FeaturedPlaylist = (props) => {
-  const [featuredPlaylistData, setfeaturedPlaylistData] = useState(
-    props.featuredPlaylist
-  ); // Use state to manage the data
-
+  const [featuredPlaylistData, setfeaturedPlaylistData] = useState(props.featuredPlaylist); // Use state to manage the data
   return (
     <>
       <div className="charts-container">

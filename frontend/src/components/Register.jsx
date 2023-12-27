@@ -18,29 +18,29 @@ const Register = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [register, { isLoading }] = useRegisterMutation();
 
-  useEffect(() => {
-    if (userInfo) {
-      navigate("/");
-      console.log(userInfo);
-    } else {
-      console.log("No userInfo");
-    }
-  }, [navigate, userInfo]);
+    useEffect(() => {
+        if (userInfo) {
+            navigate('/')
+            console.log(userInfo)
+        } else {
+            console.log("No userInfo");
+        }
+    }, [navigate, userInfo])
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match!");
-    } else {
-      try {
-        const res = await register({ email, name, password }).unwrap();
-        dispatch(setCredentials({ ...res.rows[0] }));
-        navigate("/");
-      } catch (err) {
-        toast.error(err?.data?.message || err.error);
-      }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (password !== confirmPassword) {
+            toast.error("Passwords do not match!")
+        } else {
+            try {
+                const res = await register({ email, name, password }).unwrap();
+                dispatch(setCredentials({ ...res.rows[0] }))
+                navigate('/')
+            } catch (err) {
+                toast.error(err?.data?.message || err.error)
+            }
+        }
     }
-  };
 
   return (
     <>
