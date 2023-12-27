@@ -10,20 +10,26 @@ body {
 
 body {
   background: linear-gradient(180deg, #5C258D, #4389A2);
+  /*background: rgb(0, 212, 255);
+  background: linear-gradient(183deg, rgba(0, 212, 255, 1) 0%, rgba(9, 9, 121, 1) 29%, rgba(2, 0, 36, 1) 93%);*/
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
   font-size: 14px;
   color: #000;
 }
-.play-screen{
+
+.play-screen {
   width: -webkit-fill-available;
 }
-.main-container{
-  width: -webkit-fill-available;;
-  
+
+.main-container {
+  width: -webkit-fill-available;
+  ;
+
 }
 
 .song-avatar-rotate {
-  animation: rotate 20s linear infinite; /* Animation */
+  animation: rotate 20s linear infinite;
+  /* Animation */
 }
 
 @keyframes rotate {
@@ -36,13 +42,34 @@ body {
   }
 }
 
-.register{
-  background-color: red ;
+/* Add this to your Tailwind CSS */
+/* Add this to your CSS */
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: scale(0.9);
+  }
+
+  50% {
+    transform: scale(0.95);
+  }
 }
 
-.bot{
+/* Add this class to handle the shaking animation */
+.song-avatar-shake {
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+
+
+.register {
+  background-color: red;
+}
+
+.bot {
   display: grid;
-  grid-template-columns: repeat(2,1fr);
+  grid-template-columns: repeat(2, 1fr);
   overflow-x: hidden;
 }
 
@@ -58,7 +85,7 @@ body {
   color: #eee;
 }
 
-.charts-container{
+.charts-container {
   padding-top: 10px;
 
 }

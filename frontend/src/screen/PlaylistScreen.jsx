@@ -32,9 +32,8 @@ const PlaylistScreen = () => {
     const remainingSeconds = duration % 60;
     const beforeDecimal = remainingSeconds.toString().split(".")[0];
 
-    return `${minutes}:${
-      beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
-    }`;
+    return `${minutes}:${beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
+      }`;
   }
 
   async function fetchData() {

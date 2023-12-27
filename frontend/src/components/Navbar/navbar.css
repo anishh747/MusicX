@@ -1,8 +1,10 @@
 .sidebar {
     height: calc(100vh - 6rem);
     width: 320px;
-    border-right: 1px solid #cbd5e0;
-    background: linear-gradient(#000428,#004e92);
+    border-right: 1px solid gray;
+    background: linear-gradient(#000428, #004e92);
+    /*background: black;*/
+
     display: flex;
     flex-direction: column;
 }
@@ -14,14 +16,14 @@
     overflow: auto;
 }
 
-.logo{
+.logo {
     display: block;
     margin: 5px auto;
     width: 5rem;
 }
 
 .top-content,
-.playlist-content{
+.playlist-content {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -38,13 +40,13 @@
     margin-right: 10px;
 }
 
-.playlist-content h2{
+.playlist-content h2 {
     flex: 1;
     font-size: medium;
     text-align: center;
 }
 
-.playlist-list li{
+.playlist-list li {
     text-align: center;
 }
 
@@ -119,7 +121,7 @@ button {
     text-decoration: none;
 }
 
-.bottom-content{
+.bottom-content {
     margin-top: auto;
 }
 
@@ -127,7 +129,7 @@ button {
     height: 2.5rem;
     transition: background-color 0.3s ease, border 0.3s ease;
     color: white;
-    
+
 }
 
 .nav-link :hover {
@@ -136,7 +138,7 @@ button {
 }
 
 
-.nav-link button{
+.nav-link button {
     width: 100%;
     height: 100%;
     display: block;

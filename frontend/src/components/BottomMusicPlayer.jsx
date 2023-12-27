@@ -76,9 +76,8 @@ function BottomMusicPlayer() {
     const remainingSeconds = duration % 60;
     const beforeDecimal = remainingSeconds.toString().split(".")[0];
 
-    return `${minutes}:${
-      beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
-    }`;
+    return `${minutes}:${beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
+      }`;
   }
 
   useEffect(() => {
@@ -305,7 +304,7 @@ function BottomMusicPlayer() {
         />
 
         <div className="bottom-music-bar">
-          <div className=" h-[6rem] bottom-music-bar flex flex-row justify-around bg-gray-200 fixed w-screen bottom-0 right-0 z-40">
+          <div className=" h-[6rem] bottom-music-bar flex flex-row justify-around  bg-gray-200 fixed w-screen bottom-0 right-0 z-40">
             <div className="left-player flex flex-row items-center gap-4">
               {/* Display the song image in the bottom bar */}
               <img
@@ -436,7 +435,7 @@ function BottomMusicPlayer() {
             </div>
           </div>
         </div>
-        </div>
+      </div>
     </>
   );
 }

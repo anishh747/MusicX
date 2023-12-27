@@ -5,7 +5,7 @@ import { useSongDataMutation } from "../slices/songApiSlice";
 import { setCurrentSong } from "../slices/songPlayerSlice";
 import { useDispatch } from "react-redux";
 import "../screen/screen.css";
-
+import { FaCirclePlay } from "react-icons/fa6";
 const MyPlaylist = () => {
   const { id: playlistId } = useParams();
   const [playlistName, setPlaylistName] = useState("PLAYLIST NAME");
@@ -21,9 +21,8 @@ const MyPlaylist = () => {
     const remainingSeconds = duration % 60;
     const beforeDecimal = remainingSeconds.toString().split(".")[0];
 
-    return `${minutes}:${
-      beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
-    }`;
+    return `${minutes}:${beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
+      }`;
   }
 
   const handleOnClick = async (song) => {
@@ -83,9 +82,9 @@ const MyPlaylist = () => {
                 </h4>
               </div>
               <FaCirclePlay
-              onClick={handleBigPlayButton}
-              className="text-6xl text-green-500 mx-auto hover:cursor-pointer"
-            />
+                onClick={handleBigPlayButton}
+                className="text-6xl text-green-500 mx-auto hover:cursor-pointer"
+              />
               <ul className="album-song-container">
                 <li className="album-song-list">
                   <div>
