@@ -11,6 +11,7 @@ import {
 } from "../slices/songPlayerSlice";
 import { useSongDataMutation } from "../slices/songApiSlice";
 import Options from "./Options/Options";
+import "../screen/screen.css";
 
 const SearchResult = () => {
   const dispatch = useDispatch();
@@ -80,7 +81,7 @@ const SearchResult = () => {
       ) : (
         <>
           <div className="p-8">
-            <div className="flex">
+            <div>
               {searchResult.topQuery.results.map((item, idx) => (
                 <div
                   onClick={() => handleTopQueryClick(item)}
@@ -112,34 +113,40 @@ const SearchResult = () => {
               ))}
 
               <div className="mt-4 ml-8">
-                <h1 className="text-2xl">Songs</h1>
-                {searchResult.songs.results.map((item, idx) => (
-                  <li
-                    key={idx}
-                    className="py-5 flex items-start justify-between hover:bg-gray-400"
-                  >
-                    <div
+                <div className="album-name">
+                  <h4 className="text-white-800 text-xl py-4 font-semibold">
+                    Search results
+                  </h4>
+                </div>
+                <ul className="album-song-container">
+                  {searchResult.songs.results.map((item, idx) => (
+                    <li
+                      key={idx}
+                      className="album-song-list cursor-pointer py-2 border-b border-gray-300 w-1/2"
                       onClick={() => {
                         handleSongClick(item.id);
                       }}
-                      className="flex gap-3 my-auto"
                     >
-                      <img
-                        src={item.image[2].link}
-                        className="flex-none w-12 h-12"
-                      />
-                      <div>
-                        <span className="block text-sm text-gray-700 font-semibold">
-                          {item.title}
-                        </span>
-                        <span className="block text-sm text-gray-600">
-                          {item.primaryArtists}
-                        </span>
+                      <div className="flex items-center">
+                        <img
+                          src={item.image[2].link}
+                          className="w-12 h-12 object-cover"
+                        />
+                        <div className="ml-4">
+                          <span className="block font-semibold">
+                            {item.title}
+                          </span>
+                          <span className="block text-gray-600">
+                            {item.primaryArtists}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="ml-auto">
                         <Options index={idx} song={item} />
                       </div>
-                    </div>
-                  </li>
-                ))}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>

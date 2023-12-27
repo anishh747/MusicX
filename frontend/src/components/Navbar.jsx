@@ -3,12 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
 import { useLogoutMutation } from "../slices/usersApiSlice";
-import { useGetPlaylistsMutation, useCreatePlaylistMutation, useDeletePlaylistMutation, useGetPlaylistNameMutation } from "../slices/playlistApiSlice";
+import {
+  useGetPlaylistsMutation,
+  useCreatePlaylistMutation,
+  useDeletePlaylistMutation,
+  useGetPlaylistNameMutation,
+} from "../slices/playlistApiSlice";
 import "./Navbar/navbar.css";
 import { MdPlaylistAdd } from "react-icons/md";
 import { MdPlaylistPlay } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
-
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -36,12 +40,13 @@ const Navbar = () => {
     async function fetchData() {
       if (userInfo) {
         try {
-          const playlistResponse = await fetchPlaylistsData(userInfo.id).unwrap();
+          const playlistResponse = await fetchPlaylistsData(
+            userInfo.id
+          ).unwrap();
           setUserPlaylists(playlistResponse.rows);
         } catch (error) {
           console.error("Error fetching data:", error);
         }
-
       }
     }
 
@@ -61,38 +66,41 @@ const Navbar = () => {
   const submitCreatePlaylist = async (e) => {
     e.preventDefault();
     try {
-      const res = await createPlaylist({ playlistName, userId: userInfo.id }).unwrap();
+      const res = await createPlaylist({
+        playlistName,
+        userId: userInfo.id,
+      }).unwrap();
       console.log(res);
       closeModal();
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const handleDeletePlaylist = async (playlistId) => {
     try {
-      const response = await deletePlaylist({ playlistId, userId: userInfo.id });
+      const response = await deletePlaylist({
+        playlistId,
+        userId: userInfo.id,
+      });
 
       if (response.error) {
-        console.error('Error deleting playlist:', response.error);
-
+        console.error("Error deleting playlist:", response.error);
       } else if (response.data) {
-        console.log('Playlist deleted successfully:', response.data);
+        console.log("Playlist deleted successfully:", response.data);
       } else {
-        console.error('Unexpected response:', response);
+        console.error("Unexpected response:", response);
       }
-
     } catch (error) {
-      console.error('An unexpected error occurred:', error);
+      console.error("An unexpected error occurred:", error);
     }
   };
-
 
   return (
     <div className="sidebar">
       <div className="logo">
         <Link to={`/`}>
-          <img src="../src/assets/musicx-logo.png" />
+          <img src="./src/assets/musicx-logo.png" />
         </Link>
       </div>
       <nav className="sidebar-content">
@@ -114,6 +122,11 @@ const Navbar = () => {
                 </Link>
               )}
             </li>
+            <li className="nav-link">
+              <Link to={`favourites`}>
+                <button className="favourite-btn">Favourites</button>
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -121,7 +134,7 @@ const Navbar = () => {
           <div className="playlist-caption flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold mr-20">My Playlists</h2>
             <button
-              className="text-2xl p-2 rounded-full bg-green-500 hover:bg-green-600 transition-colors"
+              className="text-2xl hover:bg-green-600 transition-colors"
               onClick={openModal}
             >
               <MdPlaylistAdd />
@@ -152,13 +165,6 @@ const Navbar = () => {
                     >
                       Submit
                     </button>
-                    <button
-                      type="button"
-                      onClick={closeModal}
-                      className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors"
-                    >
-                      Cancel
-                    </button>
                   </div>
                 </form>
               </div>
@@ -168,18 +174,21 @@ const Navbar = () => {
             <ul className="list-none items-start">
               {userPlaylists &&
                 userPlaylists.map((item) => (
-                  <li key={item.playlist_id} className="mb-2 flex items-center justify-between">
+                  <li
+                    key={item.playlist_id}
+                    className="mb-2 flex items-center justify-between"
+                  >
                     <div className="flex items-center">
-                      <MdPlaylistPlay className="text-gray-500 mr-2" />
+                      <MdPlaylistPlay className="text-gray-500 mr-2 text-2xl" />
                       <Link
                         to={`myPlaylist/${item.playlist_id}`}
-                        className="text-gray-300 hover:underline transition-colors"
+                        className="text-white-300 hover:underline transition-colors"
                       >
                         {item.title}
                       </Link>
                     </div>
                     <MdDelete
-                      className="text-red-500 hover:text-red-600 cursor-pointer"
+                      className="text-white-500 hover:text-red-600 cursor-pointer"
                       onClick={() => handleDeletePlaylist(item.playlist_id)}
                     />
                   </li>
@@ -187,7 +196,6 @@ const Navbar = () => {
             </ul>
           </div>
         </div>
-
 
         <div className="bottom-content">
           <ul>

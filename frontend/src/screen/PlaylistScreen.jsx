@@ -71,7 +71,7 @@ const PlaylistScreen = () => {
   const handleBigPlayButton = () => {
     for (let index = 0; index < data.songs.length; index++) {
       if (songPlayerInfo.songsQueue.length === 19) {
-        toast.info("Queue is full")
+        toast.info("Queue is full");
         return;
       }
       dispatch(addToQueue({ item: data.songs[index] }));

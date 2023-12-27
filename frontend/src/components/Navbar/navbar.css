@@ -26,18 +26,24 @@
 .playlist-content {
     display: flex;
     flex-direction: column;
-    flex: 1;
     overflow: auto;
     color: #fff;
+}
+.playlist-content {
+    flex: 1;
 }
 
 .playlist-caption {
     display: flex;
     align-items: center;
+    padding-top: 5px;
 }
 
 .playlist-caption button {
+    position: fixed;
+    left: 245px;
     margin-right: 10px;
+    z-index: 1000;
 }
 
 .playlist-content h2 {

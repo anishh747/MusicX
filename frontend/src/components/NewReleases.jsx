@@ -74,8 +74,23 @@ const NewReleases = (props) => {
         <Swiper
           slidesPerView={5}
           spaceBetween={30}
+          loop={true}
           navigation={true}
           modules={[Pagination, Navigation]}
+          breakpoints={{
+            640: {
+              slidesPerView: 2,
+            },
+            942: {
+              slidesPerView: 3,
+            },
+            1186: {
+              slidesPerView: 4,
+            },
+            1430: {
+              slidesPerView: 5,
+            },
+          }}
         >
           {newReleasesData.map((items, key) => (
             <SwiperSlide key={key} className="swiper-slide">

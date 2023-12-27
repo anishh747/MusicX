@@ -21,7 +21,6 @@ import { io } from "socket.io-client";
 import { FaPlayCircle } from "react-icons/fa";
 // import { useSocket } from '../utils/socketContext';
 
-
 const TrendingCard = (props) => {
   const [loading, setLoading] = useState(true);
   const [albumsData, setAlbumsData] = useState(props.data.albums); // Use state to manage the data
@@ -34,7 +33,7 @@ const TrendingCard = (props) => {
   const roomInfo = useSelector((state) => state.room.roomInfo);
   const songPlayerInfo = useSelector((state) => state.songPlayer);
 
-  useEffect(() => { 
+  useEffect(() => {
     const s = io(import.meta.env.VITE_REACT_API_URL);
     setSocket(s);
   }, []);
@@ -78,15 +77,27 @@ const TrendingCard = (props) => {
           slidesPerView={5}
           spaceBetween={30}
           navigation={true}
+          loop={true}
           modules={[Pagination, Navigation]}
+          breakpoints={{
+            640: {
+              slidesPerView: 2,
+            },
+            942: {
+              slidesPerView: 3,
+            },
+            1186: {
+              slidesPerView: 4,
+            },
+            1430: {
+              slidesPerView: 5,
+            },
+          }}
         >
           {/* Map through songsData */}
           {songsData.map((items, key) => (
             <SwiperSlide key={key} className="swiper-slide">
-              <div
-                className="card"
-                onClick={() => handleSongClick(items)}
-              >
+              <div className="card" onClick={() => handleSongClick(items)}>
                 <img
                   src={items.image[2].link}
                   loading="lazy"
@@ -136,7 +147,22 @@ const TrendingCard = (props) => {
           slidesPerView={5}
           spaceBetween={30}
           navigation={true}
+          loop={true}
           modules={[Pagination, Navigation]}
+          breakpoints={{
+            640: {
+              slidesPerView: 2,
+            },
+            942: {
+              slidesPerView: 3,
+            },
+            1186: {
+              slidesPerView: 4,
+            },
+            1430: {
+              slidesPerView: 5,
+            },
+          }}
         >
           {/* Map through albumsData */}
           {albumsData.map((items, key) => (

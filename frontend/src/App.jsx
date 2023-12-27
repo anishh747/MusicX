@@ -75,6 +75,7 @@ function App() {
                 <Route exact path="/" element={<HomeScreen />} />
                 <Route exact path="/login" element={<Login />} />
                 <Route exact path="/register" element={<Register />} />
+                <Route exact path="/favourites" element={<Favourites />} />
                 <Route exact path="/create-join" element={<CreateJoinRoom />} />
                 <Route exact path="/room/:id" element={<Room />} />
                 <Route exact path="/album/:id" element={<AlbumScreen />} />
