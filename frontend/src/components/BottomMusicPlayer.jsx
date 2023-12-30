@@ -16,6 +16,8 @@ import {
 } from "react-icons/ai";
 import { LuMonitorPlay } from "react-icons/lu";
 import { FiRepeat, FiShuffle } from "react-icons/fi";
+import { TbRepeatOnce } from "react-icons/tb";
+
 import { PiShuffleBold } from "react-icons/pi";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -26,6 +28,7 @@ import {
   playPreviousSong,
   isNowPlayingView,
   toggleShuffle,
+  toggleRepeatOneMode,
 } from "../slices/songPlayerSlice";
 import {
   useAddToFavouritesMutation,
@@ -33,11 +36,10 @@ import {
   useGetFavouritesMutation,
 } from "../slices/songApiSlice";
 import { io } from "socket.io-client";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import { useSocket } from '../utils/socketContext';
 import s from "../utils/socket";
-
 function BottomMusicPlayer() {
   const [play, setPlay] = useState(false);
   const [mute, setMute] = useState(false);
@@ -63,6 +65,9 @@ function BottomMusicPlayer() {
   const [getFavourites] = useGetFavouritesMutation();
   const [removeFromFavourites] = useRemoveFromFavouritesMutation();
   const isShuffleMode = useSelector((state) => state.songPlayer.isShuffleMode);
+  const isRepeatOneMode = useSelector(
+    (state) => state.songPlayer.isRepeatOneMode
+  );
 
   useEffect(() => {
     setNowPlayingView(songPlayerInfo.nowPlayingView);
@@ -76,8 +81,9 @@ function BottomMusicPlayer() {
     const remainingSeconds = duration % 60;
     const beforeDecimal = remainingSeconds.toString().split(".")[0];
 
-    return `${minutes}:${beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
-      }`;
+    return `${minutes}:${
+      beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
+    }`;
   }
 
   useEffect(() => {
@@ -177,6 +183,14 @@ function BottomMusicPlayer() {
     }
   };
 
+  const handleToggleRepeatOneMode = () => {
+    dispatch(toggleRepeatOneMode());
+  };
+
+  const handleToggleShuffle = () => {
+    dispatch(toggleShuffle());
+  };
+
   const handleNextSongClick = () => {
     try {
       if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
@@ -184,7 +198,11 @@ function BottomMusicPlayer() {
       } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
         toast.error("You are not the host of the room");
       } else {
-        dispatch(playNextSong());
+        if (isRepeatOneMode) {
+          audioRef.current.currentTime = 0; // Restart the current song
+        } else {
+          dispatch(playNextSong());
+        }
       }
     } catch (error) {
       console.error("Error:", error);
@@ -198,7 +216,11 @@ function BottomMusicPlayer() {
       } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
         toast.error("You are not the host of the room");
       } else {
-        dispatch(playPreviousSong());
+        if (isRepeatOneMode) {
+          audioRef.current.currentTime = 0; // Restart the current song
+        } else {
+          dispatch(playPreviousSong());
+        }
       }
     } catch (error) {
       console.error("Error:", error);
@@ -207,10 +229,6 @@ function BottomMusicPlayer() {
 
   const handleAfterSongEnds = () => {
     dispatch(playNextSong());
-  };
-
-  const handleToggleShuffle = () => {
-    dispatch(toggleShuffle());
   };
 
   const toggleFavourite = async () => {
@@ -356,23 +374,26 @@ function BottomMusicPlayer() {
                   <BiSkipNext className="text-black" />
                 </div>
 
-                {isShuffleMode ? (
-                  // Show this button when shuffle mode is enabled
-                  <div
-                    onClick={handleToggleShuffle}
-                    className="text-3xl mx-2 text-black font-bold"
-                  >
-                    <PiShuffleBold />
-                  </div>
+                {isRepeatOneMode ? (
+                  <TbRepeatOnce
+                    className="text-3xl mx-2 cursor-pointer text-black"
+                    onClick={handleToggleRepeatOneMode}
+                  />
                 ) : (
-                  // Show this button when shuffle mode is disabled
-                  <div
-                    onClick={handleToggleShuffle}
-                    className="text-3xl mx-2 text-black"
-                  >
-                    <FiRepeat />
-                  </div>
+                  <FiRepeat
+                    className="text-3xl mx-2 cursor-pointer text-black"
+                    onClick={handleToggleRepeatOneMode}
+                  />
                 )}
+
+                <div
+                  onClick={handleToggleShuffle}
+                  className={`text-3xl mx-2 text-black ${
+                    isShuffleMode ? "font-bold text-blue-500" : ""
+                  }`}
+                >
+                  {isShuffleMode ? <PiShuffleBold /> : <PiShuffleBold />}
+                </div>
               </div>
               <div className="musicProgressBar flex flex-row gap-2 justify-center items-center">
                 <div onClick={handleBackwardSong} className="text-3xl mx-2">

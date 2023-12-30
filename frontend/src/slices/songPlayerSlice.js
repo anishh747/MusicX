@@ -13,6 +13,7 @@ const initialState = {
   isRoomHost: false,
   nowPlayingView: false,
   isShuffleMode: false,
+  isRepeatOneMode: false,
 };
 
 // Create a slice for the song player
@@ -22,16 +23,15 @@ const songPlayerSlice = createSlice({
   reducers: {
     setCurrentSong: (state, action) => {
       if (state?.currentSong?.item?.id !== action.payload.item.id) {
-        
         const existingIndex = state.songsQueue.findIndex(
           (song) => song.item.id === action.payload.item.id
-          );
-          
-          if (existingIndex !== -1) {
-            state.songsQueue.splice(existingIndex, 1);
-            state.currentIndex--;
-          }
-          
+        );
+
+        if (existingIndex !== -1) {
+          state.songsQueue.splice(existingIndex, 1);
+          state.currentIndex--;
+        }
+
         const nextIndex = (state.currentIndex + 1) % 20;
         state.songsQueue[nextIndex] = action.payload;
         state.isPlaying = false;
@@ -40,6 +40,8 @@ const songPlayerSlice = createSlice({
         state.isPlaying = true;
       }
     },
+
+    
 
     playPause: (state, action) => {
       state.isPlaying = action.payload;
@@ -83,17 +85,29 @@ const songPlayerSlice = createSlice({
     },
 
     playNextSong: (state) => {
-      if (state.currentIndex < 19) {
-        state.isPlaying = false;
+      if (state.isShuffleMode) {
+        // If shuffle mode is on, get the next random song
+        const shuffledIndex = getRandomShuffledIndex(
+          state.songsQueue.length,
+          state.currentIndex
+        );
+        state.currentIndex = shuffledIndex;
+      } else {
+        // If shuffle mode is off, get the next song in the original order
         state.currentIndex = (state.currentIndex + 1) % state.songsQueue.length;
-        state.currentSong = state.songsQueue[state.currentIndex];
-        state.isPlaying = true;
       }
+
+      state.isPlaying = false;
+      state.currentSong = state.songsQueue[state.currentIndex];
+      state.isPlaying = true;
     },
 
     toggleShuffle: (state) => {
-      // Toggle the shuffle mode
       state.isShuffleMode = !state.isShuffleMode;
+    },
+
+    toggleRepeatOneMode: (state) => {
+      state.isRepeatOneMode = !state.isRepeatOneMode;
     },
 
     setRoomMode: (state, action) => {
@@ -119,6 +133,15 @@ const persistConfig = {
 // Create a persisted reducer
 const persistedReducer = persistReducer(persistConfig, songPlayerSlice.reducer);
 
+//This is for shuffle
+const getRandomShuffledIndex = (length, currentIndex) => {
+  let randomIndex = currentIndex;
+  while (randomIndex === currentIndex) {
+    randomIndex = Math.floor(Math.random() * length);
+  }
+  return randomIndex;
+};
+
 // Export actions
 export const {
   setCurrentSong,
@@ -131,6 +154,7 @@ export const {
   setRoomMode,
   isNowPlayingView,
   toggleShuffle,
+  toggleRepeatOneMode,
 } = songPlayerSlice.actions;
 
 // Export the persisted reducer
