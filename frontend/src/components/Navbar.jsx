@@ -12,6 +12,7 @@ import {
 import "./Navbar/navbar.css";
 import { MdPlaylistAdd } from "react-icons/md";
 import { MdPlaylistPlay } from "react-icons/md";
+import { VscAccount } from "react-icons/vsc";
 import { MdDelete } from "react-icons/md";
 
 const Navbar = () => {
@@ -51,7 +52,7 @@ const Navbar = () => {
     }
 
     fetchData();
-  }, []);
+  }, [userInfo]);
 
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -123,9 +124,15 @@ const Navbar = () => {
               )}
             </li>
             <li className="nav-link">
-              <Link to={`favourites`}>
-                <button className="favourite-btn">Favourites</button>
-              </Link>
+              {userInfo ? (
+                <Link to={`favourites`}>
+                  <button className="favourite-btn">Favourites</button>
+                </Link>
+              ) : (
+                <Link to="/login">
+                  <button className="favourite-btn">Favourites</button>
+                </Link>
+              )}
             </li>
           </ul>
         </div>
@@ -215,13 +222,19 @@ const Navbar = () => {
 
         <div className="profile-section">
           <div className="profile-info">
-            <img
-              src="https://randomuser.me/api/portraits/women/79.jpg"
-              className="profile-img"
-            />
+            <VscAccount className="profile-img" />
             <div>
-              <span>Alivika Tony</span>
-              <a href="">View profile</a>
+              {userInfo ? (
+                <>
+                  <span>{userInfo.name}</span>
+
+                  <a href="">View profile</a>
+                </>
+              ) : (
+                <>
+                  <span>Guest</span>
+                </>
+              )}
             </div>
           </div>
         </div>
