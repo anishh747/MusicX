@@ -33,11 +33,22 @@ const TrendingCard = (props) => {
   const roomInfo = useSelector((state) => state.room.roomInfo);
   const songPlayerInfo = useSelector((state) => state.songPlayer);
 
+  const handleMouseEnter = (index) => {
+    setHoveredIndex(index);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredIndex(null);
+  };
+
   useEffect(() => {
     const s = io(import.meta.env.VITE_REACT_API_URL);
     setSocket(s);
   }, []);
 
+useEffect(() => {
+    console.log('componentrerender');
+  }, []);
   useEffect(() => {
     if (socket !== null && roomInfo) {
       socket.emit("joinRoomCode", roomInfo?.room_id);
@@ -97,7 +108,13 @@ const TrendingCard = (props) => {
           {/* Map through songsData */}
           {songsData.map((items, key) => (
             <SwiperSlide key={key} className="swiper-slide">
-              <div className="card" onClick={() => handleSongClick(items)}>
+              <div
+                className="card"
+                onClick={() => handleSongClick(items)}
+                onMouseEnter={() => handleMouseEnter(key)}
+                onMouseLeave={handleMouseLeave}
+              >
+                {" "}
                 <img
                   src={items.image[2].link}
                   loading="lazy"

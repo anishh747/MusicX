@@ -376,12 +376,12 @@ function BottomMusicPlayer() {
 
                 {isRepeatOneMode ? (
                   <TbRepeatOnce
-                    className="text-3xl mx-2 cursor-pointer text-black"
+                    className="text-3xl mx-2 text-sky-400"
                     onClick={handleToggleRepeatOneMode}
                   />
                 ) : (
                   <FiRepeat
-                    className="text-3xl mx-2 cursor-pointer text-black"
+                    className="text-3xl mx-2 text-black"
                     onClick={handleToggleRepeatOneMode}
                   />
                 )}
@@ -389,7 +389,7 @@ function BottomMusicPlayer() {
                 <div
                   onClick={handleToggleShuffle}
                   className={`text-3xl mx-2 text-black ${
-                    isShuffleMode ? "font-bold text-blue-500" : ""
+                    isShuffleMode ? "font-bold text-sky-400" : ""
                   }`}
                 >
                   {isShuffleMode ? <PiShuffleBold /> : <PiShuffleBold />}
