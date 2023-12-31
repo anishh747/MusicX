@@ -9,6 +9,7 @@ import {
   playPause,
   addToQueue,
   playNextSong,
+  clearQueue,
 } from "../slices/songPlayerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCirclePlay } from "react-icons/fa6";
@@ -16,6 +17,7 @@ import Options from "../components/Options/Options";
 import "./screen.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SkeletonLoaderSong from "../components/SkeletonLoaders/SkeletonLoaderSong";
 
 const PlaylistScreen = () => {
   const { id: playlistId } = useParams();
@@ -68,6 +70,7 @@ const PlaylistScreen = () => {
   };
 
   const handleBigPlayButton = () => {
+    dispatch(clearQueue());
     for (let index = 0; index < data.songs.length; index++) {
       if (songPlayerInfo.songsQueue.length === 19) {
         toast.info("Queue is full");
@@ -80,8 +83,8 @@ const PlaylistScreen = () => {
   return (
     <>
       {loading ? (
-        <div className="loading"></div>
-      ) : (
+        <SkeletonLoaderSong />
+) : (
         <div>
           <div className="max-w-2xl mx-auto px-4">
             <FaCirclePlay

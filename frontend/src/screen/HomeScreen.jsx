@@ -7,6 +7,7 @@ import FeaturedPlaylist from "../components/FeaturedPlaylist";
 import {
   useHomePageDataMutation,
 } from "../slices/songApiSlice";
+import SkeletonLoaderHome from "../components/SkeletonLoaders/SkeletonLoaderCard";
 
 const HomeScreen = () => {
   const [lang, setLanguage] = useState("english");
@@ -33,8 +34,8 @@ const HomeScreen = () => {
     <>
       {
         loading ? (
-          <h1>LOADING</h1>
-        ) : (
+          <SkeletonLoaderHome />
+          ) : (
           <div>
             <TrendingCard data={data.trending} />
             <Charts charts={data.charts}/>

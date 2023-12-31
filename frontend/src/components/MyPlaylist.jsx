@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetPlaylistSongsMutation, useGetPlaylistNameMutation } from "../slices/playlistApiSlice";
 import { useSongDataMutation } from "../slices/songApiSlice";
-import { setCurrentSong } from "../slices/songPlayerSlice";
-import { useDispatch } from "react-redux";
+import { setCurrentSong, addToQueue, clearQueue } from "../slices/songPlayerSlice";
+import { useDispatch, useSelector } from "react-redux";
 import "../screen/screen.css";
 import { FaCirclePlay } from "react-icons/fa6";
+import Options from "./Options/Options";
+import SkeletonLoaderSong from "./SkeletonLoaders/SkeletonLoaderSong";
 
 const MyPlaylist = () => {
   const { id: playlistId } = useParams();
@@ -16,6 +18,7 @@ const MyPlaylist = () => {
   const [fetchPlaylistName] = useGetPlaylistNameMutation();
   const [fetchSongData] = useSongDataMutation();
   const dispatch = useDispatch();
+  const songPlayerInfo = useSelector((state) => state.songPlayer);
 
   function songDurationToTime(duration) {
     const minutes = Math.floor(duration / 60);
@@ -59,21 +62,21 @@ const MyPlaylist = () => {
   }, [playlistId]);
 
   const handleBigPlayButton = () => {
-    for (let index = 0; index < data.songs.length; index++) {
-      if (songPlayerInfo.songsQueue.length === 19) {
+    dispatch(clearQueue());
+    for (let index = 0; index < data.length; index++) {
+      if (songPlayerInfo?.songsQueue?.length === 19) {
         toast.info("Queue is full")
         return;
       }
-      dispatch(addToQueue({ item: data.songs[index] }));
+      dispatch(addToQueue({ item: data[index] }));
     }
-    dispatch(playNextSong());
   };
 
   return (
     <>
       <div>
         {loading ? (
-          <h1>LOADING</h1>
+          <SkeletonLoaderSong />
         ) : (
           <div>
             <div className="max-w-2xl mx-auto px-4">
@@ -117,6 +120,7 @@ const MyPlaylist = () => {
                     </div>
                     <div>
                       <h3>{songDurationToTime(item.duration)}</h3>
+                      <Options index={idx} song={item} myPlaylist={true}/>
                     </div>
                   </li>
                 ))}

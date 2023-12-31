@@ -4,18 +4,17 @@ import {
   useAlbumsDataMutation,
   useSongDataMutation,
 } from "../slices/songApiSlice";
-import { useGetPlaylistsMutation } from "../slices/playlistApiSlice";
 import {
   setCurrentSong,
-  playPause,
   addToQueue,
-  playNextSong,
+  clearQueue,
 } from "../slices/songPlayerSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCirclePlay } from "react-icons/fa6";
 import Options from "../components/Options/Options";
+import SkeletonLoaderSong from "../components/SkeletonLoaders/SkeletonLoaderSong";
 
 const AlbumScreen = () => {
   const { id: albumId } = useParams();
@@ -23,7 +22,6 @@ const AlbumScreen = () => {
   const [data, setData] = useState({});
   const [fetchAlbumsData, { isLoading }] = useAlbumsDataMutation();
   const [fetchSongData] = useSongDataMutation();
-  const [fetchPlaylistsData] = useGetPlaylistsMutation();
   const dispatch = useDispatch();
   const songPlayerInfo = useSelector((state) => state.songPlayer);
 
@@ -70,6 +68,7 @@ const AlbumScreen = () => {
   };
 
   const handleBigPlayButton = () => {
+    dispatch(clearQueue())
     for (let index = 0; index < data.songs.length; index++) {
       if (songPlayerInfo.songsQueue.length === 19) {
         toast.info("Queue is full")
@@ -82,7 +81,7 @@ const AlbumScreen = () => {
   return (
     <>
       {loading ? (
-        <div className="loading"></div>
+        <SkeletonLoaderSong />
       ) : (
         <div>
           <div className="max-w-2xl mx-auto px-4">

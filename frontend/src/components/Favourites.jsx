@@ -4,8 +4,11 @@ import {
   useSongDataMutation,
 } from "../slices/songApiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentSong } from "../slices/songPlayerSlice";
+import { clearQueue, setCurrentSong, addToQueue } from "../slices/songPlayerSlice";
 import Options from "../components/Options/Options";
+import { useNavigate } from "react-router-dom";
+import { FaCirclePlay } from "react-icons/fa6";
+import SkeletonLoaderSong from "../components/SkeletonLoaders/SkeletonLoaderSong";
 
 const Favourites = () => {
   const [loading, setLoading] = useState(true);
@@ -14,6 +17,8 @@ const Favourites = () => {
   const [fetchSongInfo] = useSongDataMutation();
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const { songPlayerInfo } = useSelector((state) => state.songPlayer);
 
   useEffect(() => {
     if (!userInfo) {
@@ -51,9 +56,8 @@ const Favourites = () => {
     const remainingSeconds = duration % 60;
     const beforeDecimal = remainingSeconds.toString().split(".")[0];
 
-    return `${minutes}:${
-      beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
-    }`;
+    return `${minutes}:${beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
+      }`;
   }
 
   const handleOnClick = async (song) => {
@@ -64,11 +68,22 @@ const Favourites = () => {
     }
   };
 
+  const handleBigPlayButton = () => {
+    dispatch(clearQueue());
+    for (let index = 0; index < data.length; index++) {
+      if (songPlayerInfo?.songsQueue?.length === 19) {
+        toast.info("Queue is full")
+        return;
+      }
+      dispatch(addToQueue({ item: data[index] }));
+    }
+  };
+
   return (
     <>
       <>
         {loading ? (
-          <div className="loading"></div>
+          <SkeletonLoaderSong />
         ) : (
           <div>
             <div className="max-w-2xl mx-auto px-4">
@@ -77,6 +92,10 @@ const Favourites = () => {
                   Favourites
                 </h4>
               </div>
+              <FaCirclePlay
+                onClick={handleBigPlayButton}
+                className="text-6xl text-green-500 mx-auto hover:cursor-pointer"
+              />
               <ul className="album-song-container">
                 <li className="album-song-list">
                   <div>
@@ -105,7 +124,7 @@ const Favourites = () => {
                     </div>
                     <div>
                       <h3>{songDurationToTime(item.duration)}</h3>
-                      <Options index={idx} song={item} />
+                      <Options index={idx} song={item} favourites={true} />
                     </div>
                   </li>
                 ))}

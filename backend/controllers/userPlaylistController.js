@@ -21,6 +21,7 @@ const createPlaylist = expressAsyncHandler(async(req,res) =>{
 const deletePlaylist = expressAsyncHandler(async(req,res) =>{
     try {
         const {playlistId} = req.body;
+        const deleteSongsFromPlaylist = await pool.query("DELETE FROM playlist_songs WHERE playlist_id = ($1)",[playlistId])
         const deletePlaylist = await pool.query("DELETE FROM user_playlists WHERE playlist_id = ($1)",[playlistId])
         res.status(201);
         res.json(deletePlaylist);

@@ -39,12 +39,12 @@
     padding-top: 5px;
 }
 
-.playlist-caption button {
+/* .playlist-caption button {
     position: fixed;
     left: 245px;
     margin-right: 10px;
     z-index: 1000;
-}
+} */
 
 .playlist-content h2 {
     flex: 1;

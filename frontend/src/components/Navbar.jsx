@@ -7,13 +7,14 @@ import {
   useGetPlaylistsMutation,
   useCreatePlaylistMutation,
   useDeletePlaylistMutation,
-  useGetPlaylistNameMutation,
 } from "../slices/playlistApiSlice";
 import "./Navbar/navbar.css";
 import { MdPlaylistAdd } from "react-icons/md";
 import { MdPlaylistPlay } from "react-icons/md";
 import { VscAccount } from "react-icons/vsc";
 import { MdDelete } from "react-icons/md";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -50,7 +51,6 @@ const Navbar = () => {
         }
       }
     }
-
     fetchData();
   }, [userInfo]);
 
@@ -72,6 +72,7 @@ const Navbar = () => {
         userId: userInfo.id,
       }).unwrap();
       console.log(res);
+      toast.success("Playlist created successfully");
       closeModal();
     } catch (error) {
       console.log(error);
@@ -82,13 +83,13 @@ const Navbar = () => {
     try {
       const response = await deletePlaylist({
         playlistId,
-        userId: userInfo.id,
       });
 
       if (response.error) {
         console.error("Error deleting playlist:", response.error);
       } else if (response.data) {
         console.log("Playlist deleted successfully:", response.data);
+        toast.success("Playlist deleted successfully");
       } else {
         console.error("Unexpected response:", response);
       }
@@ -101,7 +102,7 @@ const Navbar = () => {
     <div className="sidebar">
       <div className="logo">
         <Link to={`/`}>
-          <img src="./src/assets/musicx-logo.png" />
+          <img src="../assets/musicx-logo.png" />
         </Link>
       </div>
       <nav className="sidebar-content">
@@ -139,7 +140,7 @@ const Navbar = () => {
 
         <div className="playlist-content p-4 text-white rounded-md">
           <div className="playlist-caption flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold mr-20">My Playlists</h2>
+            <h2 className="text-2xl font-bold">My Playlists</h2>
             <button
               className="text-2xl hover:bg-green-600 transition-colors"
               onClick={openModal}
@@ -220,24 +221,25 @@ const Navbar = () => {
           </ul>
         </div>
 
-        <div className="profile-section">
-          <div className="profile-info">
-            <VscAccount className="profile-img" />
-            <div>
-              {userInfo ? (
-                <>
+        {
+          userInfo ? (
+            <div className="profile-section">
+              <div className="profile-info">
+                <img
+                  src="https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg"
+                  className="profile-img"
+                />
+                <div>
                   <span>{userInfo.name}</span>
-
                   <a href="">View profile</a>
-                </>
-              ) : (
-                <>
-                  <span>Guest</span>
-                </>
-              )}
+                </div>  
+              </div>
             </div>
-          </div>
-        </div>
+          ):(
+            <>
+            </>
+          )
+        }
       </nav>
     </div>
   );
