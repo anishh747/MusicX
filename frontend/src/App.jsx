@@ -22,6 +22,7 @@ import SearchBar from "./components/SearchBar";
 import NowPlaying from "./components/NowPlaying";
 import Favourites from "./components/Favourites";
 import MyPlaylist from "./components/MyPlaylist";
+import Profile from "./components/Profile";
 
 function App() {
   const dispatch = useDispatch();
@@ -75,6 +76,7 @@ function App() {
                 <Route exact path="/" element={<HomeScreen />} />
                 <Route exact path="/login" element={<Login />} />
                 <Route exact path="/register" element={<Register />} />
+                <Route eact path="/profile" element={<Profile />} />
                 <Route exact path="/favourites" element={<Favourites />} />
                 <Route exact path="/create-join" element={<CreateJoinRoom />} />
                 <Route exact path="/room/:id" element={<Room />} />
