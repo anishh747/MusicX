@@ -2,6 +2,7 @@ import { pool } from "../db.js";
 import expressAsyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import bcrypt from "bcryptjs";
+import e from "express";
 
 const registerUser = expressAsyncHandler(async(req,res) =>{
     try {
@@ -56,4 +57,25 @@ const logOutUser = expressAsyncHandler(async(req,res) =>{
     res.status(200).json({message: "Logged Out Successfully"})
 });
 
-export  {authUser,registerUser,logOutUser};
+const updatePassword = expressAsyncHandler(async(req,res) =>{
+    const {oldPassword,newPassword,email} = req.body;
+    const checkUser = await pool.query("SELECT * FROM users WHERE email = ($1)",[email])
+    if (checkUser.rowCount !== 0) {
+        const userDetails = await pool.query("SELECT * FROM users WHERE email = ($1)",[email])
+        if (await bcrypt.compare(oldPassword,userDetails.rows[0].password)) {
+            const salt = await bcrypt.genSalt(5);
+            const newPasswordHash = await bcrypt.hash(newPassword,salt)
+            const updatePassword = await pool.query("UPDATE users SET password = ($1) WHERE email = ($2)",[newPasswordHash,email])
+            res.status(201)
+            res.json(updatePassword)
+        }else{
+            res.status(401)
+            throw new Error("Invalid Password")
+        }
+    }else{
+        res.status(401)
+        throw new Error("Invalid Email or Password")
+    }
+})
+
+export  {authUser,registerUser,logOutUser,updatePassword};

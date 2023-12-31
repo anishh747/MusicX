@@ -231,7 +231,7 @@ const Navbar = () => {
                 />
                 <div>
                   <span>{userInfo.name}</span>
-                  <a href="">View profile</a>
+                  <Link to="/profile">View profile</Link>
                 </div>  
               </div>
             </div>
