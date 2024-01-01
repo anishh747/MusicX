@@ -21,15 +21,16 @@ body {
   width: -webkit-fill-available;
 }
 
+.main-content{
+  width: -webkit-fill-available;
+}
+
 .main-container {
   width: -webkit-fill-available;
-  ;
-
 }
 
 .song-avatar-rotate {
   animation: rotate 20s linear infinite;
-  /* Animation */
 }
 
 @keyframes rotate {
@@ -42,8 +43,6 @@ body {
   }
 }
 
-/* Add this to your Tailwind CSS */
-/* Add this to your CSS */
 @keyframes shake {
 
   0%,
@@ -56,7 +55,6 @@ body {
   }
 }
 
-/* Add this class to handle the shaking animation */
 .song-avatar-shake {
   animation: shake 0.5s ease-in-out infinite;
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import SongText from "./SongText";
 import "./Charts/charts.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
@@ -22,22 +23,28 @@ const FeaturedPlaylist = (props) => {
           <Swiper
             slidesPerView={1}
             spaceBetween={30}
-            loop={true}
             navigation={true}
+            loop={true}
             modules={[Pagination, Navigation]}
             breakpoints={{
-              640: {
+              620: {
                 slidesPerView: 2,
               },
-              942: {
+              922: {
                 slidesPerView: 3,
               },
-              1186: {
+              1212: {
                 slidesPerView: 4,
               },
-              1430: {
+              1464: {
                 slidesPerView: 5,
               },
+              1732: {
+                slidesPerView: 6,
+              },
+              2591: {
+                slidesPerView: 7,
+              }
             }}
           >
             {featuredPlaylistData.map((items, key) => (
@@ -51,23 +58,7 @@ const FeaturedPlaylist = (props) => {
                       className="w-full h-32 object-cover mb-2"
                     />
                     <div className="full-text py-3">
-                      <h3>
-                        {items.title.length > 20 ? (
-                          <span
-                            className="full-text"
-                            dangerouslySetInnerHTML={{
-                              __html: `${items.title.slice(0, 20)}...`,
-                            }}
-                          />
-                        ) : (
-                          <span
-                            className="full-text"
-                            dangerouslySetInnerHTML={{
-                              __html: items.title,
-                            }}
-                          />
-                        )}
-                      </h3>
+                      <SongText title={items.title} />
                     </div>
                   </div>
                 </Link>

@@ -67,40 +67,33 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <div className="flex flex-row overflow-y-hidden">
+        <div className="flex overflow-y-hidden ">
           <Navbar />
-          <div className="play-screen h-[calc(100dvh-6rem)] w-[100%] overflow-x-hidden">
-            <div className="main-container">
-              <SearchBar />
-              <Routes>
-                <Route exact path="/" element={<HomeScreen />} />
-                <Route exact path="/login" element={<Login />} />
-                <Route exact path="/register" element={<Register />} />
-                <Route exact path="/profile" element={<Profile />} />
-                <Route exact path="/favourites" element={<Favourites />} />
-                <Route exact path="/create-join" element={<CreateJoinRoom />} />
-                <Route exact path="/room/:id" element={<Room />} />
-                <Route exact path="/album/:id" element={<AlbumScreen />} />
-                <Route exact path="/myPlaylist/:id" element={<MyPlaylist />} />
-                <Route
-                  exact
-                  path="/playlist/:id"
-                  element={<PlaylistScreen />}
-                />
-                <Route exact path="/artist/:id" element={<ArtistDetails />} />
-                <Route
-                  exact
-                  path="/search/q/:query"
-                  element={<SearchResult />}
-                />
-                <Route exact path="/favourites" element={<Favourites />} />
-              </Routes>
+          <div className="main-content flex overflow-y-hidden" >
+            <div className=" flex play-screen h-[calc(100dvh-6rem)] w-[100%] overflow-x-hidden">
+              <div className="main-container">
+                <SearchBar />
+                <Routes>
+                  <Route exact path="/" element={<HomeScreen />} />
+                  <Route exact path="/login" element={<Login />} />
+                  <Route exact path="/register" element={<Register />} />
+                  <Route exact path="/profile" element={<Profile />} />
+                  <Route exact path="/favourites" element={<Favourites />} />
+                  <Route exact path="/create-join" element={<CreateJoinRoom />} />
+                  <Route exact path="/room/:id" element={<Room />} />
+                  <Route exact path="/album/:id" element={<AlbumScreen />} />
+                  <Route exact path="/myPlaylist/:id" element={<MyPlaylist />} />
+                  <Route exact path="/playlist/:id" element={<PlaylistScreen />} />
+                  <Route exact path="/artist/:id" element={<ArtistDetails />} />
+                  <Route exact path="/search/q/:query" element={<SearchResult />} />
+                  <Route exact path="/favourites" element={<Favourites />} />
+                </Routes>
+              </div>
             </div>
+            <NowPlaying display={songPlayerInfo.nowPlayingView ? "block" : "hidden"} />
           </div>
-          <NowPlaying
-            display={songPlayerInfo.nowPlayingView ? "block" : "hidden"}
-          />
         </div>
+
         {shouldShowBottomPlayer && <BottomMusicPlayer />}
       </BrowserRouter>
       <ToastContainer />

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Scrollbar } from "swiper/modules";
+import SongText from "./SongText";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
@@ -72,71 +73,63 @@ const NewReleases = (props) => {
         </div>
 
         <Swiper
-          slidesPerView={5}
+          slidesPerView={1}
           spaceBetween={30}
-          loop={true}
           navigation={true}
+          loop={true}
           modules={[Pagination, Navigation]}
           breakpoints={{
-            640: {
+            620: {
               slidesPerView: 2,
             },
-            942: {
+            922: {
               slidesPerView: 3,
             },
-            1186: {
+            1212: {
               slidesPerView: 4,
             },
-            1430: {
+            1464: {
               slidesPerView: 5,
             },
+            1732: {
+              slidesPerView: 6,
+            },
+            2591: {
+              slidesPerView: 7,
+            }
           }}
         >
-          {newReleasesData.map((items, key) => (
-            <SwiperSlide key={key} className="swiper-slide">
-              <div
-                className="card"
-                onClick={() => handleSongClick(items)}
-                onMouseEnter={() => handleMouseEnter(key)}
-                onMouseLeave={() => handleMouseLeave(key)}
-              >
-                <img
-                  src={items.image[2].link}
-                  loading="lazy"
-                  alt={items.image[2].link}
-                  className="w-full h-48 rounded-t-md"
-                />
-                <div className="pt-3 ml-4 mr-2 mb-3">
-                  <h3 className="text-xl text-white-900">
-                    {items.name.length > 12 ? (
-                      <span
-                        className="full-text"
-                        dangerouslySetInnerHTML={{
-                          __html: `${items.name.slice(0, 12)}...`,
-                        }}
-                      />
-                    ) : (
-                      <span
-                        className="full-text py-3"
-                        dangerouslySetInnerHTML={{
-                          __html: items.name,
-                        }}
-                      />
+          {
+            newReleasesData.map((items, key) => (
+              <SwiperSlide key={key} className="swiper-slide">
+                <div
+                  className="card"
+                  onClick={() => handleSongClick(items)}
+                  onMouseEnter={() => handleMouseEnter(key)}
+                  onMouseLeave={() => handleMouseLeave(key)}
+                >
+                  <img
+                    src={items.image[2].link}
+                    loading="lazy"
+                    alt={items.image[2].link}
+                    className="w-full h-48 rounded-t-md"
+                  />
+                  <div className="pt-3 ml-4 mr-2 mb-3">
+                    <SongText title={items.name} />
+                    {hoveredIndex === key && (
+                      <div className="play-overlay">
+                        <button onClick={() => handleSongClick(items)}>
+                          <FaPlayCircle className="play-button" />
+                        </button>
+                      </div>
                     )}
-                  </h3>
-                  {hoveredIndex === key && (
-                    <div className="play-overlay">
-                      <button onClick={() => handleSongClick(items)}>
-                        <FaPlayCircle className="play-button" />
-                      </button>
-                    </div>
-                  )}
+                  </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
+              </SwiperSlide>
+            ))
+          }
         </Swiper>
-      </div>
+      </div >
     </>
   );
 };

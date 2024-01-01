@@ -13,8 +13,8 @@ import { MdPlaylistAdd } from "react-icons/md";
 import { MdPlaylistPlay } from "react-icons/md";
 import { VscAccount } from "react-icons/vsc";
 import { MdDelete } from "react-icons/md";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -102,7 +102,7 @@ const Navbar = () => {
     <div className="sidebar">
       <div className="logo">
         <Link to={`/`}>
-          <img src="../assets/musicx-logo.png" />
+          <img src="./src/assets/musicx-logo.png" />
         </Link>
       </div>
       <nav className="sidebar-content">
@@ -221,25 +221,22 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {
-          userInfo ? (
-            <div className="profile-section">
-              <div className="profile-info">
-                <img
-                  src="https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg"
-                  className="profile-img"
-                />
-                <div>
-                  <span>{userInfo.name}</span>
-                  <Link to="/profile">View profile</Link>
-                </div>  
+        {userInfo ? (
+          <div className="profile-section">
+            <div className="profile-info">
+              <img
+                src="https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg"
+                className="profile-img"
+              />
+              <div>
+                <span>{userInfo.name}</span>
+                <Link to="/profile">View profile</Link>
               </div>
             </div>
-          ):(
-            <>
-            </>
-          )
-        }
+          </div>
+        ) : (
+          <></>
+        )}
       </nav>
     </div>
   );
