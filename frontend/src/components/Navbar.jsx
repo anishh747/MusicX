@@ -28,6 +28,8 @@ const Navbar = () => {
   const [logoutMutation] = useLogoutMutation();
   const roomInfo = useSelector((state) => state.room.roomInfo);
 
+
+
   const handleLogoutButton = async () => {
     try {
       await logoutMutation().unwrap();
@@ -99,10 +101,11 @@ const Navbar = () => {
   };
 
   return (
-    <div className="sidebar">
+    <div className="sidebar" id="sidebar">
+
       <div className="logo">
         <Link to={`/`}>
-          <img src="./src/assets/musicx-logo.png" />
+          <img src="./src/assets/musicx-logo.png" alt="Logo" />
         </Link>
       </div>
       <nav className="sidebar-content">
@@ -238,7 +241,7 @@ const Navbar = () => {
           <></>
         )}
       </nav>
-    </div>
+    </div >
   );
 };
 

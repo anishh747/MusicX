@@ -3,10 +3,10 @@
     width: 320px;
     border-right: 1px solid gray;
     background: linear-gradient(#000428, #004e92);
-    /*background: black;*/
-
+    position: relative;
     display: flex;
     flex-direction: column;
+    transition: width 0.3s ease;
 }
 
 .sidebar-content {
@@ -29,6 +29,7 @@
     overflow: auto;
     color: #fff;
 }
+/* Additional styles for larger screens */
 .playlist-content {
     flex: 1;
 }
@@ -38,13 +39,6 @@
     align-items: center;
     padding-top: 5px;
 }
-
-/* .playlist-caption button {
-    position: fixed;
-    left: 245px;
-    margin-right: 10px;
-    z-index: 1000;
-} */
 
 .playlist-content h2 {
     flex: 1;
@@ -66,7 +60,6 @@
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
 }
-
 .modal-content {
     z-index: 100;
     background-color: #fefefe;
