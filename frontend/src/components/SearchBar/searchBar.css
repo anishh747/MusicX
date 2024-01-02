@@ -5,14 +5,24 @@
     padding: 1rem;
     padding-top: 0;
     z-index: 1000;
+    display: flex;
+
 }
 
+.search-logo{
+    color: #47d3e6;
+    scale: 5;
+    margin-top: 1rem;
+    padding-right:5px ;
+    
+}
 .search-form {
     display: flex;
     align-items: center;
     gap: 1rem;
     border-radius: 0 0 0 0.5rem ;
     background-color: #0f0c29;
+
     padding: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

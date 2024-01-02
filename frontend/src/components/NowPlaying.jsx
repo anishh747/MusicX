@@ -32,6 +32,7 @@ const NowPlaying = (props) => {
     <>
       {songPlayerInfo?.currentSong ? (
         <div className={`${props.display} h-[calc(100dvh-6rem)] w-[25rem]`}>
+              <div className="h-[calc(100dvh-6rem)] overflow-y-auto">
           <div className="text-white text-center">
             <h1 className="text-2xl mb-2">Now Playing</h1>
             <div className="relative inline-block">
@@ -53,7 +54,6 @@ const NowPlaying = (props) => {
               className="text-4xl text-green-500 hover:cursor-pointer"
             />
           </div>
-          <div className="max-h-72 overflow-y-auto">
             {songPlayerInfo?.songsQueue?.map((song, idx) => (
               <div key={idx} className="border-solid border-2 border-gray-400 hover:border-dotted flex items-center cursor-pointer p-2">
                 {
