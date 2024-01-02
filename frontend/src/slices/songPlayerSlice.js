@@ -14,7 +14,23 @@ const initialState = {
   nowPlayingView: false,
   isShuffleMode: false,
   isRepeatOneMode: false,
-};
+};  
+
+let playedSongs = [0];
+function getRandomUnplayedIndex(totalSongs, playedSongs) {
+  let randomIndex;
+  do {
+    randomIndex = getRandomInt(totalSongs);
+  } while (playedSongs.includes(randomIndex));
+
+  return randomIndex;
+}
+
+function getRandomInt(max) {
+  let min = Math.ceil(0);//Inclusive
+  max = Math.floor(max);//Exclusive
+  return Math.floor(Math.random() * (max - min) + min);
+}
 
 // Create a slice for the song player
 const songPlayerSlice = createSlice({
@@ -86,12 +102,18 @@ const songPlayerSlice = createSlice({
 
     playNextSong: (state) => {
       if (state.isShuffleMode) {
-        // If shuffle mode is on, get the next random song
-        const shuffledIndex = getRandomShuffledIndex(
+        // If shuffle mode is on
+        if (playedSongs.length === state.songsQueue.length) {
+          playedSongs = [];
+        }
+        const shuffledIndex = getRandomUnplayedIndex(
           state.songsQueue.length,
-          state.currentIndex
+          playedSongs
         );
+      
+        // Update the currentIndex and mark the song as played
         state.currentIndex = shuffledIndex;
+        playedSongs.push(shuffledIndex);
       } else {
         // If shuffle mode is off, get the next song in the original order
         state.currentIndex = (state.currentIndex + 1) % state.songsQueue.length;

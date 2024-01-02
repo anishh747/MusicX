@@ -117,11 +117,25 @@ const PlaylistScreen = () => {
                     }}
                   >
                     <h3>{idx + 1}</h3>
-                    <img src={item.image[2].link} />
-                    <div>
-                      <span>{item.name}</span>
-                      <span>{item.primaryArtists}</span>
-                    </div>
+                    {
+                        songPlayerInfo?.currentSong?.item?.id === item.id ? (
+                          <>
+                            <img className={songPlayerInfo?.isPlaying ? (`w-[25px]`) : (``)} src={songPlayerInfo?.isPlaying ? (`https://m.media-amazon.com/images/G/01/digital/music/player/web/EQ_accent.gif`) : (item.image[0].link)} alt="" />
+                            <div>
+                              <p className="text-sm font-bold text-green-400">{item.name}</p>
+                              <p className="text-xs text-green-500 font-medium">{item.primaryArtists}</p>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <img src={item.image[2].link} />
+                            <div>
+                              <p className="text-sm font-bold text-white">{item.name}</p>
+                              <p className="text-xs text-white font-medium">{item.primaryArtists}</p>
+                            </div>
+                          </>
+                        )
+                      }
                   </div>
                   <div>
                     <h3>{songDurationToTime(item.duration)}</h3>

@@ -11,7 +11,6 @@ import {
 import "./Navbar/navbar.css";
 import { MdPlaylistAdd } from "react-icons/md";
 import { MdPlaylistPlay } from "react-icons/md";
-import { VscAccount } from "react-icons/vsc";
 import { MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -101,11 +100,11 @@ const Navbar = () => {
   };
 
   return (
-    <div className="sidebar" id="sidebar">
+    <div className="sidebar" id="sidebar hidden sm:flex">
 
       <div className="logo">
         <Link to={`/`}>
-          <img src="./src/assets/musicx-logo.png" alt="Logo" />
+          <img src="https://firebasestorage.googleapis.com/v0/b/facebook-clone-e980a.appspot.com/o/musicx-logo.png?alt=media&token=57d2eefb-0bca-49a7-9870-6d860b623ffd" />
         </Link>
       </div>
       <nav className="sidebar-content">

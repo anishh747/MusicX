@@ -5,6 +5,8 @@ import { clearQueue } from '../slices/songPlayerSlice';
 
 const NowPlaying = (props) => {
   const songPlayerInfo = useSelector((state) => state.songPlayer);
+  const isPlaying = useSelector((state) => state.songPlayer?.isPlaying);
+
   const dispatch = useDispatch();
 
   const handleClearQueue = () => {
@@ -53,12 +55,26 @@ const NowPlaying = (props) => {
           </div>
           <div className="max-h-72 overflow-y-auto">
             {songPlayerInfo?.songsQueue?.map((song, idx) => (
-              <div key={idx} className="border-solid border-2 border-gray-400 hover:border-dotted flex cursor-pointer p-2">
-                <img src={song?.item.image[0].link} alt="" className="rounded-full mr-2" />
-                <div>
-                  <p className="text-sm font-bold text-white">{song?.item.name}</p>
-                  <p className="text-xs text-gray-900 font-medium">{song?.item.primaryArtists}</p>
-                </div>
+              <div key={idx} className="border-solid border-2 border-gray-400 hover:border-dotted flex items-center cursor-pointer p-2">
+                {
+                  songPlayerInfo?.currentSong?.item?.id === song?.item?.id ? (
+                    <>
+                      <img src={isPlaying ? (`https://m.media-amazon.com/images/G/01/digital/music/player/web/EQ_accent.gif`) : (song.item.image[0].link)} alt="" className={`${isPlaying ? (`w-[20px]`) : (`rounded-full`)} mr-2`} />
+                      <div>
+                        <p className="text-sm font-bold text-green-400">{song?.item.name}</p>
+                        <p className="text-xs text-green-500 font-medium">{song?.item.primaryArtists}</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <img src={song?.item.image[0].link} alt="" className="rounded-full mr-2" />
+                      <div>
+                        <p className="text-sm font-bold text-white">{song?.item.name}</p>
+                        <p className="text-xs text-white font-medium">{song?.item.primaryArtists}</p>
+                      </div>
+                    </>
+                  )
+                }
               </div>
             ))}
           </div>

@@ -65,9 +65,7 @@ function BottomMusicPlayer() {
   const [getFavourites] = useGetFavouritesMutation();
   const [removeFromFavourites] = useRemoveFromFavouritesMutation();
   const isShuffleMode = useSelector((state) => state.songPlayer.isShuffleMode);
-  const isRepeatOneMode = useSelector(
-    (state) => state.songPlayer.isRepeatOneMode
-  );
+  const isRepeatOneMode = useSelector((state) => state.songPlayer.isRepeatOneMode);
 
   useEffect(() => {
     setNowPlayingView(songPlayerInfo.nowPlayingView);
@@ -81,9 +79,8 @@ function BottomMusicPlayer() {
     const remainingSeconds = duration % 60;
     const beforeDecimal = remainingSeconds.toString().split(".")[0];
 
-    return `${minutes}:${
-      beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
-    }`;
+    return `${minutes}:${beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
+      }`;
   }
 
   useEffect(() => {
@@ -198,11 +195,7 @@ function BottomMusicPlayer() {
       } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
         toast.error("You are not the host of the room");
       } else {
-        if (isRepeatOneMode) {
-          audioRef.current.currentTime = 0; // Restart the current song
-        } else {
-          dispatch(playNextSong());
-        }
+        dispatch(playNextSong());
       }
     } catch (error) {
       console.error("Error:", error);
@@ -216,11 +209,7 @@ function BottomMusicPlayer() {
       } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
         toast.error("You are not the host of the room");
       } else {
-        if (isRepeatOneMode) {
-          audioRef.current.currentTime = 0; // Restart the current song
-        } else {
-          dispatch(playPreviousSong());
-        }
+        dispatch(playPreviousSong());
       }
     } catch (error) {
       console.error("Error:", error);
@@ -228,7 +217,9 @@ function BottomMusicPlayer() {
   };
 
   const handleAfterSongEnds = () => {
-    dispatch(playNextSong());
+    if (!isRepeatOneMode) {
+      dispatch(playNextSong());
+    }
   };
 
   const toggleFavourite = async () => {
@@ -275,6 +266,14 @@ function BottomMusicPlayer() {
       audioRef.current.volume = volume;
     }
   }, [mute]);
+
+  useEffect(() => {
+    if(isRepeatOneMode){
+      audioRef.current.loop = true;
+    }else{
+      audioRef.current.loop = false;
+    }
+  }, [isRepeatOneMode])
 
   useEffect(() => {
     if (socket !== null) {
@@ -388,9 +387,8 @@ function BottomMusicPlayer() {
 
                 <div
                   onClick={handleToggleShuffle}
-                  className={`text-3xl mx-2 text-black ${
-                    isShuffleMode ? "font-bold text-sky-400" : ""
-                  }`}
+                  className={`text-3xl mx-2 text-black ${isShuffleMode ? "font-bold text-sky-400" : ""
+                    }`}
                 >
                   {isShuffleMode ? <PiShuffleBold /> : <PiShuffleBold />}
                 </div>
