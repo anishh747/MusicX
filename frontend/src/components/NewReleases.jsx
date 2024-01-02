@@ -115,7 +115,8 @@ const NewReleases = (props) => {
                     className="w-full h-48 rounded-t-md"
                   />
                   <div className="pt-3 ml-4 mr-2 mb-3">
-                    <SongText title={items.name} />
+                    <SongText title={items.name} mode="white" card={true} />
+
                     {hoveredIndex === key && (
                       <div className="play-overlay">
                         <button onClick={() => handleSongClick(items)}>

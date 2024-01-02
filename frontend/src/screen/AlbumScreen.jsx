@@ -76,7 +76,10 @@ const AlbumScreen = () => {
                   />
                 </div>
                 <div className="p-8 pt-12">
-                  <h2 className="mt-2 text-2xl leading-7 font-bold text-white">{data.name}</h2>
+                  <h2 className="text-white-800 text-xl py-8 font-semibold">
+                    <span className={`text-white `} dangerouslySetInnerHTML={{ __html: data.name }} />
+
+                  </h2>
                   <button className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-green-600 hover:bg-green-500 focus:outline-none focus:shadow-outline-green focus:border-green-700 active:bg-green-700 transition ease-in-out duration-150 rounded-lg"
                     onClick={handleBigPlayButton}>
                     <svg

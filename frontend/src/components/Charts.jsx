@@ -13,7 +13,7 @@ const Charts = (props) => {
           <div className="container-title">
             <h1 className="text-3xl font-bold mb-4">Top Charts</h1>
           </div>
-          <div className="grid grid-cols-4 lg-grid-cols-4 gap-10">
+          <div className="grid grid-cols-2 lg-grid-cols-2 gap-5 md:grid-cols-4 md:lg-grid-cols-4 md:gap-10">
             {chartsData.map((items, key) => (
               <article key={key} className="chart-card">
                 <Link to={`playlist/${items.id}`} className="flex flex-col">

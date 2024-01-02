@@ -20,7 +20,7 @@ const SearchBar = () => {
 
   return (
     <>
-      <div className="search-bar">
+      <div className="search-bar ">
         <TbMusicSearch className="search-logo" onClick={toggleSearchBar} />
         {isSearchBarVisible && (
           <form onSubmit={handleSearch} className="search-form">

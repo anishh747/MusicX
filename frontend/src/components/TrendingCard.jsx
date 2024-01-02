@@ -130,7 +130,7 @@ const TrendingCard = (props) => {
                   className="w-full h-48 rounded-t-md"
                 />
                 <div className="pt-3 ml-4 mr-2 mb-3">
-                  <SongText title={items.name} />
+                  <SongText title={items.name} mode="white" card={true} />
                   <p className="text-gray-400 text-sm mt-1">
                     {items.primaryArtists[0].name}
                   </p>
@@ -200,9 +200,7 @@ const TrendingCard = (props) => {
                     )}
                   </div>
                   <div className="pt-3 ml-4 mr-2 mb-3">
-
-                    <SongText title={items.name} />
-
+                    <SongText mode="white" card={true} title={items.name} />
                     <p className="text-gray-400 text-sm mt-1">
                       {items.artists[0].name}
                     </p>

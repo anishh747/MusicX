@@ -72,7 +72,7 @@ function App() {
           <div className="main-content flex overflow-y-hidden" >
             <div className=" flex play-screen h-[calc(100dvh-6rem)] w-[100%] overflow-x-hidden">
               <div className="main-container">
-                {/* <SearchBar /> */}
+                <SearchBar />
                 <Routes>
                   <Route exact path="/" element={<HomeScreen />} />
                   <Route exact path="/login" element={<Login />} />

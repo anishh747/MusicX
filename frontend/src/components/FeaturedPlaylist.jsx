@@ -58,7 +58,7 @@ const FeaturedPlaylist = (props) => {
                       className="w-full h-32 object-cover mb-2"
                     />
                     <div className="full-text py-3">
-                      <SongText title={items.title} />
+                      <SongText card={true} title={items.title} />
                     </div>
                   </div>
                 </Link>

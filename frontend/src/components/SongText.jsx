@@ -5,18 +5,20 @@ const SongText = (props) => {
     const title = String(props.title);
     return (
         <h3>
-            {title.length > 14 ? (
+            {props.card && title.length > 14 ? (
                 <span
-                    className="full-text"
+                    className={`text-${props.mode}`}
                     dangerouslySetInnerHTML={{
                         __html: `${title.slice(0, 14)}...`,
-                    }}
-                />
+                    }
+                    }
+                >
+                </span>
             ) : (
                 <span
-                    className="full-text"
+                    className={`text-${props.mode}`}
                     dangerouslySetInnerHTML={{
-                        __html: title,
+                        __html: `${title}`,
                     }}
                 />
             )}
