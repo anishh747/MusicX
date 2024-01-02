@@ -28,7 +28,6 @@ const Navbar = () => {
   const roomInfo = useSelector((state) => state.room.roomInfo);
 
 
-
   const handleLogoutButton = async () => {
     try {
       await logoutMutation().unwrap();
@@ -39,26 +38,31 @@ const Navbar = () => {
     }
   };
 
-  useEffect(() => {
-    async function fetchData() {
-      if (userInfo) {
-        try {
-          const playlistResponse = await fetchPlaylistsData(
-            userInfo.id
-          ).unwrap();
-          setUserPlaylists(playlistResponse.rows);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
+  async function fetchData() {
+    if (userInfo) {
+      try {
+        const playlistResponse = await fetchPlaylistsData(
+          userInfo.id
+        ).unwrap();
+        setUserPlaylists(playlistResponse.rows);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
     }
+  }
+
+  useEffect(() => {
     fetchData();
   }, [userInfo]);
 
   const [isModalOpen, setModalOpen] = useState(false);
 
   const openModal = () => {
-    setModalOpen(true);
+    if(userInfo){
+      setModalOpen(true);
+    }else{
+      navigate('/login')
+    }
   };
 
   const closeModal = () => {
@@ -67,16 +71,22 @@ const Navbar = () => {
 
   const submitCreatePlaylist = async (e) => {
     e.preventDefault();
-    try {
-      const res = await createPlaylist({
-        playlistName,
-        userId: userInfo.id,
-      }).unwrap();
-      console.log(res);
-      toast.success("Playlist created successfully");
-      closeModal();
-    } catch (error) {
-      console.log(error);
+    if(userInfo){
+      try {
+        const res = await createPlaylist({
+          playlistName,
+          userId: userInfo.id,
+        }).unwrap();
+        // console.log(res);
+        fetchData();
+        toast.success("Playlist created successfully");
+        closeModal();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    else{
+      navigate("/login");
     }
   };
 
@@ -85,7 +95,7 @@ const Navbar = () => {
       const response = await deletePlaylist({
         playlistId,
       });
-
+      fetchData();
       if (response.error) {
         console.error("Error deleting playlist:", response.error);
       } else if (response.data) {
@@ -112,7 +122,7 @@ const Navbar = () => {
           <ul>
             <li className="nav-link">
               <Link to={`/`}>
-                <button className="home-btn">Home</button>
+                <button className="home-btn text-white">Home</button>
               </Link>
             </li>
             <li className="nav-link">

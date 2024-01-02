@@ -37,37 +37,21 @@ const Favourites = () => {
     }
   }
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetchFavourites(userInfo.id).unwrap();
-        for (let index = 0; index < response.length; index++) {
-          getSongData(response[index].song_id);
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-    fetchData();
-  }, []);
-
-  function songDurationToTime(duration) {
-    const minutes = Math.floor(duration / 60);
-    const remainingSeconds = duration % 60;
-    const beforeDecimal = remainingSeconds.toString().split(".")[0];
-
-    return `${minutes}:${beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
-      }`;
-  }
-
-  const handleOnClick = async (song) => {
+  async function fetchData() {
     try {
-      dispatch(setCurrentSong({ item: song }));
+      const response = await fetchFavourites(userInfo.id).unwrap();
+      for (let index = 0; index < response.length; index++) {
+        getSongData(response[index].song_id);
+      }
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleBigPlayButton = () => {
     dispatch(clearQueue());

@@ -90,7 +90,7 @@ const PlaylistScreen = () => {
           <div className="max-w-2xl mx-auto px-4">
             <div key="1" className="max-w-md mx-auto rounded-xl  overflow-hidden md:max-w-2xl">
               <div className="md:flex">
-                <div className="md:flex-shrink-0">
+                <div className="mr-10 md:flex-shrink-0">
                   <img
                     alt="Album cover"
                     className="h-36 w-full object-cover md:w-36 rounded-full mt-4"
@@ -103,11 +103,11 @@ const PlaylistScreen = () => {
                     width="300"
                   />
                 </div>
-                <div className="p-8 pt-12">
-                  <h2 className="text-white-800 text-xl py-8 font-semibold">
+                <div>
+                  <h2 className="text-white-800 text-xl font-semibold">
                     <span className={`text-white `} dangerouslySetInnerHTML={{ __html: data.name }} />
                   </h2>
-                  <button className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-green-600 hover:bg-green-500 focus:outline-none focus:shadow-outline-green focus:border-green-700 active:bg-green-700 transition ease-in-out duration-150 rounded-lg"
+                  <button className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-green-600 hover:bg-green-500 focus:outline-none focus:shadow-outline-green focus:border-green-700 active:bg-green-700 transition ease-in-out duration-150 "
                     onClick={handleBigPlayButton}>
                     <svg
                       className="w-4 h-4 mr-2"

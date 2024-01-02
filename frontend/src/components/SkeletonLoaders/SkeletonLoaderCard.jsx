@@ -8,9 +8,9 @@ const SkeletonLoaderBox = () => {
             <main className="p-4">
                 <div className="flex flex-wrap">
                     {skeletonArray.map((_, index) => (
-                        <div className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2">
-                            <div className="rounded-lg shadow-md bg-white dark:bg-gray-800">
-                                <div className="rounded-lg h-48 bg-gray-400 dark:bg-gray-700 animate-pulse" />
+                        <div key={index} className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2">
+                            <div className="rounded-lg shadow-md bg-gray-800">
+                                <div className="rounded-lg h-48 bg-gray-700 animate-pulse" />
                             </div>
                         </div>
                     ))}
@@ -27,13 +27,13 @@ const SkeletonLoaderCard = () => {
         <main className="p-4">
             <div className="flex flex-wrap">
                 {skeletonArray.map((_, index) => (
-                    <div className="w-full md:w-1/4 lg:w-1/5 xl:w-1/6 p-2">
-                        <div className="rounded-lg shadow-md bg-white dark:bg-gray-800">
-                            <div className="rounded-lg h-48 bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                    <div key={index} className="w-full md:w-1/4 lg:w-1/5 xl:w-1/6 p-2">
+                        <div className="rounded-lg shadow-mdbg-gray-800">
+                            <div className="rounded-lg h-48 bg-gray-700 animate-pulse" />
                             <div className="p-4 space-y-2">
-                                <div className="h-4 bg-gray-200 dark:bg-gray-700 animate-pulse" />
-                                <div className="h-3 bg-gray-200 dark:bg-gray-700 w-3/4 animate-pulse" />
-                                <div className="h-3 bg-gray-200 dark:bg-gray-700 w-1/2 animate-pulse" />
+                                <div className="h-4 bg-gray-700 animate-pulse" />
+                                <div className="h-3 bg-gray-700 w-3/4 animate-pulse" />
+                                <div className="h-3 bg-gray-700 w-1/2 animate-pulse" />
                             </div>
                         </div>
                     </div>
