@@ -9,6 +9,7 @@ import Options from "../components/Options/Options";
 import { useNavigate } from "react-router-dom";
 import { FaCirclePlay } from "react-icons/fa6";
 import SkeletonLoaderSong from "../components/SkeletonLoaders/SkeletonLoaderSong";
+import Song from "../components/Song";
 
 const Favourites = () => {
   const [loading, setLoading] = useState(true);
@@ -109,39 +110,7 @@ const Favourites = () => {
                   </div>
                 </li>
                 {data.map((item, idx) => (
-                  <li key={idx} className="album-song-list">
-                    <div
-                      onClick={() => {
-                        handleOnClick(item);
-                      }}
-                    >
-                      <h3>{idx + 1}</h3>
-
-                      {
-                        songPlayerInfo?.currentSong?.item?.id === item.id ? (
-                          <>
-                            <img className={songPlayerInfo?.isPlaying ? (`w-[25px]`) : (``)} src={songPlayerInfo?.isPlaying ? (`https://m.media-amazon.com/images/G/01/digital/music/player/web/EQ_accent.gif`) : (item.image[0].link)} alt="" />
-                            <div>
-                              <p className="text-sm font-bold text-green-400">{item.name}</p>
-                              <p className="text-xs text-green-500 font-medium">{item.primaryArtists}</p>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <img src={item.image[2].link} />
-                            <div>
-                              <p className="text-sm font-bold text-white">{item.name}</p>
-                              <p className="text-xs text-white font-medium">{item.primaryArtists}</p>
-                            </div>
-                          </>
-                        )
-                      }
-                    </div>
-                    <div>
-                      <h3>{songDurationToTime(item.duration)}</h3>
-                      <Options index={idx} song={item} favourites={true} />
-                    </div>
-                  </li>
+                  <Song data={item} _key={idx}/>
                 ))}
               </ul>
             </div>

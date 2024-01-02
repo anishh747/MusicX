@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaCirclePlay } from "react-icons/fa6";
 import Options from "../components/Options/Options";
 import SkeletonLoaderSong from "../components/SkeletonLoaders/SkeletonLoaderSong";
+import Song from "../components/Song";
 
 const AlbumScreen = () => {
   const { id: albumId } = useParams();
@@ -36,36 +37,9 @@ const AlbumScreen = () => {
     }
   }
 
-  function songDurationToTime(duration) {
-    const minutes = Math.floor(duration / 60);
-    const remainingSeconds = duration % 60;
-    const beforeDecimal = remainingSeconds.toString().split(".")[0];
-
-    return `${minutes}:${
-      beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
-    }`;
-  }
-
   useEffect(() => {
     fetchData();
   }, []);
-
-  const handleOnClick = async (item) => {
-    try {
-      if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
-        const response = await fetchSongData({ songId: item.id }).unwrap();
-        socket.emit("playSong", response[0]);
-      } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
-        toast.error("You are not the host of the room");
-      } else {
-        const response = await fetchSongData({ songId: item.id }).unwrap();
-        // console.log({ item: response[0] })
-        dispatch(setCurrentSong({ item: response[0] }));
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
 
   const handleBigPlayButton = () => {
     dispatch(clearQueue())
@@ -107,38 +81,7 @@ const AlbumScreen = () => {
                 </div>
               </li>
               {data.songs.map((item, idx) => (
-                <li key={idx} className="album-song-list">
-                  <div
-                    onClick={() => {
-                      handleOnClick(item);
-                    }}
-                  >
-                    <h3>{idx + 1}</h3>
-                    {
-                        songPlayerInfo?.currentSong?.item?.id === item.id ? (
-                          <>
-                            <img className={songPlayerInfo?.isPlaying ? (`w-[25px]`) : (``)} src={songPlayerInfo?.isPlaying ? (`https://m.media-amazon.com/images/G/01/digital/music/player/web/EQ_accent.gif`) : (item.image[0].link)} alt="" />
-                            <div>
-                              <p className="text-sm font-bold text-green-400">{item.name}</p>
-                              <p className="text-xs text-green-500 font-medium">{item.primaryArtists}</p>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <img src={item.image[2].link} />
-                            <div>
-                              <p className="text-sm font-bold text-white">{item.name}</p>
-                              <p className="text-xs text-white font-medium">{item.primaryArtists}</p>
-                            </div>
-                          </>
-                        )
-                      }
-                  </div>
-                  <div>
-                    <h3>{songDurationToTime(item.duration)}</h3>
-                    <Options index={idx} song={item} />
-                  </div>
-                </li>
+                <Song data={item} _key={idx}/>
               ))}
             </ul>
           </div>

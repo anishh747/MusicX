@@ -18,6 +18,7 @@ import "./screen.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SkeletonLoaderSong from "../components/SkeletonLoaders/SkeletonLoaderSong";
+import Song from "../components/Song";
 
 const PlaylistScreen = () => {
   const { id: playlistId } = useParams();
@@ -84,7 +85,7 @@ const PlaylistScreen = () => {
     <>
       {loading ? (
         <SkeletonLoaderSong />
-) : (
+      ) : (
         <div>
           <div className="max-w-2xl mx-auto px-4">
             <FaCirclePlay
@@ -110,38 +111,7 @@ const PlaylistScreen = () => {
               </li>
 
               {data.songs.map((item, idx) => (
-                <li key={idx} className="album-song-list">
-                  <div
-                    onClick={() => {
-                      handleOnClick(item);
-                    }}
-                  >
-                    <h3>{idx + 1}</h3>
-                    {
-                        songPlayerInfo?.currentSong?.item?.id === item.id ? (
-                          <>
-                            <img className={songPlayerInfo?.isPlaying ? (`w-[25px]`) : (``)} src={songPlayerInfo?.isPlaying ? (`https://m.media-amazon.com/images/G/01/digital/music/player/web/EQ_accent.gif`) : (item.image[0].link)} alt="" />
-                            <div>
-                              <p className="text-sm font-bold text-green-400">{item.name}</p>
-                              <p className="text-xs text-green-500 font-medium">{item.primaryArtists}</p>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <img src={item.image[2].link} />
-                            <div>
-                              <p className="text-sm font-bold text-white">{item.name}</p>
-                              <p className="text-xs text-white font-medium">{item.primaryArtists}</p>
-                            </div>
-                          </>
-                        )
-                      }
-                  </div>
-                  <div>
-                    <h3>{songDurationToTime(item.duration)}</h3>
-                    <Options index={idx} song={item} />
-                  </div>
-                </li>
+                <Song data={item} _key={idx} />
               ))}
             </ul>
           </div>
