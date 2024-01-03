@@ -29,6 +29,7 @@ import {
   isNowPlayingView,
   toggleShuffle,
   toggleRepeatOneMode,
+  addToQueue
 } from "../slices/songPlayerSlice";
 import {
   useAddToFavouritesMutation,
@@ -90,7 +91,7 @@ function BottomMusicPlayer() {
 
   useEffect(() => {
     if (socket !== null && roomInfo) {
-      socket.emit("joinRoomCode", roomInfo?.room_id);
+      socket.emit("joinRoomCode", {room_id: roomInfo?.room_id, username: userInfo?.name});
     }
   }, [socket, roomInfo]);
 
@@ -278,6 +279,7 @@ function BottomMusicPlayer() {
   useEffect(() => {
     if (socket !== null) {
       const handlePlaySong = (data) => {
+        console.log("playSong socket");
         dispatch(setCurrentSong({ item: data }));
       };
 
@@ -299,6 +301,9 @@ function BottomMusicPlayer() {
       socket.on("playPause", handlePlayPause);
       socket.on("playNextSong", handlePlayNextSong);
       socket.on("playPreviousSong", handlePlayPreviousSong);
+      socket.on("addToQueue", (data) => {
+        dispatch(addToQueue(data));
+      });
 
       return () => {
         // Clean up the event listeners when the component unmounts or when socket changes

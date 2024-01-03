@@ -7,8 +7,6 @@ import {
   useRemoveSongFromPlaylistMutation
 } from "../../slices/playlistApiSlice";
 import {
-  useAlbumsDataMutation,
-  useSongDataMutation,
   useAddToFavouritesMutation,
   useRemoveFromFavouritesMutation
 } from "../../slices/songApiSlice";
@@ -16,17 +14,30 @@ import { addToQueue } from "../../slices/songPlayerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { io } from "socket.io-client";
 
 const Options = (props) => {
   const dispatch = useDispatch();
   const [userPlaylists, setUserPlaylists] = useState();
   const [addSongToPlaylist] = useAddSongToPlaylistMutation();
   const [removeSongFromPlaylist] = useRemoveSongFromPlaylistMutation();
-  const [fetchAlbumsData, { isLoading }] = useAlbumsDataMutation();
   const [fetchPlaylistsData] = useGetPlaylistsMutation();
   const { userInfo } = useSelector((state) => state.auth);
   const [addToFavourites] = useAddToFavouritesMutation();
   const [removeFromFavourites] = useRemoveFromFavouritesMutation();
+  const [socket, setSocket] = useState(null);
+  const roomInfo = useSelector((state) => state.room.roomInfo);
+
+  useEffect(() => {
+    const s = io(import.meta.env.VITE_REACT_API_URL);
+    setSocket(s);
+  }, []);
+
+  useEffect(() => {
+    if (socket !== null && roomInfo) {
+      socket.emit("joinRoomCode", {room_id: roomInfo?.room_id, username: userInfo?.name});
+    }
+  }, [socket, roomInfo]);
 
   async function fetchData() {
     try {
@@ -40,8 +51,12 @@ const Options = (props) => {
   }
 
   const handleAddToQueue = (item) => {
-    console.log(item);
-    dispatch(addToQueue({ item }));
+    if(roomInfo) {
+      socket.emit("addToQueue", {item});
+    }else {
+      console.log("ADDD TO QUEUEUEUE")
+      dispatch(addToQueue({ item }));
+    }
   };
 
 

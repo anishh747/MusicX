@@ -2,18 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   usePlaylistDataMutation,
-  useSongDataMutation,
 } from "../slices/songApiSlice";
 import {
-  setCurrentSong,
-  playPause,
   addToQueue,
-  playNextSong,
   clearQueue,
 } from "../slices/songPlayerSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { FaCirclePlay } from "react-icons/fa6";
-import Options from "../components/Options/Options";
 import "./screen.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -26,17 +20,7 @@ const PlaylistScreen = () => {
   const [data, setData] = useState({});
   const [fetchPlaylistData, { isLoading }] = usePlaylistDataMutation();
   const dispatch = useDispatch();
-  const [fetchSongData] = useSongDataMutation();
   const songPlayerInfo = useSelector((state) => state.songPlayer);
-
-  function songDurationToTime(duration) {
-    const minutes = Math.floor(duration / 60);
-    const remainingSeconds = duration % 60;
-    const beforeDecimal = remainingSeconds.toString().split(".")[0];
-
-    return `${minutes}:${beforeDecimal.length === 1 ? `0${beforeDecimal}` : beforeDecimal
-      }`;
-  }
 
   async function fetchData() {
     try {
@@ -52,23 +36,6 @@ const PlaylistScreen = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const handleOnClick = async (item) => {
-    try {
-      if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
-        const response = await fetchSongData({ songId: item.id }).unwrap();
-        socket.emit("playSong", response[0]);
-      } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
-        toast.error("You are not the host of the room");
-      } else {
-        const response = await fetchSongData({ songId: item.id }).unwrap();
-        // console.log({ item: response[0] })
-        dispatch(setCurrentSong({ item: response[0] }));
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
 
   const handleBigPlayButton = () => {
     dispatch(clearQueue());

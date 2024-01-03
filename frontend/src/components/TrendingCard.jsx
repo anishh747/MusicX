@@ -34,6 +34,7 @@ const TrendingCard = (props) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const roomInfo = useSelector((state) => state.room.roomInfo);
   const songPlayerInfo = useSelector((state) => state.songPlayer);
+  const { userInfo } = useSelector((state) => state.auth);
 
   const handleMouseEnter = (index) => {
     setHoveredIndex(index);
@@ -53,7 +54,7 @@ const TrendingCard = (props) => {
   }, []);
   useEffect(() => {
     if (socket !== null && roomInfo) {
-      socket.emit("joinRoomCode", roomInfo?.room_id);
+      socket.emit("joinRoomCode", {room_id: roomInfo?.room_id, username: userInfo?.name});
     }
   }, [socket, roomInfo]);
 

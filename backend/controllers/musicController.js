@@ -92,7 +92,7 @@ const getArtistData = expressAsyncHandler(async (req, res) => {
   try {
     const { artistId } = req.body;
 
-    const response = await fetch(`https://saavn.me/artists?id=${id}`);
+    const response = await fetch(`https://saavn.me/artists?id=${artistId}`);
     if (response.ok) {
       const data = await response.json();
       res.json(data.data);

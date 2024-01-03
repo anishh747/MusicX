@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSearchQueryDataMutation } from "../slices/songApiSlice";
 import { useEffect, useState } from "react";
 import { FaCirclePlay } from "react-icons/fa6";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   clearQueue,
   addToQueue,
@@ -12,6 +12,8 @@ import {
 import { useSongDataMutation } from "../slices/songApiSlice";
 import Options from "./Options/Options";
 import "../screen/screen.css";
+import { io } from "socket.io-client";
+
 
 const SearchResult = () => {
   const dispatch = useDispatch();
@@ -22,6 +24,11 @@ const SearchResult = () => {
   const [loading, setLoading] = useState(true);
   const [floatingButton, setFloatingButton] = useState(false);
   const [getSongData] = useSongDataMutation();
+  const [socket, setSocket] = useState(null);
+  const { userInfo } = useSelector((state) => state.auth);
+  const roomInfo = useSelector((state) => state.room.roomInfo);
+  const room_id = roomInfo?.room_id;
+  const songPlayerInfo = useSelector((state) => state.songPlayer);
 
   useEffect(() => {
     async function getResultFromQuery() {
@@ -40,6 +47,17 @@ const SearchResult = () => {
     }
   }, [searchResult]);
 
+  useEffect(() => {
+    const s = io(import.meta.env.VITE_REACT_API_URL);
+    setSocket(s);
+  }, []);
+
+  useEffect(() => {
+    if (socket !== null) {
+      socket.emit('joinRoomCode', { room_id: room_id, username: userInfo.name });
+    }
+  }, [socket, roomInfo]);
+
   const handleFloatingPlayButtonClick = async () => {
     dispatch(clearQueue());
     for (let index = 0; index < searchResult.songs.results.length; index++) {
@@ -51,15 +69,28 @@ const SearchResult = () => {
     }
   };
 
-  const handleSongClick = async (songId) => {
-    const response = await getSongData({ songId }).unwrap();
-    dispatch(setCurrentSong({ item: response[0] }));
+  const handleSongClick = async (item_id) => {
+    try {
+      if (songPlayerInfo?.roomMode && songPlayerInfo?.isRoomHost) {
+        const response = await getSongData({ songId: item_id }).unwrap();
+        console.log("HOST PLAYED SONG")
+        socket.emit("playSong", response[0]);
+      } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
+        toast.error("You are not the host of the room");
+      } else {
+        const response = await getSongData({ songId: item_id }).unwrap();
+        // console.log({ item: response[0] })
+        dispatch(setCurrentSong({ item: response[0] }));
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   const handleTopQueryClick = async (item) => {
     switch (item.type) {
       case "artist":
-        navigate(`/artist/${item.id}`);
+        // navigate(`/artist/${item.id}`);
         break;
       case "album":
         navigate(`/album/${item.id}`);
@@ -127,20 +158,25 @@ const SearchResult = () => {
                         handleSongClick(item.id);
                       }}
                     >
-                      <div className="flex items-center">
-                        <img
-                          src={item.image[2].link}
-                          className="w-12 h-12 object-cover"
-                        />
-                        <div className="ml-4">
-                          <span className="block font-semibold">
-                            {item.title}
-                          </span>
-                          <span className="block text-gray-600">
-                            {item.primaryArtists}
-                          </span>
-                        </div>
-                      </div>
+                      {
+                        songPlayerInfo?.currentSong?.item?.id === item.id ? (
+                          <>
+                            <img className={songPlayerInfo?.isPlaying ? (`p-2`) : (``)} src={songPlayerInfo?.isPlaying ? (`https://m.media-amazon.com/images/G/01/digital/music/player/web/EQ_accent.gif`) : (item.image[0].link)} alt="" />
+                            <div>
+                              <p className="text-sm font-bold text-green-400">{item.title}</p>
+                              <p className="text-xs text-green-500 font-medium">{item.primaryArtists}</p>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <img src={item.image[2].link} />
+                            <div>
+                            <p className="text-sm font-bold text-white">{item.title}</p>
+                              <p className="text-xs text-white font-medium">{item.primaryArtists}</p>
+                            </div>
+                          </>
+                        )
+                      }
                       <div className="ml-auto">
                         <Options index={idx} song={item} />
                       </div>

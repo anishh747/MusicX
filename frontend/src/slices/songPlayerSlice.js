@@ -155,14 +155,6 @@ const persistConfig = {
 // Create a persisted reducer
 const persistedReducer = persistReducer(persistConfig, songPlayerSlice.reducer);
 
-//This is for shuffle
-const getRandomShuffledIndex = (length, currentIndex) => {
-  let randomIndex = currentIndex;
-  while (randomIndex === currentIndex) {
-    randomIndex = Math.floor(Math.random() * length);
-  }
-  return randomIndex;
-};
 
 // Export actions
 export const {

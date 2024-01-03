@@ -29,11 +29,13 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-    socket.on("joinRoomCode", (roomCode) => {
+    socket.on("joinRoomCode", (roomInfo) => {
+        let roomCode = roomInfo.room_id;
         socket.join(roomCode);
         // Send a message to all members in the room (including the sender)
         io.to(roomCode).emit("message", "A user has joined the room");
-
+        io.to(roomCode).emit("memberJoined", roomInfo.username);
+        console.log("A user:"+ roomInfo.username);
         // Listen for chat messages
         socket.on("chatMessage", (data) => {
             io.to(roomCode).emit("receiveChatMessage", data);
@@ -50,7 +52,13 @@ io.on("connection", (socket) => {
             io.to(roomCode).emit("message", "A user has left the room");
             console.log("A user Disconnected");
         });
+
+        socket.on("exitRoom", (data) => {
+            io.to(roomCode).emit("exitRoom", data);
+        });
+        
         socket.on("playSong", (data) => {
+            console.log("Playing Song")
             io.to(roomCode).emit("playSong", data);
         });
 

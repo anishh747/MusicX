@@ -23,6 +23,7 @@ const Room = () => {
     const [getRoomInfo] = useRoomInfoMutation();
     const navigate = useNavigate();
     const [allMessages, setAllMessages] = useState([]);
+    const [members, setMembers] = useState([]);
     const [inputMessage, setInputMessage] = useState("");
     const { userInfo } = useSelector((state) => state.auth);
     const roomInfo = useSelector((state) => state.room.roomInfo);
@@ -52,7 +53,7 @@ const Room = () => {
 
     useEffect(() => {
         if (socket !== null) {
-            socket.emit('joinRoomCode', room_id);
+            socket.emit('joinRoomCode', {room_id: room_id, username: userInfo?.name});
 
             const handleMessage = (message) => {
                 console.log(message);
@@ -74,21 +75,40 @@ const Room = () => {
             socket.on("message", handleMessage);
             socket.on("receiveChatMessage", handleReceiveChatMessage);
             socket.on("endRoom", handleEndRoom);
-
+            socket.on("memberJoined", (data) => {
+                toast.info(`${data} joined the room`);
+                setMembers((oldMembers) => [
+                    ...oldMembers, data
+                ]);
+            });
+            socket.on("exitRoom", (data) => {
+                toast.info(`${data} left the room`);
+                setMembers((oldMembers) => {
+                    const newMembers = oldMembers.filter((member) => member !== data);
+                    return newMembers;
+                });
+            })
+            
             return () => {
                 // Clean up the event listeners when the component unmounts or when socket changes
                 socket.off("message", handleMessage);
                 socket.off("receiveChatMessage", handleReceiveChatMessage);
                 socket.off("endRoom", handleEndRoom);
+                socket.off("memberJoined");
+                socket.off("exitRoom");
             };
         }
     }, [socket]);
     
+    useEffect(() => {
+        console.log("MEMBERS:", members);
+    }, [members]);
 
     const handleEndRoom = async () => {
         if (socket !== null) {
             console.log("EMIT END ROOM")
             socket.emit('endRoom', room_id);
+            socket.emit("exitRoom",userInfo?.name);
         }
         const endRoomQuery = await endRoom({ room_id });
         dispatch(clearRoomData());
@@ -100,7 +120,7 @@ const Room = () => {
     const handleLeaveRoom = async () => {
         dispatch(clearRoomData());
         dispatch(setRoomMode(false));
-        // socket.disconnect();
+        socket.emit("exitRoom",userInfo?.name);
         navigate('/');
     }
 

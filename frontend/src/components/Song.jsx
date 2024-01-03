@@ -10,9 +10,12 @@ import SongText from './SongText';
 
 const Song = (props) => {
   const songPlayerInfo = useSelector((state) => state.songPlayer);
+  const roomInfo = useSelector((state) => state.room.roomInfo);
+  const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [fetchSongData] = useSongDataMutation();
   const [socket, setSocket] = useState(null);
+  const room_id = roomInfo?.room_id;
 
   function songDurationToTime(duration) {
     const minutes = Math.floor(duration / 60);
@@ -28,10 +31,17 @@ const Song = (props) => {
     setSocket(s);
   }, []);
 
+  useEffect(() => {
+    if (socket !== null) {
+      socket.emit('joinRoomCode', {room_id: room_id, username: userInfo.name});
+    }
+  }, [socket, roomInfo]);
+
   const handleOnClick = async (item) => {
     try {
-      if (songPlayerInfo.roomMode && songPlayerInfo.isRoomHost) {
+      if (songPlayerInfo?.roomMode && songPlayerInfo?.isRoomHost) {
         const response = await fetchSongData({ songId: item.id }).unwrap();
+        console.log("HOST PLAYED SONG")
         socket.emit("playSong", response[0]);
       } else if (songPlayerInfo.roomMode && !songPlayerInfo.isRoomHost) {
         toast.error("You are not the host of the room");
@@ -46,28 +56,28 @@ const Song = (props) => {
   };
   return (
     <>
-      <li onClick={() => { handleOnClick(props.data) }} key={props._key} className="album-song-list">
-        <div>
+      <li key={props._key} className="album-song-list">
+        <div onClick={() => { handleOnClick(props.data) }}>
           <h3>{props._key + 1}</h3>
-          {
-            songPlayerInfo?.currentSong?.item?.id === props.data.id ? (
-              <>
-                <img className={songPlayerInfo?.isPlaying ? (`p-2`) : (``)} src={songPlayerInfo?.isPlaying ? (`https://m.media-amazon.com/images/G/01/digital/music/player/web/EQ_accent.gif`) : (props.data.image[0].link)} alt="" />
-                <div>
-                  <SongText className="text-sm font-bold text-green-400" card={false} title={props.data.name} mode="green" />
-                  <p className="text-xs text-green-500 font-medium">{props.data.primaryArtists}</p>
-                </div>
-              </>
-            ) : (
-              <>
-                <img src={props.data.image[2].link} />
-                <div>
-                  <SongText className="text-sm font-bold text-white" card={false} title={props.data.name} />
-                  <p className="text-xs text-white font-medium">{props.data.primaryArtists}</p>
-                </div>
-              </>
-            )
-          }
+            {
+              songPlayerInfo?.currentSong?.item?.id === props.data.id ? (
+                <>
+                  <img className={songPlayerInfo?.isPlaying ? (`p-2`) : (``)} src={songPlayerInfo?.isPlaying ? (`https://m.media-amazon.com/images/G/01/digital/music/player/web/EQ_accent.gif`) : (props.data.image[0].link)} alt="" />
+                  <div>
+                    <SongText className="text-sm font-bold text-green-400" card={false} title={props.data.name} mode="green" />
+                    <p className="text-xs text-green-500 font-medium">{props.data.primaryArtists}</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <img src={props.data.image[2].link} />
+                  <div>
+                    <SongText className="text-sm font-bold text-white" card={false} title={props.data.name} />
+                    <p className="text-xs text-white font-medium">{props.data.primaryArtists}</p>
+                  </div>
+                </>
+              )
+            }
         </div>
         <div>
           <h3>{songDurationToTime(props.data.duration)}</h3>
