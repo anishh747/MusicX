@@ -33,7 +33,7 @@ const Song = (props) => {
 
   useEffect(() => {
     if (socket !== null) {
-      socket.emit('joinRoomCode', {room_id: room_id, username: userInfo.name});
+      socket.emit('joinRoomCode', {room_id: room_id, username: userInfo?.name});
     }
   }, [socket, roomInfo]);
 
