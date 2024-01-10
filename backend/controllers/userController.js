@@ -2,7 +2,6 @@ import { pool } from "../db.js";
 import expressAsyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import bcrypt from "bcryptjs";
-import e from "express";
 
 const registerUser = expressAsyncHandler(async(req,res) =>{
     try {
@@ -16,10 +15,10 @@ const registerUser = expressAsyncHandler(async(req,res) =>{
             password = await bcrypt.hash(password,salt)
     
             const register = await pool.query("INSERT INTO users (email, name,password) VALUES ($1,$2,$3) ",[email,name,password])
-            const user = await pool.query("SELECT id FROM users WHERE email = ($1)",[email])
-            generateToken(res, user.rows.id);
+            const user = await pool.query("SELECT * FROM users WHERE email = ($1)",[email])
+            // generateToken(res, user.rows.id);
             res.status(201);
-            res.json(register);
+            res.json(user.rows[0]);
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -36,7 +35,7 @@ const authUser = expressAsyncHandler(async(req,res) =>{
             if (await bcrypt.compare(password,userDetails.rows[0].password)) {
                 generateToken(res,checkUser.rows[0].id)
                 res.status(201)
-                res.json(userDetails)
+                res.json(userDetails.rows[0])
             }else{
                 res.status(401)
                 throw new Error("Invalid Email or Password")
